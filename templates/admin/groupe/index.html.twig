@@ -1,0 +1,162 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Liste groupes{% endblock %}
+
+{% block body %}
+
+<div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">Liste</i>
+                  </div>
+                  <h4 class="card-title">Groupes</h4>
+                   <div class="card-title">
+                      <button type="submit" onclick="location.href='{{ path('app_admin_groupe_new') }}';" class="btn btn-fill btn-green mx-auto">Nouveau</button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="toolbar">
+                    <!--        Here you can write extra buttons/actions for the toolbar              -->
+                  </div>
+                  <div class="material-datatables">
+                    <div id="loader" class="loader-overlay">&nbsp;</div>
+                    <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                      <thead>
+                        <tr>
+
+                          <th>Année</th>
+                          <th>Nom du groupe</th>
+                          <th>Provinces</th>
+                          <th>Districts</th>
+                          {# <th>Province</th> #}
+
+                          <th class="disabled-sorting text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tfoot>
+                        <tr>
+                          <th>Année</th>
+                          <th>Nom du groupe</th>
+                          <th>Provinces</th>
+                          <th>Districts</th>
+
+                          <th class="text-right">Actions</th>
+                        </tr>
+                      </tfoot>
+                      <tbody>
+
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- end content-->
+              </div>
+              <!--  end card  -->
+            </div>
+{% endblock %}
+{% block javascripts %}
+
+    <script>
+    $(document).ready(function() {
+
+
+
+      $('#datatables').DataTable({
+        "pagingType": "full_numbers",
+        "pageLength": 10,
+        /*"lengthMenu": [
+          [10, 25, 50, -1],
+          [10, 25, 50, "All"]
+        ],*/
+        // Server-side parameters
+        "processing": false,
+        "serverSide": true,
+        responsive: true,
+         // Ajax call
+        "ajax": {
+            "url": "{{ path('app_admin_groupe_liste') }}",
+            "type": "POST",
+            //data :  {search: (($("input[type='search']").val() == undefined) ? "" : $("input[type='search']").val())},
+            data: function(d) {
+            d.search = $("input[type='search']").val(); // Utilisez ici la valeur de votre champ de recherche
+            // Autres paramètres de DataTables
+        },
+            beforeSend: function () {
+              $("#loader").show();
+
+            },
+            complete: function () {
+              //alert(JSON.stringify(response));
+              $("#loader").hide();
+
+            },
+        },
+        language: {
+          search: "_INPUT_",
+          searchPlaceholder: "Search records",
+          processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>',
+        },
+         columns: [
+            { data: "annee" },
+            { data: "nom" },
+            { data: "provinces" },
+            { data: "districts" },
+            {
+                data : "id",
+                "render": function ( data, type, full) {
+                    var url = '{{ path("app_admin_groupe_edit", { 'id': 'data' }) }} ';
+                    var urlDelete = '{{ path("app_admin_groupe_delete", { 'id': 'data' }) }} ';
+                    url = url.replace("data", data);
+                    urlDelete = urlDelete.replace("data", data);
+            return "<button type='button' onclick=\"location.href='"+url+"';\" class='btn btn-success edit' data-id=" + data + ">Edit</button><button type='button' onclick=\"location.href='"+url+"';\" class='btn btn-success edit' data-id=" + data + ">Delete</button>";
+                    }
+            }
+
+        ],
+        'searching'   : true,
+        "ordering": false,  // enleve le sorting
+        // Set column definition initialisation properties
+        "columnDefs": [
+            {
+                //"targets": [0], //first column / numbering column
+                //"orderable": true, //set not orderable
+            }
+        ],
+        });
+
+         var table = $('#datatable').DataTable();
+      var search = "";
+      $("input[type='search']").on("keyup", function () {
+         table.search( this.value );
+      });
+     // alert(search);
+     /* var table = $('#datatable').DataTable();
+
+        $('#datatable tbody').on( 'click', 'button', function () {
+            var rows = table.rows( 0 ).data();
+            alert(rows);
+        } );*/
+      // Edit record
+      /*table.on('click', '.edit', function() {
+        $tr = $(this).closest('tr');
+        var data = table.row($tr).data();
+        alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+      });*/
+
+      // Delete a record
+      /*table.on('click', '.remove', function(e) {
+        $tr = $(this).closest('tr');
+        table.row($tr).remove().draw();
+        e.preventDefault();
+      });*/
+
+      //Like record
+      /*table.on('click', '.like', function() {
+        alert('You clicked on Like button');
+      });*/
+    });
+  </script>
+{% endblock %}
+

@@ -1,0 +1,1506 @@
+{% extends 'supervisorBase.html.twig' %}
+{% block title %}
+	Superviseur central- accueil
+{% endblock %}
+{% block body %}
+
+<div class="container-fluid">
+	<div class="card shadow mb-4">
+		<div class="centerContentDiv">
+			<h3>Mouvement des produits</h3>
+		</div>
+		<div class="card-body">
+			<!-- Canvas SDSP Section - Canvas SDSP Page -->
+			<section id="canvas" class="canvas">
+				<!-- Section Title -->
+				<div class="container section-title" data-aos="fade-up">
+					<h2>Canvas SDSP</h2>
+					{# <a class="navbar-brand" href="{{ path('app_show_movement_products_ajax_pnsdu', {'district': 4}) }}">Test</a> #}
+				</div>
+				<!-- End Section Title -->
+
+				<div class="">
+					<div class="container">
+						<label for="selectDistrictSdsp">sélectionner le district</label>
+						<select name="selectDistrictSdsp" id="selectDistrictSdsp" class="form-control selectDistrictSdsp" style="width: 250px">
+							<option value="">Veuillez sélectionner.</option>
+							{% for allDistrict in allDistricts %}
+								<option value="{{ allDistrict.id }}">
+									{{ allDistrict.Nom|default('') }}
+								</option>
+							{% endfor %}					
+						</select>
+						<div id="loadingSpinnerSdsp" style="display: none;">
+							<p></p>
+							<i class="fa fa-spinner fa-spin"></i> Chargement en cours...
+						</div>
+						<p></p>
+						<h4>CRENAS</h4>
+						<button type="button" class="btn btn-primary" id="btnExportSdsp" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" style="padding: 9px; margin-left: 78%;">
+							Exporter
+						</button>
+						<p></p>
+							<div class="table-responsive table-wrapper">
+							<div class="row margin-left-right-20 margin-top-40">
+								<div class="col-md-12">
+									<table class="table table-bordered table-fixed-header" id="tableCanvasSdsp">
+										<thead>
+											<tr class="table-success">
+												<th class="textTblCenterBold">
+													Au niveau SDSP (Plumpynut en sachet)
+												</th>
+												<th class="textTblCenterBold">
+													Stock au début du mois niveau SDSP (1)
+												</th>
+												<th class="textTblCenterBold">
+													Quantité reçue durant le mois (2)
+												</th>
+												<th class="textTblCenterBold">
+													Quantité envoyée aux CSB
+												</th>
+												<th class="textTblCenterBold">
+													Quantité redéployée vers autres SDSP
+												</th>
+												<th class="textTblCenterBold">
+													Quantité Perdue : expirée, cassée, avariée (5)
+												</th>
+												<th class="textTblCenterBold">
+													Quantité restante à la fin du mois (7)= (1+2)-(3+4+5+6)
+												</th>
+												<th class="textTblCenterBold">
+													SDU < 3 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													SDU 4  à 6 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													SDU > 6 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													Nombre des jours de rupture de stock
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="text-center">Janvier</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Février</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Mars</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Avril</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Mai</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Juin</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Juillet</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Août</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Septembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Octobre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Novembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Décembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Service Item -->
+						</div>
+					</div>
+
+					<div class="container">
+						<p></p>
+						<h4>CRENI</h4>
+						<button type="button" class="btn btn-primary" id="btnExportSdspCreniF100" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" style="padding: 9px; margin-left: 78%;">
+							Exporter
+						</button>
+						<p></p>
+						
+						<div class="table-responsive table-wrapper">
+							<div class="row margin-left-right-20 margin-top-40">
+								<div class="col-md-12">
+									<table class="table table-bordered table-fixed-header" id="tableCanvasSdspCreniF100">
+										<thead>
+											<tr class="table-success">
+												<th class="textTblCenterBold">
+													F100 (Boites)
+												</th>
+												<th class="textTblCenterBold">
+													Stock au début du mois niveau
+												</th>
+												<th class="textTblCenterBold">
+													Quantité reçue durant le mois
+												</th>
+												<th class="textTblCenterBold">
+													Quantité Utilisée
+												</th>
+												<th class="textTblCenterBold">
+													Quantité redéployée /Perdue : expirée, cassée, périmée, etc.
+												</th>
+												<th class="textTblCenterBold">
+													Quantité restante à la fin du mois
+												</th>
+												<th class="textTblCenterBold">
+													SDU < 3 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													SDU 4  à 6 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													SDU > 6 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													Nombre des jours de rupture de stock
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="text-center">Janvier</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Février</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Mars</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Avril</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Mai</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Juin</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Juillet</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Août</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Septembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Octobre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Novembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Décembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Service Item -->
+						</div>
+					</div>
+
+					<div class="container">
+						<button type="button" class="btn btn-primary" id="btnExportSdspCreniF75" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" style="padding: 9px; margin-left: 78%;">
+							Exporter
+						</button>
+						<p></p>
+						<div class="table-responsive table-wrapper">
+							<div class="row margin-left-right-20 margin-top-40">
+								<div class="col-md-12">
+									<table class="table table-bordered table-fixed-header" id="tableCanvasSdspCreniF75">
+										<thead>
+											<tr class="table-success">
+												<th class="textTblCenterBold">
+													F75 (Boites)
+												</th>
+												<th class="textTblCenterBold">
+													Stock au début du mois niveau
+												</th>
+												<th class="textTblCenterBold">
+													Quantité reçue durant le mois
+												</th>
+												<th class="textTblCenterBold">
+													Quantité Utilisée
+												</th>
+												<th class="textTblCenterBold">
+													Quantité redéployée /Perdue : expirée, cassée, périmée, etc.
+												</th>
+												<th class="textTblCenterBold">
+													Quantité restante à la fin du mois
+												</th>
+												<th class="textTblCenterBold">
+													SDU < 3 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													SDU 4  à 6 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													SDU > 6 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													Nombre des jours de rupture de stock
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="text-center">Janvier</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Février</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Mars</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Avril</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Mai</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Juin</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Juillet</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Août</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Septembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Octobre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Novembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Décembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Service Item -->
+						</div>
+					</div>
+
+
+					<div class="container">
+						<button type="button" class="btn btn-primary" id="btnExportSdspCreniPN" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" style="padding: 9px; margin-left: 78%;">
+							Exporter
+						</button>
+						<p></p>
+						<div class="table-responsive table-wrapper">
+							<div class="row margin-left-right-20 margin-top-40">
+								<div class="col-md-12">
+									<table class="table table-bordered table-fixed-header" id="tableCanvasSdspCreniPN">
+										<thead>
+											<tr class="table-success">
+												<th class="textTblCenterBold">
+													Plumpy Nut (sachets)
+												</th>
+												<th class="textTblCenterBold">
+													Stock au début du mois niveau
+												</th>
+												<th class="textTblCenterBold">
+													Quantité reçue durant le mois
+												</th>
+												<th class="textTblCenterBold">
+													Quantité Utilisée
+												</th>
+												<th class="textTblCenterBold">
+													Quantité redéployée /Perdue : expirée, cassée, périmée, etc.
+												</th>
+												<th class="textTblCenterBold">
+													Quantité restante à la fin du mois
+												</th>
+												<th class="textTblCenterBold">
+													SDU < 3 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													SDU 4  à 6 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													SDU > 6 mois avant péremption
+												</th>
+												<th class="textTblCenterBold">
+													Nombre des jours de rupture de stock
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="text-center">Janvier</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Février</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Mars</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Avril</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Mai</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Juin</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Juillet</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Août</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Septembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Octobre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Novembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center">Décembre</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Service Item -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- End Canvas SDSP Section -->
+			<br/>
+			<br/>
+			<br/>
+			<!-- Gestion PN CSB Section - Gestion PN CSB Page -->
+			<section id="pnCsb" class="pnCsb"> 
+				<!-- Section Title -->
+				<div class="container section-title" data-aos="fade-up">
+					<h2>Gestion PN CSB</h2>
+				</div>
+				<!-- End Section Title -->
+				<div class="">
+					<div class="container">
+						<label for="selectDistrictPnCsb">sélectionner le district</label>
+						<select name="selectDistrictPnCsb" id="selectDistrictPnCsb" class="form-control selectDistrictPnCsb" style="width: 250px">
+							<option value="">Veuillez sélectionner.</option>
+							{% for allDistrict in allDistricts %}
+								<option value="{{ allDistrict.id }}">
+									{{ allDistrict.Nom|default('') }}
+								</option>
+							{% endfor %}					
+						</select>
+						<div id="loadingSpinnerPnCsb" style="display: none;">
+							<p></p>
+							<i class="fa fa-spinner fa-spin"></i> Chargement en cours...
+						</div>
+						<button type="button" class="btn btn-primary" id="btnExporPnCsb" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" style="padding: 9px; margin-left: 78%;">
+							Exporter
+						</button>
+						<p></p>
+
+						<div class="table-responsive table-wrapper">
+							<div class="row margin-left-right-20 margin-top-40">
+								<div class="col-md-12">
+									<table class="table table-bordered table-fixed-header" id="tablePnCsb">
+										<thead>
+											<tr class="table-success">										
+												<th class="textTblCenterBold">
+													CSB
+												</th>
+												<th class="textTblCenterBold">
+													Quantités
+												</th>
+												<th class="textTblCenterBold">
+													Janv
+												</th>
+												<th class="textTblCenterBold">
+													Févr
+												</th>
+												<th class="textTblCenterBold">
+													Mars
+												</th>
+												<th class="textTblCenterBold">
+													Avr
+												</th>
+												<th class="textTblCenterBold">
+													Mai
+												</th>
+												<th class="textTblCenterBold">
+													Juin
+												</th>
+												<th class="textTblCenterBold">
+													Juil
+												</th>
+												<th class="textTblCenterBold">
+													Août
+												</th>
+												<th class="textTblCenterBold">
+													Sept
+												</th>
+												<th class="textTblCenterBold">
+													Oct
+												</th>
+												<th class="textTblCenterBold">
+													Nov
+												</th>
+												<th class="textTblCenterBold">
+													Déc
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="text-center"> </td>
+												<td class="text-center">
+													Reçue</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											<tr>
+												<td class="text-center"></td>
+												<td class="text-center">
+													Sortie
+												</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+											
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Service Item -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- End Gestion PN CSB Section -->
+			<br/>
+			<br/>
+			<br/>
+			<!-- Gestion PN SDU Section - Gestion PN SDU Page -->
+			<section id="pnSdu" class="pnSdu">
+				<!-- Section Title -->
+				<div class="container section-title" data-aos="fade-up">
+					<h2>Gestion PN SDU</h2>
+				</div>
+				<!-- End Section Title -->
+				<div class="">
+					<div class="container">
+						<label for="selectDistrictPnSdu">sélectionner le district</label>
+						<select name="selectRegion" id="selectDistrictPnSdu" class="form-control selectDistrictPnSdu" style="width: 250px">
+							<option value="">Veuillez sélectionner.</option>
+							{% for allDistrict in allDistricts %}
+								<option value="{{ allDistrict.id }}">
+									{{ allDistrict.Nom|default('') }}
+								</option>
+							{% endfor %}					
+						</select>
+						<div id="loadingSpinnerPnSdu" style="display: none;">
+							<p></p>
+							<i class="fa fa-spinner fa-spin"></i> Chargement en cours...
+						</div>
+						<button type="button" class="btn btn-primary" id="btnExportPnSdu" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" style="padding: 9px; margin-left: 78%;">
+							Exporter
+						</button>
+						<p></p>
+
+						<div class="table-responsive table-wrapper">
+							<div class="row margin-left-right-20 margin-top-40">
+								<div class="col-md-12">
+									<table class="table table-bordered table-fixed-header" id="tablePnSdu">
+										<thead>
+											<tr class="table-success">
+												<th class="textTblCenterBold">
+													CSB
+												</th>
+												<th class="textTblCenterBold">
+													Quantités
+												</th>
+												<th class="textTblCenterBold">
+													Janv
+												</th>
+												<th class="textTblCenterBold">
+													Févr
+												</th>
+												<th class="textTblCenterBold">
+													Mars
+												</th>
+												<th class="textTblCenterBold">
+													Avr
+												</th>
+												<th class="textTblCenterBold">
+													Mai
+												</th>
+												<th class="textTblCenterBold">
+													Juin
+												</th>
+												<th class="textTblCenterBold">
+													Juil
+												</th>
+												<th class="textTblCenterBold">
+													Août
+												</th>
+												<th class="textTblCenterBold">
+													Sept
+												</th>
+												<th class="textTblCenterBold">
+													Oct
+												</th>
+												<th class="textTblCenterBold">
+													Nov
+												</th>
+												<th class="textTblCenterBold">
+													Déc
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="text-center"></td>
+												<td class="text-center">
+													< 3 mois avant péremption
+												</td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+												<td class="text-center"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Service Item -->
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- End Gestion PN SDU Section -->
+		</div>
+	</div>
+	<script>
+		$(document).ready(function() {
+            $('#selectCentral, #selectRnr, #selectRnd, .selectRegion').select2();
+
+			let selectDistrictSdsp = $("#selectDistrictSdsp");
+			let loadingSpinnerSdsp = $("#loadingSpinnerSdsp");
+			let loadingSpinnerSdspCreni = $("#loadingSpinnerSdspCreni");
+			selectDistrictSdsp.on('change', function () {
+				let selectedDistrict = $(this).val();
+				let selectedDistrictNom = $(this).find(':selected').text().trim();
+				console.log(" selectedDistrict ", selectedDistrict);
+				console.log(" selectedDistrictNom ", selectedDistrictNom);
+
+				// Afficher l'indicateur de chargement
+				loadingSpinnerSdsp.show();
+
+				$.ajax({
+					url: '{{ path('app_show_movement_products_ajaxCanvassdsp') }}',
+					type: 'GET',
+					dataType: 'json',
+					data: { district: selectedDistrict },
+					success: function(data) {
+						// Votre logique pour mettre à jour le tableau avec les données reçues
+						console.log(data);
+						setTimeout(function() {				
+							updateTableSdspCrenas(data[0]);
+							updateTableSdspCrenasCreni(data[1]);			
+							loadingSpinnerSdsp.hide();
+						}, 100);
+					},
+					error: function(error) {
+						console.error('Erreur Ajax:', error);
+						loadingSpinnerSdsp.hide();
+					}
+				});
+
+				$("#btnExportSdsp").click(function () {
+					let table = document.getElementById("tableCanvasSdsp");
+					let nameExcel = "CanvasSdspCrenasPN-" + selectedDistrictNom + ".xlsx";
+
+					/* Utilisez la logique appropriée pour extraire les données du tableau
+					et créer un objet de feuille de calcul xlsx ici */
+
+					/* Exemple (utilisez votre propre logique) */
+					var ws = XLSX.utils.table_to_sheet(table);
+					var wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, ws, "CanvasSdsp");
+
+					/* Sauvegarder le fichier Excel */
+					XLSX.writeFile(wb, nameExcel);
+				});
+				$("#btnExportSdspCreniF100").click(function () {
+					let table = document.getElementById("tableCanvasSdspCreniF100");
+					let nameExcel = "CanvasSdspCreniF100-" + selectedDistrictNom + ".xlsx";
+
+					/* Utilisez la logique appropriée pour extraire les données du tableau
+					et créer un objet de feuille de calcul xlsx ici */
+
+					/* Exemple (utilisez votre propre logique) */
+					var ws = XLSX.utils.table_to_sheet(table);
+					var wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, ws, "CanvasSdspCreniF100");
+
+					/* Sauvegarder le fichier Excel */
+					XLSX.writeFile(wb, nameExcel);
+				});
+				$("#btnExportSdspCreniF75").click(function () {
+					let table = document.getElementById("tableCanvasSdspCreniF75");
+					let nameExcel = "CanvasSdspCreniF75-" + selectedDistrictNom + ".xlsx";
+
+					/* Utilisez la logique appropriée pour extraire les données du tableau
+					et créer un objet de feuille de calcul xlsx ici */
+
+					/* Exemple (utilisez votre propre logique) */
+					var ws = XLSX.utils.table_to_sheet(table);
+					var wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, ws, "CanvasSdspCreniF75");
+
+					/* Sauvegarder le fichier Excel */
+					XLSX.writeFile(wb, nameExcel);
+				});
+				$("#btnExportSdspCreniPN").click(function () {
+					let table = document.getElementById("tableCanvasSdspCreniPN");
+					let nameExcel = "CanvasSdspCreniPN-" + selectedDistrictNom + ".xlsx";
+
+					/* Utilisez la logique appropriée pour extraire les données du tableau
+					et créer un objet de feuille de calcul xlsx ici */
+
+					/* Exemple (utilisez votre propre logique) */
+					var ws = XLSX.utils.table_to_sheet(table);
+					var wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, ws, "CanvasSdspCreniPN");
+
+					/* Sauvegarder le fichier Excel */
+					XLSX.writeFile(wb, nameExcel);
+				});
+			});
+
+			function updateTableSdspCrenas(data) {
+				// Sélectionner le tableau
+				let table = $('#tableCanvasSdsp tbody');
+
+				// Vider le tableau actuel
+				table.empty();
+			
+				// Vérifier si la longueur de data est supérieure à zéro
+				if (data && data.length > 0) {
+					// Pour chaque ensemble de données
+					for (let i = 0; i < data.length; i++) {
+						// Créer une nouvelle ligne
+						let row = $('<tr>');
+			
+						// Ajouter chaque colonne à la ligne avec les données reçues
+						row.append('<td class="text-center">' + data[i][0] + '</td>');
+						row.append('<td class="text-center">' + data[i][1] + '</td>');
+						row.append('<td class="text-center">' + data[i][2] + '</td>');
+						row.append('<td class="text-center">' + data[i][3] + '</td>');
+						row.append('<td class="text-center">' + data[i][4] + '</td>');
+						row.append('<td class="text-center">' + data[i][5] + '</td>');
+						row.append('<td class="text-center">' + data[i][6] + '</td>');
+						row.append('<td class="text-center">' + data[i][7] + '</td>');
+						row.append('<td class="text-center">' + data[i][8] + '</td>');
+						row.append('<td class="text-center">' + data[i][9] + '</td>');
+						row.append('<td class="text-center">' + data[i][10] + '</td>');
+			
+						// Ajouter la ligne au tableau
+						table.append(row);
+					}
+				} else {
+					// Si la longueur de data est zéro, ajouter une ligne indiquant que le tableau est vide
+					table.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+				}
+			}
+
+			function updateTableSdspCrenasCreni(data) {
+				// Sélectionner le tableau
+				let table1 = $('#tableCanvasSdspCreniF100 tbody');
+				let table2 = $('#tableCanvasSdspCreniF75 tbody');
+				let table3 = $('#tableCanvasSdspCreniPN tbody');
+
+				// Vider le tableau actuel
+				table1.empty();
+				table2.empty();
+				table3.empty();
+			
+				// Vérifier si la longueur de data est supérieure à zéro
+				if (data && data.length > 0) {
+					if (data[0].length > 0) {
+						// Pour chaque ensemble de données
+						for (let i = 0; i < data[0].length; i++) {
+							// Créer une nouvelle ligne
+							let row = $('<tr>');
+				
+							// Ajouter chaque colonne à la ligne avec les données reçues
+							row.append('<td class="text-center">' + data[0][i][0] + '</td>');
+							row.append('<td class="text-center">' + data[0][i][1] + '</td>');
+							row.append('<td class="text-center">' + data[0][i][2] + '</td>');
+							row.append('<td class="text-center">' + data[0][i][3] + '</td>');
+							row.append('<td class="text-center">' + data[0][i][4] + '</td>');
+							row.append('<td class="text-center">' + data[0][i][5] + '</td>');
+							row.append('<td class="text-center">' + data[0][i][6] + '</td>');
+							row.append('<td class="text-center">' + data[0][i][7] + '</td>');
+							row.append('<td class="text-center">' + data[0][i][8] + '</td>');
+							row.append('<td class="text-center">' + data[0][i][9] + '</td>');
+				
+							// Ajouter la ligne au tableau
+							table1.append(row);
+						}
+					} else {
+						// Si la longueur de data est zéro, ajouter une ligne indiquant que le tableau est vide
+						table1.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+					}
+					if (data[1].length > 0) {
+						// Pour chaque ensemble de données
+						for (let i = 0; i < data[1].length; i++) {
+							// Créer une nouvelle ligne
+							let row = $('<tr>');
+				
+							// Ajouter chaque colonne à la ligne avec les données reçues
+							row.append('<td class="text-center">' + data[1][i][0] + '</td>');
+							row.append('<td class="text-center">' + data[1][i][1] + '</td>');
+							row.append('<td class="text-center">' + data[1][i][2] + '</td>');
+							row.append('<td class="text-center">' + data[1][i][3] + '</td>');
+							row.append('<td class="text-center">' + data[1][i][4] + '</td>');
+							row.append('<td class="text-center">' + data[1][i][5] + '</td>');
+							row.append('<td class="text-center">' + data[1][i][6] + '</td>');
+							row.append('<td class="text-center">' + data[1][i][7] + '</td>');
+							row.append('<td class="text-center">' + data[1][i][8] + '</td>');
+							row.append('<td class="text-center">' + data[1][i][9] + '</td>');
+				
+							// Ajouter la ligne au tableau
+							table2.append(row);
+						}
+					} else {
+						// Si la longueur de data est zéro, ajouter une ligne indiquant que le tableau est vide
+						table2.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+					}
+					if (data[2].length > 0) {
+						// Pour chaque ensemble de données
+						for (let i = 0; i < data[2].length; i++) {
+							// Créer une nouvelle ligne
+							let row = $('<tr>');
+				
+							// Ajouter chaque colonne à la ligne avec les données reçues
+							row.append('<td class="text-center">' + data[2][i][0] + '</td>');
+							row.append('<td class="text-center">' + data[2][i][1] + '</td>');
+							row.append('<td class="text-center">' + data[2][i][2] + '</td>');
+							row.append('<td class="text-center">' + data[2][i][3] + '</td>');
+							row.append('<td class="text-center">' + data[2][i][4] + '</td>');
+							row.append('<td class="text-center">' + data[2][i][5] + '</td>');
+							row.append('<td class="text-center">' + data[2][i][6] + '</td>');
+							row.append('<td class="text-center">' + data[2][i][7] + '</td>');
+							row.append('<td class="text-center">' + data[2][i][8] + '</td>');
+							row.append('<td class="text-center">' + data[2][i][9] + '</td>');
+				
+							// Ajouter la ligne au tableau
+							table3.append(row);
+						}
+					} else {
+						// Si la longueur de data est zéro, ajouter une ligne indiquant que le tableau est vide
+						table3.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+					}
+				} else {
+					// Si la longueur de data est zéro, ajouter une ligne indiquant que le tableau est vide
+					table1.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+					table2.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+					table3.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+				}
+			}
+
+			let selectDistrictPnCsb = $("#selectDistrictPnCsb");
+			let loadingSpinnerPnCsb = $("#loadingSpinnerPnCsb");
+			selectDistrictPnCsb.on('change', function () {
+				let selectedDistrict = $(this).val();
+				let selectedDistrictNom = $(this).find(':selected').text().trim();
+				// Afficher l'indicateur de chargement
+				loadingSpinnerPnCsb.show();
+
+				$.ajax({
+					url: '{{ path('app_show_movement_products_ajaxPnCsb') }}',
+					type: 'GET',
+					dataType: 'json',
+					data: { district: selectedDistrict },
+					success: function(data) {
+						// Votre logique pour mettre à jour le tableau avec les données reçues
+						console.log(data);
+						if (data.length > 0) {
+							updateTablePnCsb(data)
+						} else {
+							let table = $('#tablePnCsb tbody');
+							// Vider le tableau actuel
+							table.empty();
+							table.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+						}
+						
+						loadingSpinnerPnCsb.hide();
+					},
+					error: function(error) {
+						console.error('Erreur Ajax:', error);
+						let table = $('#tablePnCsb tbody');
+						
+						// Vider le tableau actuel
+						table.empty();
+						table.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+						loadingSpinnerPnCsb.hide();
+					}
+				});
+
+				$("#btnExporPnCsb").click(function () {
+					let table = document.getElementById("tablePnCsb");
+					let nameExcel = "CanvasPnCsb-" + selectedDistrictNom + ".xlsx";
+
+					/* Exemple (utilisez votre propre logique) */
+					var ws = XLSX.utils.table_to_sheet(table);
+					var wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, ws, "CanvasPnCsb");
+
+					/* Sauvegarder le fichier Excel */
+					XLSX.writeFile(wb, nameExcel);
+				});
+			});
+
+			function updateTablePnCsb(data) {
+				// Sélectionner le tableau
+				let table = $('#tablePnCsb tbody');
+
+				// Vider le tableau actuel
+				table.empty();
+				
+				// Vérifier si la longueur de data est supérieure à zéro
+				if (data.length > 0) {
+					dataCsb = data[0];
+					dataRecues = data[1];
+					dataSorties = data[2];
+					console.log(dataCsb);
+					// Pour chaque ensemble de données
+					for (let i = 0; i < dataCsb.length; i++) {
+						// Créer une nouvelle ligne
+						let row1 = $('<tr>');
+						let row2 = $('<tr>');
+
+						// Ajouter la première colonne avec les valeurs de $dataRecues
+						row1.append('<td class="text-center">' + dataCsb[i] + '</td>');
+						row1.append('<td class="text-center">Reçue</td>');
+						// Ajouter la première colonne avec les valeurs de $dataRecues[i]
+						for (let j = 0; j < dataRecues[i].length; j++) {
+							row1.append('<td class="text-center">' + dataRecues[i][j] + '</td>');
+						}
+						row2.append('<td class="text-center">' + dataCsb[i] + '</td>');
+						row2.append('<td class="text-center">Sorties</td>');
+						// Ajouter la première colonne avec les valeurs de $dataSorties[i]
+						for (let k = 0; k < dataSorties[i].length; k++) {
+						row2.append('<td class="text-center">' + dataSorties[i][k] + '</td>');
+						}
+
+						// Ajouter la ligne au tableau
+						table.append(row1);
+						table.append(row2);
+					}
+				} else {
+					// Si la longueur de data est zéro, ajouter une ligne indiquant que le tableau est vide
+					table.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+				}
+			}
+
+			let selectDistrictPnSdu = $("#selectDistrictPnSdu");
+			let loadingSpinnerPnSdu = $("#loadingSpinnerPnSdu");
+			selectDistrictPnSdu.on('change', function () {
+				let selectedDistrict = $(this).val();
+				let selectedDistrictNom = $(this).find(':selected').text().trim();
+				// Afficher l'indicateur de chargement
+				loadingSpinnerPnSdu.show();
+
+				$.ajax({
+					url: '{{ path('app_show_movement_products_ajax_pnsdu') }}',
+					type: 'GET',
+					dataType: 'json',
+					data: { district: selectedDistrict },
+					success: function(data) {
+						// Votre logique pour mettre à jour le tableau avec les données reçues
+						console.log("data ", data);
+						if (data.length > 0) {
+							updateTablePnSdu(data)
+						} else {
+							let table = $('#tablePnSdu tbody');
+							// Vider le tableau actuel
+							table.empty();
+							table.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+						}
+						
+						loadingSpinnerPnSdu.hide();
+						
+					},
+					error: function(error) {
+						console.error('Erreur Ajax:', error);
+						loadingSpinnerPnSdu.hide();
+						let table = $('#tablePnSdu tbody');
+						// Vider le tableau actuel
+						table.empty();
+						table.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+					}
+				});
+
+				$("#btnExportPnSdu").click(function () {
+					let table = document.getElementById("tablePnSdu");
+					let nameExcel = "CanvasPnSdu-" + selectedDistrictNom + ".xlsx";
+
+					/* Utilisez la logique appropriée pour extraire les données du tableau
+					et créer un objet de feuille de calcul xlsx ici */
+
+					/* Exemple (utilisez votre propre logique) */
+					var ws = XLSX.utils.table_to_sheet(table);
+					var wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, ws, "CanvasPnSdu");
+
+					/* Sauvegarder le fichier Excel */
+					XLSX.writeFile(wb, nameExcel);
+				});
+			});
+
+			function updateTablePnSdu(data) {
+				// Sélectionner le tableau
+				let tablePnSdu = $('#tablePnSdu tbody');
+
+				// Vider le tableau actuel
+				tablePnSdu.empty();
+			
+				// Vérifier si la longueur de data est supérieure à zéro
+				if (data.length > 0) {
+					let dataCsb = data[0];
+					let dataResultsPnSdu = data[1];
+			
+					if (dataResultsPnSdu.length > 0) {
+						// Pour chaque ensemble de données
+						for (let i = 0; i < dataCsb.length; i++) {
+							// Créer une nouvelle ligne
+							let row = $('<tr>');
+			
+							// Ajouter la première colonne avec les valeurs de $dataCsb
+							row.append('<td class="text-center">' + dataCsb[i] + '</td>');
+							row.append('<td class="text-center"> < 3 mois avant péremption </td>');
+							// Ajouter les colonnes avec les valeurs de $dataResultsPnSdu[i]
+							for (let j = 0; j < dataResultsPnSdu[i].length; j++) {
+								row.append('<td class="text-center">' + dataResultsPnSdu[i][j] + '</td>');
+							}
+			
+							// Ajouter la ligne au tableau
+							tablePnSdu.append(row);
+						}
+					} else {
+						// Si la longueur de dataResultsPnSdu est zéro, ajouter une ligne indiquant que le tableau est vide
+						tablePnSdu.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+					}
+				} else {
+					// Si la longueur de data est zéro, ajouter une ligne indiquant que le tableau est vide
+					tablePnSdu.append('<tr><td colspan="12" class="text-center">Aucune donnée disponible.</td></tr>');
+				}
+			}
+			
+		});
+	</script>
+</div>
+{% endblock %}

@@ -1,0 +1,114 @@
+<table class="table table-bordered">
+    <tr class="table-info">
+        <td colspan="13" class="titleTblCenterBoldBlue">Stocks Disponibles et Utilisables (SDU) par produits </td>
+    </tr>
+    <tr class="table-info">
+        <td class="textTblCenterSmall">F75 <br> Boites </td>
+        <td class="textTblCenterSmall">F100 <br> Boites</td> 
+        <td class="textTblCenterSmall">ReSoMal <br> sachet</td>
+        <td class="textTblCenterSmall">PN <br> sachet</td> 
+        <td class="textTblCenterSmall">Fiche de suivi CRENI<br/>Unité</td>
+        <td class="textTblCenterSmall">Fiche de suivi intensif<br/>Unité</td> 
+        <td class="textTblCenterSmall">Amoxici.pdr/oral sus 125mg/5ml/BOT-100ml  </td>
+        <td class="textTblCenterSmall">Nystatin oral sus 100,000IU/ml/BOT-30ml </td>
+        <td class="textTblCenterSmall">Fluconazole 50mg caps/PAC-7 (non pas injection) </td> 
+        <td class="textTblCenterSmall">Ciprofloxacin 250mg tab/PAC-10 </td> 
+        <td class="textTblCenterSmall">Ampicillinpdr/inj 500mg vial/BOX-100  </td> 
+        <td class="textTblCenterSmall">Gentamicininj 40mg/ml 2ml amp/BOX-50   </td> 
+        <td class="textTblCenterSmall">Sod.lactat.comp.inj 500ml w/g.set/BOX-20   </td> 
+    </tr>
+    <tr>
+        <td class="textTblCenter">
+            <input type="text" name="sduF75Boites" class="inputTblCenterWidth50 quantiteSDU" id="sduF75Boites" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduF75Boites }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduF100Boites" class="inputTblCenterWidth50 quantiteSDU" id="sduF100Boites" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduF100Boites }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduReSoMal" class="inputTblCenterWidth50 quantiteSDU" id="sduReSoMal" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduReSoMal }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduPnSachet" class="inputTblCenterWidth50 quantiteSDU" id="sduPnSachet" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduPnSachet }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduFicheSuiviCreni" class="inputTblCenterWidth50 quantiteSDU" id="sduFicheSuiviCreni" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduFicheSuiviCreni }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduFicheSuiviIntensif" class="inputTblCenterWidth50 quantiteSDU" id="sduFicheSuiviIntensif" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduFicheSuiviIntensif }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduAmoxiciPdr" class="inputTblCenterWidth50 quantiteSDU" id="sduAmoxiciPdr" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduAmoxiciPdr }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduNystatinOral" class="inputTblCenterWidth50 quantiteSDU" id="sduNystatinOral" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduNystatinOral }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduFluconazole50mg" class="inputTblCenterWidth50 quantiteSDU" id="sduFluconazole50mg" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduFluconazole50mg }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduCiprofloxacin250mg" class="inputTblCenterWidth50 quantiteSDU" id="sduCiprofloxacin250mg" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduCiprofloxacin250mg }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduAmpicillinpdrInj500mg" class="inputTblCenterWidth50 quantiteSDU" id="sduAmpicillinpdrInj500mg" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduAmpicillinpdrInj500mg }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduGentamicininj40mg" class="inputTblCenterWidth50 quantiteSDU" id="sduGentamicininj40mg" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduGentamicininj40mg }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduSodLactatInj500ml" class="inputTblCenterWidth50 quantiteSDU" id="sduSodLactatInj500ml" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduSodLactatInj500ml }} {% endif %}" required="required">
+        </td>
+    </tr>
+    <tr class="table-info">
+        <td class="textTblCenterSmall">Glucose inj 5% 500ml <br/>w/giv.set/BOX-20 </td>
+        <td class="textTblCenterSmall">Glucose hyperton.inj <br/>50% 50mL vl/BOX-25</td> 
+        <td class="textTblCenterSmall">Furosemideinj 10mg/ml <br/>2ml amp/BOX-10 </td>
+        <td class="textTblCenterSmall">Chlorhexidine conc. sol.<br/> 5%/BOT-100ml </td> 
+        <td class="textTblCenterSmall">Miconazole nitrate <br/>cream 2%/TBE-30g </td>
+        <td class="textTblCenterSmall">Tetracyclineeyeointment<br/>1%/TBE-5g </td> 
+        <td class="textTblCenterSmall">Tube,feeding,CH08,<br/>L40cm,ster,disp </td> 
+        <td class="textTblCenterSmall">Tube,feeding,CH05,<br/>L40cm,ster,disp </td> 
+        <td class="textTblCenterSmall">Syringe,disp,2ml,<br/>w/ndl,21G/BOX-100  </td> 
+        <td class="textTblCenterSmall">Syringe,disp,10ml,<br/>ster/BOX-100 </td> 
+        <td class="textTblCenterSmall">Syringe,disp,20ml,<br/>ster/BOX-100  </td> 
+        <td class="textTblCenterSmall">Syringe,feeding,50ml,<br/>luer tip,ster  </td>  
+    </tr>
+    <tr>
+        <td class="textTblCenter">
+            <input type="text" name="sduGlucoseInj500ml" class="inputTblCenterWidth50 quantiteSDU" id="sduGlucoseInj500ml" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduGlucoseInj500ml }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduGlucoseHyperton50ml" class="inputTblCenterWidth50 quantiteSDU" id="sduGlucoseHyperton50ml" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduGlucoseHyperton50ml }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduFurosemideinj10mg" class="inputTblCenterWidth50 quantiteSDU" id="sduFurosemideinj10mg" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduFurosemideinj10mg }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduChlorhexidineConSol" class="inputTblCenterWidth50 quantiteSDU" id="sduChlorhexidineConSol" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduChlorhexidineConSol }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduMiconazoleNitrate" class="inputTblCenterWidth50 quantiteSDU" id="sduMiconazoleNitrate" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduMiconazoleNitrate }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduTetracyclineeyeointment" class="inputTblCenterWidth50 quantiteSDU" id="sduTetracyclineeyeointment" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduTetracyclineeyeointment }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduTubeFeedingCH08" class="inputTblCenterWidth50 quantiteSDU" id="sduTubeFeedingCH08" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduTubeFeedingCH08 }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduTubeFeedingCH05" class="inputTblCenterWidth50 quantiteSDU" id="sduTubeFeedingCH05" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduTubeFeedingCH05 }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduSyringeDisp2ml" class="inputTblCenterWidth50 quantiteSDU" id="sduSyringeDisp2ml" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduSyringeDisp2ml }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduSyringeDisp10ml" class="inputTblCenterWidth50 quantiteSDU" id="sduSyringeDisp10ml" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduSyringeDisp10ml }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduSyringeDisp20ml" class="inputTblCenterWidth50 quantiteSDU" id="sduSyringeDisp20ml" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduSyringeDisp20ml }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="sduSyringeFeeding50ml" class="inputTblCenterWidth50 quantiteSDU" id="sduSyringeFeeding50ml" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.sduSyringeFeeding50ml }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter"></td>
+    </tr>
+</table>

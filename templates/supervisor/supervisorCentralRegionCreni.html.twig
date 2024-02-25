@@ -1,0 +1,64 @@
+{% extends 'supervisorBase.html.twig' %}
+
+{% block title %}Superviseur central- Region Creni{% endblock %}
+
+{% block body %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">CRENI</h1>
+    <p class="mb-4">Vous êtes actuellement sur la page dédiée à la visualisation des CRENI par région. Vous y trouverez la liste des régions avec leur chef-lieu, où vous pouvez consulter les détails sur le nombre de districts capables de générer des bons de commande CRENI dans chaque région, ainsi que le nombre actuel de CRENI reçus par l'application.</p>
+    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Liste des bons de commande CRENI par région</h6>
+        </div>
+        <div class="card-body">
+        <div class="table-responsive table-wrapper"> 
+            <table class="table table-bordered table-fixed-header" id="dataTableRegionCreni" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="textTblCenterBoldPink">N°</th> 
+                        <th class="textTblCenterBoldPink">Région</th>
+                        <th class="textTblCenterBoldPink">Chef lieu</th>
+                        <th class="textTblCenterBoldPink">Nombre des districts eligible CRENI</th>
+                        <th class="textTblCenterBoldPink">Nombre des CRENI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set increment = 1 %}
+                    {% for region in lstRegionCreni %}
+                    <tr>
+                        <td>{{ increment }}</td>
+                        <td>
+                            <a href="{{ path('app_accueil_sp_creni_from_region', {'regionId': region.regionId}) }}"> 
+                                {{ region.regionNom }} 
+                            </a> 
+                        </td>
+                        <td>{{ region.regionChefLieu }}</td>
+                        <td class="titleTblCenterBoldBlue">{{ region.nombreDeDistricts }}</td>
+                            {% if (region.nombreDeCrenis > 0) %}
+                                <td class="titleTblCenterBoldGreen">
+                                    <span class="badge bg-success badge-pill" style="font-size: 14px; color: #FFF;">
+                                        {{ region.nombreDeCrenis }}
+                                    </span>
+                                </td>
+                            {% else %}
+                                <td class="textTblCenterBoldPink">
+                                    <span class="badge bg-danger badge-pill" style="font-size: 14px; color: #FFF;">
+                                        {{ region.nombreDeCrenis }}
+                                    </span>
+                                </td>
+                            {% endif %}
+                        {% set increment = increment +1 %} 
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

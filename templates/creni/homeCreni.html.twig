@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BON DE COMMANDE INTRANTS CRENI{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <h2>BON DE COMMANDE INTRANTS CRENI Intégration SALAMA </h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="titleTblRightBold">Province</td>
+                        <td>{{ dataUser.nomFRProvince }}</td>
+                    </tr>
+                    <tr>
+                        <td class="titleTblRightBold">Région</td>
+                        <td>{{ dataUser.nomRegion }}</td>
+                    </tr>
+                    <tr>
+                        <td class="titleTblRightBold">District</td>
+                        <td>{{ dataUser.nomDistrict }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-lg-8">
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="titleTblRightBold">Nom</td>
+                        <td>{{ dataUser.nomUser }}</td>
+                    </tr>
+                    <tr>
+                        <td class="titleTblRightBold">Prénoms</td>
+                        <td>{{ dataUser.prenomsUser }}</td>
+                    </tr>
+                    <tr>
+                        <td class="titleTblRightBold">Email</td>
+                        <td>{{ dataUser.emailUser }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        {% if (dataRMANut is null ) %}
+            <div class="card bg-secondary mb-3" style="max-width: 40rem;">
+                <div class="card-header">Information</div>
+                <div class="card-body">
+                    <h4 class="card-title">Important</h4>
+                    <p class="card-text">Vous devez <b><a href="/rmanut" style="color:#73a839">téléverser le fichier RMA Nut</a></b> avant d'insérer des données CRENI.</p>
+                </div>
+            </div>
+        {% else %}
+            {% if (dataUser.isEligibleForCreni == false ) %}
+                <div class="card text-white bg-warning mb-3" style="max-width: 40rem;">
+                    <div class="card-header">Avertissement</div>
+                    <div class="card-body">
+                        <h4 class="card-title">District non éligible</h4>
+                        <p class="card-text">Votre district n'est pas éligible pour insérer des données CRENI.</p>
+                    </div>
+                </div>
+            {% else %}
+                <form id="formCreni" method="post" action="{{ path('app_creni_save') }}">
+                    <input type="hidden" name="DataCommandeSemestrielleId" id="DataCommandeSemestrielleId" value="{{ dataCommandeSemestrielle.idCommandeSemestrielle }}" /> 
+                    <input type="hidden" name="isUserHavingDataCreni" id="isUserHavingDataCreni" value="{{ isUserHavingDataCreni }}" /> 
+                    <input type="hidden" name="DataCreniId" id="DataCreniId" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.id }} {% endif %}" /> 
+
+
+                    <!-- DEBUT: NOMBRE D'ADMISSION CRENI ENREGISTRE | NOMBRE D'ADMISSION QUI AVAIS ETE PROJETE | PROJECTION D'ADMISSION -->
+                    <div class="row">
+                        {% include 'creni/admissionNumberCreni.html.twig' %}
+                    </div>
+                    <!-- FIN: NOMBRE D'ADMISSION CRENI ENREGISTRE | NOMBRE D'ADMISSION QUI AVAIS ETE PROJETE | PROJECTION D'ADMISSION -->
+
+                    <!-- DEBUT: F75 - F100 - ReSoMal - PN - Fiche suivi CRENI - Fiche de suivi intensif - kIT -->
+                    <div class="row">
+                        {% include 'creni/ficheSuivi.html.twig' %}
+                    </div>
+                    <!-- FIN: F75 - F100 - ReSoMal - PN - Fiche suivi CRENI - Fiche de suivi intensif - kIT -->
+
+                    <!-- DEBUT KIT CRENI -->
+                    <div class="row">
+                        {% include 'creni/ficheKitCreni.html.twig' %}
+                    </div>
+                    <!-- FIN KIT CRENI-->
+
+                    <!-- DEBUT SDU -->
+                    <div class="row">
+                        {% include 'creni/ficheStocksDisponiblesUtilisables.html.twig' %}
+                    </div>
+                    <!-- FIN SDU -->
+
+                    <div class="container my-5">
+                        <div class="row">
+                            <div class="col-lg-6" style="text-align:right">
+                                <a class="btn btn-secondary" href="/">Retour à l'acceuil</a> 
+                            </div>
+                            <div class="col-lg-6">
+                                <button id="submitBtn" class="btn btn-primary" type="button"> Enregistré le bon de commande CRENI </button> 
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- Modale de confirmation -->
+                <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Confirmer l'envoi du formulaire</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Veuillez confirmer l'envoi du formulaire du bon de commande intrants CRENI avec les informations suivantes :</p>
+                                <pre id="summary"></pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button id="confirmSubmit" type="submit" class="btn btn-primary">Confirmer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+<script src="js/controle-creni.js"></script>
+{% endblock %}

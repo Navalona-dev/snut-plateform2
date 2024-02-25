@@ -1,0 +1,851 @@
+{% extends 'supervisorBase.html.twig' %}
+{% block title %}
+	Tableau de bord
+{% endblock %}
+{% block body %} 
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading --> 
+        <h1 class="h3 mb-2 text-gray-800">Tableau de bord indicateurs logistiques</h1>
+        <p class="mb-4">Vous êtes actuellement sur le tableau de bord où vous pouvez consulter les différents indicateurs logistiques.</p>
+         
+        <!-- Content Row : LIST DES INDICATEURS [Distribution - CRENAS - Gestion péremption - Message Retro Information]-->
+        <div class="row">
+            <!-- Distribution -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <a style="text-decoration: none" href="#distribution">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Distribution
+                                    </div>
+                                    <div class="h7 mb-0 font-weight-bold text-gray-800">Consulter</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- CRENAS -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <a style="text-decoration: none" href="#crenas">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Stock CRENAS
+                                    </div>
+                                    <div class="h7 mb-0 font-weight-bold text-gray-800">Consulter</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Gestion de péremption -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <a style="text-decoration: none" href="#peremption">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Gestion de péremption
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col-auto">
+                                            <div class="h7 mb-0 mr-3 font-weight-bold text-gray-800">Consulter</div>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Retro-information -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <a style="text-decoration: none" href="#retroinfo">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Message / Retro information</div>
+                                    <div class="h7 mb-0 font-weight-bold text-gray-800">Consulter</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Content Row [DISTRIBUTION] -->
+        <section id="distribution" class="distribution">
+            <div class="row">
+                <!-- Content Column : Distribution -->
+                <div class="col-lg-6 mb-4">
+                    <!-- Taux d'envoi PVRD Madagascar -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 border-left-primary">
+                            <h6 class="m-0 font-weight-bold text-primary">Distribution: taux d'envoi PVRD Madagascar</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table-wrapper"> 
+                                <div class="row margin-left-right-20 margin-top-40">
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered table-fixed-header" id="tableDashboardDistribution">
+                                            <thead>
+                                                <tr class="table-secondary">
+                                                    <th class="textTblCenterBold bg-secondary text-white table-secondary">
+                                                        <h8 class="title">
+                                                            Année en cours 2024
+                                                        </h8>
+                                                    </th>										
+                                                    <th class="textTblCenterBold bg-secondary text-white table-secondary">Pourcentage</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if allTauxPvrd is defined and allTauxPvrd is iterable %}
+                                                    {% for result in allTauxPvrd %}
+                                                        <tr>
+                                                            <td class="text-center">{{ result.slugTrimestrielle }}</td>
+                                                            <td class="text-center">{{ result.TauxEnvoiPvrd }} %</td>
+                                                        </tr> 
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Column : Distribution CHART -->
+                <div class="col-lg-6 mb-4">
+                    <!-- Chart Taux d'envoi PVRD Madagascar -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 border-left-primary">
+                            <h6 class="m-0 font-weight-bold text-primary">Représentation graphique: distribution</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table-wrapper"> 
+                                <div class="row margin-left-right-20 margin-top-40">
+                                    <div class="col-md-12">
+                                        <canvas id="chartDistribution"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Row [STOCK CRENAS] -->
+        <section id="crenas" class="crenas">
+            <div class="row">
+                <!-- Content Column : Statust Stock M-1 -->
+                <div class="col-lg-6 mb-4">
+                    <!-- Stock M-1 du mois en cours (PLUMPY NYUT) -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 border-left-success">
+                            <h6 class="m-0 font-weight-bold text-success">Status de stock M-1 du mois en cours (PLUMPY NYUT)</h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered table-fixed-header" id="tableDashboardCrenas">
+                                <thead>
+                                    <tr class="table-secondary ">
+                                        <th class="textTblCenterBold bg-secondary text-white table-secondary">
+                                            <h7 class="title">Status</h4>
+                                </th>
+                                        <th class="textTblCenterBold bg-secondary text-white table-secondary">Taux</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left">Taux sur stock</td>
+                                        <td class="text-center">{{ pourcentagePNSurStock }}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Taux stock normal</td>
+                                        <td class="text-center">{{ pourcentagePNNormal }}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Taux sous stock</td>
+                                        <td class="text-center">{{ pourcentagePNSousStock }}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left">Taux rupture</td>
+                                        <td class="text-center">{{ pourcentagePNRupture }}%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a class="btn btn-success d-flex justify-content-center" id="collapseDetailsButton" data-toggle="collapse" href="#collapseDetails" role="button" aria-expanded="false" aria-controls="collapseDetails">Voir détail</a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a class="btn btn-success d-flex justify-content-center" id="collapseRuptureButton" data-toggle="collapse" href="#collapseRupture" role="button" aria-expanded="false" aria-controls="collapseRupture">Liste district en rupture de stock</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Column : Statust Stock M-1 CHART -->
+                <div class="col-lg-6 mb-4">
+                    <!-- Chart Stock M-1 du mois en cours (PLUMPY NYUT) -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 border-left-success">
+                            <h6 class="m-0 font-weight-bold text-success">Représentation graphique: stock M-1</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table-wrapper"> 
+                                <div class="row margin-left-right-20 margin-top-40"> 
+                                    <div class="col-md-12">
+                                        <canvas id="chartCrenasStock"></canvas>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 mb-4">
+                    <div class="collapse" id="collapseDetails"> 
+                         <!-- STATUT DE STOCK ACTUEL PAR REGION CRENAS -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 border-left-success">
+                                <h6 class="m-0 font-weight-bold text-success">Status de stock actuel par région CRENAS</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered table-fixed-header" id="tableDashboardCrenasDetails">
+                                    <thead>
+                                        <tr class="table-success">
+                                            <th class="textTblCenterBold">Région</th>
+                                            <th>District</th>
+                                            <th>Produits</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for result in allStockDatasByStatus %}
+                                            <tr>
+                                                <td class="text-center">{{ result['regionNom'] }}</td>
+                                                <td class="text-center">{{ result['districtNom'] }}</td>
+                                                <td class="text-center">Plumpy Nut</td>
+                                                <td style="padding: 0">
+                                                    <span style="color: blue;">
+                                                        SurStock :
+                                                        {{ result['totalNombreSurStock']|default(0) }}
+                                                    </span>,
+                                                    <span style="color: green;">
+                                                        Stock Normal :
+                                                        {{ result['totalNombreNormal']|default(0) }}
+                                                    </span>,
+                                                    <span style="color: #f6c23e;">
+                                                        Sous Stock :
+                                                        {{ result['totalNombreSoustock']|default(0) }}
+                                                    </span>,
+                                                    <span style="color: red;">
+                                                        En Rupture :
+                                                        {{ result['totalNombreRupture']|default(0) }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse" id="collapseRupture">
+                         <!-- LISTE DES DISTRICTS CRENAS EN RUPTURE DE STOCK -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 border-left-success">
+                                <h6 class="m-0 font-weight-bold text-success">Liste des districts CRENAS en rupture de stock</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered table-fixed-header" id="tableDashboardCrenasRupture">
+                                    <thead>
+                                        <tr class="table-success">
+                                            <th class="textTblCenterBold">Région</th>
+                                            <th>District</th>
+                                            <th>Nombre de ruptures</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for result in allStockDatasByStatus %}
+                                            {% if result['totalNombreRupture'] > 0 %}												
+                                                <tr>
+                                                    <td class="text-center">{{ result['regionNom'] }}</td>
+                                                    <td class="text-center">{{ result['districtNom'] }}</td>
+                                                    <td class="text-center">{{ result['totalNombreRupture']|default(0) }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Row [GESTION PEREMPTION] -->
+        <section id="peremption" class="peremption">
+            <div class="row">
+                <!-- Content Column : Gestion de péremption -->
+                <div class="col-lg-6 mb-4">
+                    <!-- Quantités expiré d'ici 3 mois -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 border-left-info">
+                            <h6 class="m-0 font-weight-bold text-info">Gestion de péremption</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table-wrapper"> 
+                                <div class="row margin-left-right-20 margin-top-40">
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered table-fixed-header" id="tableDashboardPeremption">
+                                            <thead>
+                                                <tr class="table-success">
+                                                    <th class="textTblCenterBold bg-secondary text-white table-secondary">Produits</th>
+                                                    <th class="textTblCenterBold bg-secondary text-white table-secondary">
+                                                        <h8 class="title">Quantités expiré d'ici 3 mois</h8>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-center">PN</td>
+                                                    <td class="text-center">{{ quantitiesProductRiskExpiryPN }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">F75</td>
+                                                    <td class="text-center">{{ quantitiesProductRiskExpiryF75 }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">F100</td>
+                                                    <td class="text-center">{{ quantitiesProductRiskExpiryF100 }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <a class="btn btn-info d-flex justify-content-center" data-toggle="collapse" href="#collapseRuptureDetails" role="button" aria-expanded="false" aria-controls="collapseRuptureDetails">
+                                                    Voir détail
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Column : Statust Stock M-1 CHART -->
+                <div class="col-lg-6 mb-4">
+                    <!-- Chart Stock M-1 du mois en cours (PLUMPY NYUT) -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 border-left-info">
+                            <h6 class="m-0 font-weight-bold text-info">Représentation graphique: gestion péremption</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table-wrapper"> 
+                                <div class="row margin-left-right-20 margin-top-40"> 
+                                    <div class="col-md-12">
+                                        <canvas id="chartGestionPeremption"></canvas>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 mb-4">
+                    <div class="collapse" id="collapseRuptureDetails">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 border-left-info">
+                                <h6 class="m-0 font-weight-bold text-info">Quantité des produits à risque de péremption par région d'ici 3 mois</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered table-fixed-header" id="tableDashboardRuptureDetails">
+                                    <thead>
+                                        <tr class="table-success">
+                                            <th class="textTblCenterBold">Région</th>
+                                            <th>District</th>
+                                            <th>Plumpy Nut</th>
+                                            <th>F75</th>
+                                            <th>F100</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for result in allQuantitiesExpiry %}
+                                            <tr>
+                                                <td class="text-center">{{ result['regionNom'] }}</td>
+                                                <td class="text-center">{{ result['districtNom'] }}</td>
+                                                <td class="text-center">{{ result['nombreQuantitiesExpiryPn']|default(0) }}</td>
+                                                <td class="text-center">{{ result['nombreQuantitiesExpiryF75']|default(0) }}</td>
+                                                <td class="text-center">{{ result['nombreQuantitiesExpiryF100']|default(0) }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Row [MESSAGE RETRO INFORMATION] -->
+        <section id="retroinfo" class="retroinfo">
+            <div class="row">
+                <!-- Content Column : Message retro information -->
+                <div class="col-lg-6 mb-4">
+                    <!-- Retro information -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 border-left-warning">
+                            <h6 class="m-0 font-weight-bold text-warning">Message retro information</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{{ path('app_dashboard1_retroinfo', {'role': 'ROLE_CENTRAL_SUPERVISOR'}) }}" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        Adresser à
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" title="...">
+                                            <input type="checkbox" name="chkAllCentral" id="chkAllCentral">&nbsp; A tous les CGIS NUT
+                                            <br>
+                                            <input type="checkbox" name="chkAllRnr" id="chkAllRnr">&nbsp; A tous les RNR
+                                            <br>
+                                            <input type="checkbox" name="chkAllRnd" id="chkAllRnd">&nbsp; A tous les RND
+                                        </div>										
+                                        <p>OU</p>
+                                        <label for="selectCentral">Selective CGIS NUT</label>
+                                        <select name="selectCentral" id="selectCentral" class="form-control">
+                                            <option value="">Veuillez sélectionner.</option>
+                                            {% for centralSupervisor in allCentralSupervisor %}
+                                                {% if centralSupervisor.idUser != app.user.id %}
+                                                    <option value="{{ centralSupervisor.idUser }}">
+                                                        {{ centralSupervisor.nomUser|default('') ~ ' ' ~ centralSupervisor.prenomsUser|default('') }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                        <p></p>
+                                        <p>OU</p>
+                                        <label for="selectRnr">Selective RNR</label>
+                                        <select name="selectRnr" id="selectRnr" class="form-control">
+                                            <option value="">Veuillez sélectionner.</option>
+                                            {% for regionalSupervisor in allRegionalSupervisors %}
+                                                {% if regionalSupervisor.idUser != app.user.id %}
+                                                    <option value="{{ regionalSupervisor.idUser }}">
+                                                        {{ regionalSupervisor.nomUser|default('') ~ ' ' ~ regionalSupervisor.prenomsUser|default('') }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                        <p></p>
+                                        <p>OU</p>
+                                        <label for="selectRnd">Selective RND</label>
+                                        <select name="selectRnd" id="selectRnd" class="form-control">
+                                            <option value="">Veuillez sélectionner.</option>
+                                            {% for districtSupervisor in allDistrictAgents %}
+                                                {% if districtSupervisor.idUser != app.user.id %}
+                                                    <option value="{{ districtSupervisor.idUser }}">
+                                                        {{ districtSupervisor.nomUser|default('') ~ ' ' ~ districtSupervisor.prenomsUser|default('') }}
+                                                    </option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="txtTextMessage">Message</label>
+                                        <textarea name="txtTextMessage" id="txtTextMessage" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div>
+                                    <input type="file" name="piecesJointeMessage" id="piecesJointeMessage" class="form-control"><br>
+                                    <button id="sendMessage" class="btn btn-warning" type="submit">
+                                        Envoyer
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Column : Message Envoyés et Message Reçus -->
+                <div class="col-lg-6 mb-4">
+                    <!-- Message Envoyés et Message Reçus -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 border-left-warning">
+                            <h6 class="m-0 font-weight-bold text-warning">Messages envoyés et messages reçus</h6>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a class="btn btn-warning d-flex justify-content-center" data-toggle="collapse" id="collapseSentMessageBtn" href="#collapseSentMessage" role="button" aria-expanded="false" aria-controls="collapseSentMessage">
+                                        Messages envoyés
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a class="btn btn-warning d-flex justify-content-center" data-toggle="collapse" id="collapseMessageReceivedBtn" href="#collapseMessageReceived" role="button" aria-expanded="false" aria-controls="collapseMessageReceived">
+                                        Messages reçus 
+                                        {% if unreadMessageCount > 0 %}
+                                            ( {{ unreadMessageCount }} {% if unreadMessageCount == 1 %}non lue{% else %}non lues{% endif %} )
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Begin collapseSentMessage -->
+                            <div class="collapse" id="collapseSentMessage">
+                                <div class="card card-body">
+                                    <div class="container section-title" data-aos="fade-up" id="titreSent">
+                                        <h4>ENVOYES</h>
+                                    </div>
+                                    <div class="table-responsive table-wrapper">
+                                        <div class="row margin-left-right-20 margin-top-40">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered table-fixed-header" id="tableDashboardSentMessage">
+                                                    <thead>
+                                                        <tr class="table-success">
+                                                            <th class="textTblCenterBold">Date</th>
+                                                            <th>Destinataire</th>
+                                                            <th>Message</th>
+                                                            <th>Pieces jointes</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for message in sentMessages %}															
+                                                            <tr>																
+                                                                <td class="text-center">{{ message.date|date('d/m/Y') }}</td>
+                                                                <td class="text-center">
+                                                                    {{ message.nomRecipient }}
+                                                                    <input type="hidden" name="hidIdMessage" value="{{message.id}}">
+                                                                </td>
+                                                                <td class="text-center">
+                                                                        {{ message.textMessage }}
+                                                                </td>
+                                                            </a>
+                                                                <td class="text-center">
+                                                                {% if message.pieceJointes|length > 0 %}
+                                                                    {% for pieceJointe in message.pieceJointes %}
+                                                                        <a href="{{ asset('uploads/retroinfo/' ~ pieceJointe.fileName) }}" target="_blank" style="color: #73a839; font-weight: bold;">
+                                                                            <span style="font-size: 12px;">
+                                                                                {{pieceJointe.fileName}}
+                                                                            </span>
+                                                                        </a>																				
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    <a data-toggle="modal" href="#btnDeleteAfficheModal_{{message.id }}" class="btn btn-xs btn-danger">
+                                                                        <i class="glyphicon glyphicon-trash"></i>
+                                                                        Supprimer
+                                                                    </a>
+                                                                    <div class="modal fade" id="btnDeleteAfficheModal_{{message.id }}">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h4 class="modal-title">Confirmation</h4>
+                                                                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    {# <a href="{{ path('message_delete', {'id': message.id, 'option': 'for_me'}) }}" class="btn btn-outline-danger">Supprimer pour moi</a> #}
+                                                                                    {# <p></p> #}
+                                                                                    <a href="{{ path('app_dashboard1_retroinfo_delete_message', {'id': message.id, 'option': 'for_all', 'role' : 'ROLE_CENTRAL_SUPERVISOR'}) }}" class="btn btn-outline-danger">Supprimer</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End collapseSentMessage -->
+
+                            <!-- Begin collapseMessageReceived -->
+                            <div class="collapse" id="collapseMessageReceived">
+                                <div class="card card-body">
+                                    <div class="container section-title" data-aos="fade-up" id="titreRecu">
+                                        <h4>RECUS</h>
+                                    </div>
+                                    <div class="table-responsive table-wrapper">
+                                        <div class="row margin-left-right-20 margin-top-40">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered table-fixed-header" id="tableDashboardSentMessage">
+                                                    <thead>
+                                                        <tr class="table-success">
+                                                            <th class="textTblCenterBold">Date</th>
+                                                            <th class="textTblCenterBold">Expéditeur</th>
+                                                            <th class="textTblCenterBold">Message</th>
+                                                            <th class="textTblCenterBold">Pieces jointes</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for message in receivedMessages %}
+                                                            {% if not message.isDeletedPerRecipient %}
+
+                                                                <tr {% if not message.isRead %} style="background: darkgray;" {% endif %}>
+                                                                    <td class="text-center">{{ message.date|date('d/m/Y') }}</td>
+                                                                    <td class="text-center">{{ message.nomSender }}</td>
+                                                                    <td class="text-center">																
+                                                                        {% if not message.isRead %} <a href="{{ path('app_dashboard1_retroinfo_update_message', {'id': message.id, 'isread': true, 'role':'ROLE_CENTRAL_SUPERVISOR' }) }}"> {% endif %}
+                                                                            {% if not message.isRead %}
+                                                                                (Non lu)
+                                                                            {% endif %}
+                                                                            {{ message.textMessage }}
+                                                                        {% if not message.isRead %}	</a> {% endif %}
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        {% if message.pieceJointes|length > 0 %}
+                                                                            {% for pieceJointe in message.pieceJointes %}
+                                                                                <a href="{{ asset('uploads/retroinfo/' ~ pieceJointe.fileName) }}" target="_blank" style="color: #73a839; font-weight: bold;">
+                                                                                    <span style="font-size: 12px;">
+                                                                                        {{ pieceJointe.fileName }}
+                                                                                    </span>
+                                                                                </a>
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    </td>
+                                                                    <td>
+                                                                        <a data-toggle="modal" href="#deleteReceived_{{message.id}}" class="btn btn-xs btn-danger">
+                                                                            <i class="glyphicon glyphicon-trash"></i>
+                                                                            Supprimer
+                                                                        </a>
+                                                                        <div class="modal fade" id="deleteReceived_{{message.id}}">
+                                                                            <div class="modal-dialog">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h4 class="modal-title">Confirmation</h4>
+                                                                                        <button type="button" class="close" data-dismiss="modal">x</button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <a href="{{ path('app_dashboard1_retroinfo_delete_message', {'id': message.id, 'option': 'for_me', 'role' : 'ROLE_CENTRAL_SUPERVISOR'}) }}" class="btn btn-outline-danger">Supprimer</a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End collapseMessageReceived -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </section>
+
+    </div>
+
+{% set deletedA = app.request.query.get('deleted_a') %}
+{% set deletedM = app.request.query.get('deleted_m') %}
+{% set uptadedread = app.request.query.get('uptadedread') %}
+<script src="js/Chart.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#selectCentral, #selectRnr, #selectRnd').select2();
+    });
+    window.onload = function() {
+        var currentUrl = window.location.href;
+        var deletedA = {{deletedA|default(0)}};
+        var deletedM = {{deletedM|default(0)}};
+        var uptadedread = {{uptadedread|default(0)}};
+
+        // Extraire la partie de base de l'URL
+        var baseUrl = currentUrl.split("/").slice(0, 3).join("/");
+
+        // Vérifier si l'URL contient les mots clés spécifiques
+        if (currentUrl.includes('deletemessage') || currentUrl.includes('sendmessage') || currentUrl.includes('updatemessage') || deletedA || deletedM || uptadedread) {
+            if (currentUrl.includes('deletemessage') || deletedA || deletedM) {
+                var flashMessage = document.createElement('div');
+                flashMessage.classList.add('alert', 'alert-success');
+                flashMessage.innerHTML = 'Le message a été supprimé avec succès.';
+                var titreRecuElement = document.getElementById('flashMessage');
+                titreRecuElement.appendChild(flashMessage);
+                // Supprimer le message après 3 secondes (3000 millisecondes)
+                setTimeout(function() {
+                    flashMessage.remove();
+                }, 3000);
+            }
+            if (currentUrl.includes('sendmessage')) {
+                var flashMessage = document.createElement('div');
+                flashMessage.classList.add('alert', 'alert-success');
+                flashMessage.innerHTML = 'Le message a été envoyé avec succès.';
+                var titreRecuElement = document.getElementById('flashMessage');
+                titreRecuElement.appendChild(flashMessage);
+                // Supprimer le message après 3 secondes (3000 millisecondes)
+                setTimeout(function() {
+                    flashMessage.remove();
+                }, 3000);
+            }
+            if (uptadedread) {
+                var flashMessage = document.createElement('div');
+                flashMessage.classList.add('alert', 'alert-success');
+                flashMessage.innerHTML = 'Le message a été lu.';
+                var titreRecuElement = document.getElementById('flashMessage');
+                titreRecuElement.appendChild(flashMessage);
+                // Supprimer le message après 3 secondes (3000 millisecondes)
+                setTimeout(function() {
+                    flashMessage.remove();
+                }, 3000);
+            }
+            // Construire la nouvelle URL en ajoutant "/retro_information" à la partie de base de l'URL
+            var newUrl = baseUrl + '#retroinfo';
+            setTimeout(function() {
+                // Rediriger vers la nouvelle URL
+                window.location.href = newUrl;
+            }, 3000); // 3000 millisecondes (3 secondes)
+            
+            console.log(currentUrl);
+            console.log(baseUrl);
+        }
+    };
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('chartDistribution').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar', // ou 'line', 'pie', etc., en fonction du type de graphique souhaité
+            data: {
+                labels: [ {% for result in allTauxPvrd %}"{{ result.slugTrimestrielle }}", {% endfor %}],
+                datasets: [{
+                    label: 'Taux d\'envoi PVRD ',
+                    data: [ {% for result in allTauxPvrd %}{{ result.TauxEnvoiPvrd }}, {% endfor %}],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Couleur de fond
+                    borderColor: 'rgba(75, 192, 192, 1)', // Couleur de la bordure
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+ 
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('chartCrenasStock').getContext('2d');
+        var myPieChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Taux sur stock', 'Taux stock normal', 'Taux sous stock', 'Taux rupture'],
+                datasets: [{
+                    label: 'Taux',
+                    data: [
+                        {{ pourcentagePNSurStock }},
+                        {{ pourcentagePNNormal }},
+                        {{ pourcentagePNSousStock }},
+                        {{ pourcentagePNRupture }}
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+    // Données du tableau
+    var produits = ['PN', 'F75', 'F100'];
+    var quantitesExpiry = [{{ quantitiesProductRiskExpiryPN }}, {{ quantitiesProductRiskExpiryF75 }}, {{ quantitiesProductRiskExpiryF100 }}];
+
+    // Création du graphique doughnut
+    var chartGestionPeremption = new Chart(document.getElementById('chartGestionPeremption'), {
+        type: 'doughnut',
+        data: {
+            labels: produits,
+            datasets: [{
+                data: quantitesExpiry,
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // Couleurs des segments
+                hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Pour éviter la distorsion sur les graphiques responsives
+            legend: {
+                display: true,
+                position: 'bottom'
+            }
+        }
+    });
+</script>
+
+</script>
+{% endblock %}

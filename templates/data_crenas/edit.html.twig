@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit DataCrenas{% endblock %}
+
+{% block body %}
+    <h1>Edit DataCrenas</h1>
+
+    {{ include('data_crenas/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_data_crenas_index') }}">back to list</a>
+
+    {{ include('data_crenas/_delete_form.html.twig') }}
+{% endblock %}

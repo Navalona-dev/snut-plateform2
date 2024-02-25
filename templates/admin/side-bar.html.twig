@@ -1,0 +1,332 @@
+<div class="sidebar" data-color="rose" data-background-color="black" data-image="{{ asset('assets_admin/img/sidebar-1.jpg') }}">
+
+      <div class="logo"><a href="#" class="simple-text logo-mini">
+          &nbsp
+        </a>
+        <a href="#" class="simple-text logo-normal">
+          SNUT
+        </a></div>
+      <div class="sidebar-wrapper">
+        {# <div class="user">
+          <div class="photo">
+            <img src="{{ asset('assets_admin/img/faces/avatar.jpg') }}">
+          </div>
+          <div class="user-info">
+            <a data-toggle="collapse" href="#collapseExample" class="username" aria-expanded="false">
+              <span>
+                Admin
+                <b class="caret"></b>
+              </span>
+            </a>
+            <div class="collapse" id="collapseExample" style="">
+              <ul class="nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span class="sidebar-mini"> MP </span>
+                    <span class="sidebar-normal"> My Profile </span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span class="sidebar-mini"> EP </span>
+                    <span class="sidebar-normal"> Edit Profile </span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span class="sidebar-mini"> S </span>
+                    <span class="sidebar-normal"> Settings </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div> #}
+        <ul class="nav">
+           {#<li class="nav-item ">
+            <a class="nav-link" href="#">
+              <i class="la la-dashboard"></i>
+              <p> Dashboard </p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#pagesExamples">
+              <i class="la la-file-text-o"></i>
+              <p> Pages
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="pagesExamples">
+              <ul class="nav">
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="#">
+                    <span class="sidebar-mini"> RS </span>
+                    <span class="sidebar-normal"> RTL Support </span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="#">
+                    <span class="sidebar-mini"> LP </span>
+                    <span class="sidebar-normal"> Login Page </span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="#">
+                    <span class="sidebar-mini"> UP </span>
+                    <span class="sidebar-normal"> User Profile </span>
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+          </li> #}
+          {# <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#componentsExamples">
+              <i class="la la-plus-square-o"></i>
+              <p> Utilisateur
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="componentsExamples">
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="{{ path('admin_users_liste') }}">
+                    <span class="sidebar-normal"> Listes
+                    <b class="caret"></b>
+                    </span>
+                  </a>
+                  <a class="nav-link" data-toggle="collapse" href="#componentsCollapse">
+                    <span class="sidebar-mini"> MLT </span>
+                    <span class="sidebar-normal"> Multi Level Collapse
+                      <b class="caret"></b>
+                    </span>
+                  </a>
+                  <div class="collapse" id="componentsCollapse">
+                    <ul class="nav">
+                      <li class="nav-item ">
+                        <a class="nav-link" href="#0">
+                          <span class="sidebar-mini"> E </span>
+                          <span class="sidebar-normal"> Example </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="#">
+                    <span class="sidebar-mini"> GS </span>
+                    <span class="sidebar-normal"> Grid System </span>
+                  </a>
+                </li>
+
+
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="#">
+                    <span class="sidebar-mini"> I </span>
+                    <span class="sidebar-normal"> Icons </span>
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+          </li> #}
+          <li class="nav-item active">
+            <a class="nav-link" data-toggle="collapse" href="#parametrages" aria-expanded="true">
+              <i class="la la-wrench"></i>
+              <p> Parametrages
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="parametrages">
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="{{ path('app_centre_recuperation_index') }}">
+                    <span class="sidebar-mini"> CP </span>
+                    <span class="sidebar-normal"> Centre de récupération </span>
+                  </a>
+                </li>
+<li class="nav-item ">
+                  <a class="nav-link" href="{{ path('app_centre_hospitalier_universitaire_index') }}">
+                    <span class="sidebar-mini"> CHU </span>
+                    <span class="sidebar-normal"> Centre Hospitalier Universitaire </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="{{ path('app_annee_previsionnelle_index') }}">
+                    <span class="sidebar-mini"> Ap </span>
+                    <span class="sidebar-normal"> Année prévisionnelle </span>
+                  </a>
+                </li>
+
+                <li class="nav-item " data-toggle="collapse" href="#privilegeCollapse">
+                
+                  <a class="nav-link" href="{{ path('app_admin_groupe_index') }}">
+                      <span class="sidebar-mini"> G </span>
+                    <span class="sidebar-normal"> Groupes
+                    {#<b class="caret"></b>#}
+                    </span>
+                  </a>
+                  {# <div class="collapse" id="privilegeCollapse">
+                    <ul class="nav">
+                      <li class="nav-item ">
+                        <a class="nav-link" href="#0">
+                          <span class="sidebar-normal"> Nouveau
+                          </span>
+                        </a>
+                      </li>
+                      <li class="nav-item ">
+                        <a class="nav-link" href="#0">
+                          <span class="sidebar-normal"> Liste
+                           </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div> #}
+
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="{{ path('app_admin_province_index') }}">
+                     <span class="sidebar-mini"> P </span>
+                    <span class="sidebar-normal"> Province </span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="{{ path('app_admin_region_index') }}">
+                     <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal"> Région </span>
+                  </a>
+                </li>
+
+               <li class="nav-item ">
+                    <a class="nav-link" href="{{ path('app_district_index') }}">
+                     <span class="sidebar-mini"> D </span>
+                    <span class="sidebar-normal"> District </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#componentsHierarchiques">
+              <i class="la la-plus-square-o"></i>
+              <p> CRENAS
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="componentsHierarchiques">
+              <ul class="nav">
+                <li class="nav-item ">
+                {#  <a class="nav-link" href="{{ path('niveau_hierarchique_index') }}">
+                    <span class="sidebar-normal"> Listes
+                    {#<b class="caret"></b>#}
+               {#     </span>
+                  </a>
+                  {#<a class="nav-link" data-toggle="collapse" href="#componentsCollapse">
+                    <span class="sidebar-mini"> MLT </span>
+                    <span class="sidebar-normal"> Multi Level Collapse
+                      <b class="caret"></b>
+                    </span>
+                  </a>#}
+
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="{{ path('app_commande_trimestrielle_index') }}">
+                    <span class="sidebar-mini"> DC </span>
+                    <span class="sidebar-normal"> Date de commande </span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="{{ path('app_mois_projections_admissions_index') }}">
+                    <span class="sidebar-mini"> MP </span>
+                    <span class="sidebar-normal"> Mois de projection </span>
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#componentsCreni">
+              <i class="la la-plus-square-o"></i>
+              <p> CRENI
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="componentsCreni">
+              <ul class="nav">
+                <li class="nav-item ">
+                {#  <a class="nav-link" href="{{ path('niveau_hierarchique_index') }}">
+                    <span class="sidebar-normal"> Listes
+                    {#<b class="caret"></b>#}
+               {#     </span>
+                  </a>
+                  {#<a class="nav-link" data-toggle="collapse" href="#componentsCollapse">
+                    <span class="sidebar-mini"> MLT </span>
+                    <span class="sidebar-normal"> Multi Level Collapse
+                      <b class="caret"></b>
+                    </span>
+                  </a>#}
+
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="{{ path('app_commande_semestrielle_index') }}">
+                    <span class="sidebar-mini"> DC </span>
+                    <span class="sidebar-normal"> Date de commande </span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="{{ path('app_creni_mois_projections_admissions_index') }}">
+                    <span class="sidebar-mini"> MP </span>
+                    <span class="sidebar-normal"> Mois de projection </span>
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+          
+          {#<li class="nav-item ">
+            <a class="nav-link" href="{{ path('show_historique') }}">
+              <i class="la la-dashboard"></i>
+              <p> Historiques </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#tablesExamples" aria-expanded="true">
+              <i class="la la-table"></i>
+              <p> Tables
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse show" id="tablesExamples">
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="#">
+                    <span class="sidebar-mini"> RT </span>
+                    <span class="sidebar-normal"> Regular Tables </span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="../../examples/tables/datatables.net.html">
+                    <span class="sidebar-mini"> DT </span>
+                    <span class="sidebar-normal"> DataTables.net </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>#}
+
+        </ul>
+      </div>
+</div>

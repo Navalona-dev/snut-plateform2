@@ -1,0 +1,881 @@
+{% extends 'supervisorBase.html.twig' %}
+
+{% block title %}Superviseur central- RMA Nut visualisation{% endblock %}
+
+{% block body %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Information d'historique d'admission dans le fichier RMA Nut pour le district <span class="titleTblCenterBoldGreen">{{ district.districtNom }}</span> </h1> 
+        <div class="card shadow mb-4"> 
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">RMA Nut et Bon de Commande CRENAS et CRENI</h6>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ path('export_excel_historic_crenas_crenis') }}" name="historicForm">
+                    <div class="centerContentDiv" id="divBtnExport"> 
+                        <button class="btn btn-success" type="submit">Exporter en format Excel</button>
+                        <input type="hidden" name="hidDistrictName" value="{{district.districtNom}}"/> 
+                    </div>
+                    <div class="row"> 
+                        <!-- DEBUT : INFORMATION CONCERNANT RMA NUT POUR CRENAS -->
+                        <div class="col-lg-3">
+                            <div class="table-responsive"> 
+                                <table class="table table-bordered tableSmallPadding">
+                                    <thead>
+                                        <tr class="table-info">
+                                            <th class="titleTblCenterBoldBlue" colspan="4">CRENAS</th>
+                                        </tr>
+                                        <tr class="table-success">
+                                            {% set currentYear = 'now'|date('Y') %}
+                                            {% set lastYear = currentYear - 1 %}
+                                            <th class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ lastYear }}</th>
+                                            <th class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ currentYear }} </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="titleTblRightBold">Janvier</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[0] }}" class="inputTblCenterWidth40"  name="mois1LastCrenas" id="mois1LastCrenas"></td>
+                                            <td class="titleTblRightBold">Janvier</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[0] }}" class="inputTblCenterWidth40"  name="mois1NowCrenas" id="mois1NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Février</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[1] }}" class="inputTblCenterWidth40"  name="mois2LastCrenas" id="mois2LastCrenas"></td>
+                                            <td class="titleTblRightBold">Février</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[1] }}" class="inputTblCenterWidth40"  name="mois2NowCrenas" id="mois2NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Mars</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[2] }}" class="inputTblCenterWidth40"  name="mois3LastCrenas" id="mois3LastCrenas"></td>
+                                            <td class="titleTblRightBold">Mars</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[2] }}" class="inputTblCenterWidth40"  name="mois3NowCrenas" id="mois3NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Avril</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[3] }}" class="inputTblCenterWidth40"  name="mois4LastCrenas" id="mois4LastCrenas"></td>
+                                            <td class="titleTblRightBold">Avril</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[3] }}" class="inputTblCenterWidth40"  name="mois4NowCrenas" id="mois4NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Mai</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[4] }}" class="inputTblCenterWidth40"  name="mois5LastCrenas" id="mois5LastCrenas"></td>
+                                            <td class="titleTblRightBold">Mai</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[4] }}" class="inputTblCenterWidth40"  name="mois5NowCrenas" id="mois5NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Juin</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[5] }}" class="inputTblCenterWidth40"  name="mois6LastCrenas" id="mois6LastCrenas"></td>
+                                            <td class="titleTblRightBold">Juin</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[5] }}" class="inputTblCenterWidth40"  name="mois6NowCrenas" id="mois6NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Juillet</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[6] }}" class="inputTblCenterWidth40"  name="mois7LastCrenas" id="mois7LastCrenas"></td>
+                                            <td class="titleTblRightBold">Juillet</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[6] }}" class="inputTblCenterWidth40"  name="mois7NowCrenas" id="mois7NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Août</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[7] }}" class="inputTblCenterWidth40"  name="mois8LastCrenas" id="mois8LastCrenas"></td>
+                                            <td class="titleTblRightBold">Août</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[7] }}" class="inputTblCenterWidth40"  name="mois8NowCrenas" id="mois8NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Septembre</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[8] }}" class="inputTblCenterWidth40"  name="mois9LastCrenas" id="mois9LastCrenas"></td>
+                                            <td class="titleTblRightBold">Septembre</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[8] }}" class="inputTblCenterWidth40"  name="mois9NowCrenas" id="mois9NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Octobre</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[9] }}" class="inputTblCenterWidth40"  name="mois10LastCrenas" id="mois10LastCrenas"></td>
+                                            <td class="titleTblRightBold">Octobre</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[9] }}" class="inputTblCenterWidth40"  name="mois10NowCrenas" id="mois10NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Novembre</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[10] }}" class="inputTblCenterWidth40"  name="mois11LastCrenas" id="mois11LastCrenas"></td>
+                                            <td class="titleTblRightBold">Novembre</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[10] }}" class="inputTblCenterWidth40"  name="mois11NowCrenas" id="mois11NowCrenas"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="titleTblRightBold">Décembre</td>
+                                            <td ><input type="text" value="{{ valuesLastCrenas[11] }}" class="inputTblCenterWidth40"  name="mois12LastCrenas" id="mois12LastCrenas"></td>
+                                            <td class="titleTblRightBold">Décembre</td>
+                                            <td ><input type="text" value="{{ valuesNowCrenas[11] }}" class="inputTblCenterWidth40"  name="mois12NowCrenas" id="mois12NowCrenas"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>  
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="table-responsive">
+                                <table class="table table-bordered tableSmallPadding">
+                                    <tr class="table-warning">
+                                        {% set currentYear = 'now'|date('Y') %}
+                                        {% set nextYear = currentYear + 1 %}
+                                        <td class="titleTblCenterBoldBlue" colspan="2">
+                                            <span style="font-size:13px;"> Bon de commande CRENAS <br/>Projections du nombre d'admissions <br/> année {{ nextYear }} </span>
+                                        </td>
+                                    </tr>
+                                    {% if valueDataMoisProjection is not empty %}
+                                        {% set increment = 0 %}
+                                        {% set numProjectionProjete = 1 %}
+                                        {% for mois in lstMoisProjectionAnneePrevisionnelle %}  
+                                            <tr>
+                                                {% set moisId = "moisProjection_" ~ mois|replace({' ': '_'}) %}
+                                                <td class="titleTblRightBold"> {{ mois|replace({' ': '_'}) }} </td>                                        
+                                                <td class="textTblCenter"> 
+                                                    <input type="text" class="bonCommandeValueCrenas inputTblCenterWidth40" value="{{ lstValueMoisProjectionAnneePrevisionnelle[arrDataCrenasUser["id"]][increment] | default('') }}" name="moisProjectionAnneePrevisionnelle{{ numProjectionProjete }}" id="{{ moisId }}">
+                                                    
+                                                    <input type="hidden" name="nameMoisProjectionAnneePrevisionnel{{numProjectionProjete}}" value="{{ mois|replace({' ': '_'}) }}" />
+                                                </td>
+                                                {% set numProjectionProjete = numProjectionProjete + 1 %}
+                                                {% set increment = increment + 1 %}
+                                            </tr> 
+                                        {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="2">
+                                            Les informations de bon de commande CRENAS ne sont pas encore disponible pour ce district 
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </table> 
+                            </div>
+                        </div>
+                        <!-- FIN : INFORMATION CONCERNANT RMA NUT POUR CRENAS -->
+
+                        <!-- DEBUT : INFORMATION CONCERNANT RMA NUT POUR CRENI -->
+                        <div class="col-lg-3">
+                            <div class="table-responsive">
+                                <table class="table table-bordered tableSmallPadding">
+                                    <tr class="table-info">
+                                        <td class="titleTblCenterBoldBlue" colspan="4">CRENI</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        {% set currentYear = 'now'|date('Y') %}
+                                        {% set lastYear = currentYear - 1 %}
+                                        <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ lastYear }}</td>
+                                        <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ currentYear }} </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Janvier</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[0] }}" class="inputTblCenterWidth40"  name="mois1LastCreni" id="mois1LastCreni"></td>
+                                        <td class="titleTblRightBold">Janvier</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[0] }}" class="inputTblCenterWidth40"  name="mois1NowCreni" id="mois1NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Février</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[1] }}" class="inputTblCenterWidth40"  name="mois2LastCreni" id="mois2LastCreni"></td>
+                                        <td class="titleTblRightBold">Février</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[1] }}" class="inputTblCenterWidth40"  name="mois2NowCreni" id="mois2NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Mars</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[2] }}" class="inputTblCenterWidth40"  name="mois3LastCreni" id="mois3LastCreni"></td>
+                                        <td class="titleTblRightBold">Mars</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[2] }}" class="inputTblCenterWidth40"  name="mois3NowCreni" id="mois3NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Avril</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[3] }}" class="inputTblCenterWidth40"  name="mois4LastCreni" id="mois4LastCreni"></td>
+                                        <td class="titleTblRightBold">Avril</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[3] }}" class="inputTblCenterWidth40"  name="mois4NowCreni" id="mois4NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Mai</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[4] }}" class="inputTblCenterWidth40"  name="mois5LastCreni" id="mois5LastCreni"></td>
+                                        <td class="titleTblRightBold">Mai</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[4] }}" class="inputTblCenterWidth40"  name="mois5NowCreni" id="mois5NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Juin</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[5] }}" class="inputTblCenterWidth40"  name="mois6LastCreni" id="mois6LastCreni"></td>
+                                        <td class="titleTblRightBold">Juin</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[5] }}" class="inputTblCenterWidth40"  name="mois6NowCreni" id="mois6NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Juillet</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[6] }}" class="inputTblCenterWidth40"  name="mois7LastCreni" id="mois7LastCreni"></td>
+                                        <td class="titleTblRightBold">Juillet</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[6] }}" class="inputTblCenterWidth40"  name="mois7NowCreni" id="mois7NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Août</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[7] }}" class="inputTblCenterWidth40"  name="mois8LastCreni" id="mois8LastCreni"></td>
+                                        <td class="titleTblRightBold">Août</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[7] }}" class="inputTblCenterWidth40"  name="mois8NowCreni" id="mois8NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Septembre</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[8] }}" class="inputTblCenterWidth40"  name="mois9LastCreni" id="mois9LastCreni"></td>
+                                        <td class="titleTblRightBold">Septembre</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[8] }}" class="inputTblCenterWidth40"  name="mois9NowCreni" id="mois9NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Octobre</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[9] }}" class="inputTblCenterWidth40"  name="mois10LastCreni" id="mois10LastCreni"></td>
+                                        <td class="titleTblRightBold">Octobre</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[9] }}" class="inputTblCenterWidth40"  name="mois10NowCreni" id="mois10NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Novembre</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[10] }}" class="inputTblCenterWidth40"  name="mois11LastCreni" id="mois11LastCreni"></td>
+                                        <td class="titleTblRightBold">Novembre</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[10] }}" class="inputTblCenterWidth40"  name="mois11NowCreni" id="mois11NowCreni"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblRightBold">Décembre</td>
+                                        <td ><input type="text" value="{{ valuesLastCreni[11] }}" class="inputTblCenterWidth40"  name="mois12LastCreni" id="mois12LastCreni"></td>
+                                        <td class="titleTblRightBold">Décembre</td>
+                                        <td ><input type="text" value="{{ valuesNowCreni[11] }}" class="inputTblCenterWidth40"  name="mois12NowCreni" id="mois12NowCreni"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="table-responsive">
+                                <table class="table table-bordered tableSmallPadding">
+                                    <tr class="table-warning">
+                                        {% set currentYear = 'now'|date('Y') %}
+                                        {% set nextYear = currentYear + 1 %}
+                                        <td class="titleTblCenterBoldBlue" colspan="2">
+                                            <span style="font-size:13px;"> Bon de commande CRENI <br/>Projections du nombre d'admissions <br/> année {{ nextYear }} </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        {% if dataCreniMoisProjetionAdmission.id is defined %} 
+                                            <tr>
+                                                <td class="titleTblRightBold">{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}</td> 
+                                                <td >
+                                                    <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois01ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni1" id="moisProjection_{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}"> 
+                                                    <input type="hidden" value="{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni1">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="titleTblRightBold">{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}</td> 
+                                                <td >
+                                                    <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois02ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni2" id="moisProjection_{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}">
+                                                    <input type="hidden" value="{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni2">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="titleTblRightBold">{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}</td> 
+                                                <td >
+                                                    <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois03ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni3" id="moisProjection_{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}"> 
+                                                    <input type="hidden" value="{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni3">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="titleTblRightBold">{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}</td> 
+                                                <td >
+                                                    <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois04ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni4" id="moisProjection_{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}"> 
+                                                    <input type="hidden" value="{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni4">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="titleTblRightBold">{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}</td> 
+                                                <td >
+                                                    <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois05ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni5" id="moisProjection_{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}"> 
+                                                    <input type="hidden" value="{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni5">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="titleTblRightBold">{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}</td> 
+                                                <td >
+                                                    <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois06ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni6" id="moisProjection_{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}"> 
+                                                    <input type="hidden" value="{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni6">
+                                                </td>
+                                            </tr> 
+                                        {% else %}
+                                            <td colspan="2">
+                                                Bon de commande CRENI non disponible pour ce district 
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                </table> 
+                            </div>                    
+                        </div>
+                        <!-- FIN : INFORMATION CONCERNANT RMA NUT POUR CRENI -->
+                    </div>
+                </form>
+                <form method="post" action="{{ path('app_crenas_validation_save') }}" name="valdiationCrenasForm"> 
+                    <input type="hidden" name="GroupeId" value="{{ dataGroupe['idGroupe']|default("") }}">
+                    <input type="hidden" name="DataCommandeTrimestrielleId" value="{{ dataCommandeTrimestrielle['idCommandeTrimestrielle'] }}">
+                    <input type="hidden" name="ResponsableId" value="{{ responsableId }}">
+                    <input type="hidden" name="DataCrenasId" value="{% if (dataCrenas is defined and dataCrenas.id is defined ) %} {{ dataCrenas.id }} {% endif %}"> 
+                    <input type="hidden" name="isUserHavingDataValidationCrenas" value="{{ isUserHavingDataValidationCrenas }}">
+
+                    <input type="hidden" name="valeurCalculTheoriqueATPE" id="valeurCalculTheoriqueATPE" value="{{ valeurCalculTheoriqueATPE }}" /> 
+                    <input type="hidden" name="valeurCalculTheoriqueAMOX" id="valeurCalculTheoriqueAMOX" value="{{ valeurCalculTheoriqueAMOX }}" /> 
+                    <input type="hidden" name="valeurCalculTheoriqueFichePatient" id="valeurCalculTheoriqueFichePatient" value="{{ valeurCalculTheoriqueFichePatient }}" /> 
+                    <input type="hidden" name="valeurCalculTheoriqueRegistre" id="valeurCalculTheoriqueRegistre" value="{{ valeurCalculTheoriqueRegistre }}" /> 
+                    <input type="hidden" name="valeurCalculTheoriqueCarnetRapport" id="valeurCalculTheoriqueCarnetRapport" value="{{ valeurCalculTheoriqueCarnetRapport }}" />
+                    
+                    <div class="row">   
+                        <div class="col-lg-12">
+                            <div class="centerContentDiv">  
+                                <h4 style="color: #e74a3b;">Procéder à la validation</h4>
+                            </div>
+                        </div>
+                        <div class="col-lg-12"> 
+                            <div class="table-responsive table-wrapper"> 
+                                <table class="table table-bordered table-fixed-header" id="tblValidationAdmissionCrenas" width="100%" cellspacing="0">
+                                    {% set nombreMois = lstMoisProjectionAnneePrevisionnelle|length %}
+                                    {% set nombreMoisWithTotal = nombreMois + 1 %}
+                                    {% set nombreColumn = nombreMoisWithTotal + 57 %}
+                                    <thead> 
+                                        <tr class="table-info">
+                                            <th class="titleTblLeftrBoldBlue" colspan="{{ nombreColumn }}">CRENAS</th>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="3"></th>
+                                            <th class="titleTblCenterBoldGreen" colspan="{{ nombreMoisWithTotal }}">Projections du nombre d'admissions</th>
+
+                                            <th class="titleTblCenterBoldBlue" rowspan="3">Nombre CSB CRENAS</th>
+
+                                            <th colspan="5" class="titleTblCenterBoldBlue">Quantité nécessaire en intrants nutrition <br/><span style="color:#73a839;">(Besoins théoriques)</span></th>
+
+                                            <th colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable à l’inventaire AMOX en Boite de 100 cp (SDU total BSD) <br/><span style="color:#73a839;">(SDU AMOX Boite de 100 cp au niveau BSD)</span></th>
+                                            <th colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  AMOX à l’inventaire  en Boite de 100 cp (SDU total CSB) <br/><span style="color:#73a839;">(SDU AMOX Boite de 100 cp au niveau CSB)</span></th>
+                                            <th rowspan="3" class="textTblCenterBoldPink">TOTAL SDU <br/>AMOX Boite de <br>100 Cp SDSP</th>
+
+                                            <th colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  PN à l’inventaire en CARTON (SDU total BSD) <br/><span style="color:#73a839;">(SDU PN en Carton au niveau BSD)</span></th>
+                                            <th colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  PN à l’inventaire en CARTON (SDU total CSB) <br/><span style="color:#73a839;">(SDU PN en Carton au niveau CSB)</span></th>
+                                            <th rowspan="3" class="textTblCenterBoldPink">TOTAL SDU <br/>PN en carton<br>SDSP</th>
+                                        </tr>
+
+                                        <tr>  
+                                            {% for mois in lstMoisProjectionAnneePrevisionnelle %}
+                                                <th class="titleTblCenterBold" rowspan="2">
+                                                    {{ mois }}
+                                                </th>
+                                            {% endfor %}
+ 
+                                            <th class="titleTblCenterBold" rowspan="2">Total</th>
+
+                                            <th class="titleTblCenterBold" rowspan="2">ATPE (en carton)</th>
+                                            <th class="titleTblCenterBold" rowspan="2">AMOX (boite de 100)</th>
+                                            <th class="titleTblCenterBold" rowspan="2">Fiche patient (unité)</th>
+                                            <th class="titleTblCenterBold" rowspan="2">Registre (unité) </th>
+                                            <th class="titleTblCenterBold" rowspan="2">Carnet de Rapport CRENAS (unité) </th>
+
+
+                                            <th class="titleTblCenterBold" colspan="2">Lot A</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot B</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot C</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot D</th>
+                                            <th class="titleTblCenterBold" ></th>
+
+                                            <th class="titleTblCenterBold" colspan="2">Lot A</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot B</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot C</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot D</th>
+                                            <th class="titleTblCenterBold" ></th>
+
+                                            <th class="titleTblCenterBold" colspan="2">Lot A</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot B</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot C</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot D</th>
+                                            <th class="titleTblCenterBold" ></th> 
+
+                                            <th class="titleTblCenterBold" colspan="2">Lot A</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot B</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot C</th>
+                                            <th class="titleTblCenterBold" colspan="2">Lot D</th>
+                                            <th class="titleTblCenterBold" ></th>
+                                        </tr>
+
+                                        <tr class="table-success">
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterBoldPink">Total</th>
+
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterBoldPink">Total</th>
+
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterBoldPink">Total</th>
+
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterSmall">Quantité</th>
+                                            <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                                            <th class="textTblCenterBoldPink">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if (lstValueMoisProjectionAnneePrevisionnelle is not empty ) %}
+                                            <tr>
+                                                <td class="titleTblLeftrBoldBlue fixeTd">Bon de commande</td>  
+                                                {% set increment = 0 %}
+                                                {% set numProjectionProjete = 1 %} 
+                                                {% for mois in lstMoisProjectionAnneePrevisionnelle %}
+                                                    <td class="textTblCenter">
+                                                        <input type="text" name="EstimatedDataMonthDistrict{{ numProjectionProjete }}" value="{{ lstValueMoisProjectionAnneePrevisionnelle[arrDataCrenasUser["id"]][increment] | default('') }}" class="inputTblCenterWidth40 EstimatedDataMonthDistrict readonly-field" readonly>
+                                                        {% set increment = increment + 1 %}
+                                                        {% set numProjectionProjete = numProjectionProjete + 1 %}
+                                                    </td>
+                                                {% endfor %} 
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="TotalEstimatedDataMonthDistrict" name="TotalEstimatedDataMonthDistrict" value="{{ arrDataCrenasUser.totalAnneeProjection }}" class="inputTblCenterWidth40 readonly-field" readonly>
+                                                </td>
+
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="nbrCSBCRENAS" id="nbrCSBCRENASDistrict" class="inputTblCenterWidth40 readonly-field" readonly value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ arrDataCrenasUser.nbrCSBCRENAS }} {% endif %}"  required="required"/>
+                                                </td>
+
+                                                <!-- Théorique : Quantité nécessaire en intrants nutrition -->
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinAPTEDistrict" class="inputTblCenterWidth60 readonly-field" id="besoinAPTEDistrict" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinAMOXDistrict" class="inputTblCenterWidth60 readonly-field" id="besoinAMOXDistrict" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinFichePatientDistrict" class="inputTblCenterWidth60 readonly-field" id="besoinFichePatientDistrict" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinRegistreDistrict" class="inputTblCenterWidth60 readonly-field" id="besoinRegistreDistrict" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ arrDataCrenasUser.besoinRegistre }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinCarnetRapportCRENASDistrict" class="inputTblCenterWidth60 readonly-field" id="besoinCarnetRapportCRENASDistrict" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ arrDataCrenasUser.besoinCarnetRapportCRENAS }} {% endif %}" required="required">
+                                                </td>
+
+                                                <!-- SDU AMOX Boite de 100 cp au niveau BSD -->
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite01AmoxSDUCartonBSD }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration01AmoxSDUCartonBSD|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite02AmoxSDUCartonBSD }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration02AmoxSDUCartonBSD|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite03AmoxSDUCartonBSD }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration03AmoxSDUCartonBSD|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite04AmoxSDUCartonBSD }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration04AmoxSDUCartonBSD|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.totalAmoxSDUCartonBSD }}
+                                                </td>
+
+                                                <!-- SDU AMOX Boite de 100 cp au niveau CSB -->
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite01AmoxSDUCartonCSB }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration01AmoxSDUCartonCSB|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite02AmoxSDUCartonCSB }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration02AmoxSDUCartonCSB|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite03AmoxSDUCartonCSB }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration03AmoxSDUCartonCSB|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite04AmoxSDUCartonCSB }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration04AmoxSDUCartonCSB|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.totalAmoxSDUCartonCSB }}
+                                                </td>
+
+                                                <!-- TOTAL SDU AMOX Boite de 100 Cp SDSP -->
+                                                <td class="textTblCenter">{{ dataCrenas.totalAmoxSDUCartonSDSP }}</td>
+
+                                                <!-- SDU PN en Carton au niveau BSD -->
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite01PnSDUCartonBSD }}
+                                                </td>
+                                                <td class="textTblCenter"> 
+                                                    {{ dataCrenas.dateExpiration01PnSDUCartonBSD|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite02PnSDUCartonBSD }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration02PnSDUCartonBSD|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite03PnSDUCartonBSD }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration03PnSDUCartonBSD|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite04PnSDUCartonBSD }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration04PnSDUCartonBSD|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.totalPnSDUCartonBSD }}
+                                                </td>
+
+                                                <!-- SDU PN en Carton au niveau CSB -->
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite01PnSDUCartonCSB }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration01PnSDUCartonCSB|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite02PnSDUCartonCSB }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration02PnSDUCartonCSB|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite03PnSDUCartonCSB }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration03PnSDUCartonCSB|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.quantite04PnSDUCartonCSB }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.dateExpiration04PnSDUCartonCSB|date('Y-m-d') }}
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    {{ dataCrenas.totalPnSDUCartonCSB }}
+                                                </td>
+
+                                                <!-- TOTAL SDU PN en carton SDSP -->
+                                                <td class="textTblCenter">{{ dataCrenas.totalPnSDUCartonSDSP }}</td>
+                                            <tr> 
+
+                                            <tr>
+                                                <td class="titleTblLeftrBoldBlue fixeTd">Prévision</td> 
+                                                {% set increment = 0 %}
+                                                {% set numProjectionProjete = 1 %}
+                                                {% for mois in lstMoisProjectionAnneePrevisionnelle %}
+                                                    <td class="textTblCenter">
+                                                        <input type="text" name="EstimatedDataMonthCentral{{ numProjectionProjete }}" value="{% if lstValueValidatedDataMonth is defined and lstValueValidatedDataMonth is iterable %} {{ lstValueValidatedDataMonth[increment]["EstimatedDataMonthCentral"] }} {% endif %} " class="inputTblCenterWidth40 EstimatedDataMonthCentral">
+                                                    </td>
+                                                    {% set increment = increment + 1 %}
+                                                    {% set numProjectionProjete = numProjectionProjete + 1 %}
+                                                {% endfor %} 
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="TotalEstimatedDataMonthCentral" name="TotalEstimatedDataMonthCentral" value="" class="inputTblCenterWidth40 readonly-field" readonly>
+                                                </td> 
+
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="nbrCSBCRENAS" id="nbrCSBCRENASCentral" class="inputTblCenterWidth40 readonly-field" readonly value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ arrDataCrenasUser.nbrCSBCRENAS }} {% endif %}"  required="required"/>
+                                                </td>
+
+                                                <!-- Théorique : Quantité nécessaire en intrants nutrition -->
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinAPTEPrevision" class="inputTblCenterWidth60 readonly-field" id="besoinAPTEPrevision" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinAMOXPrevision" class="inputTblCenterWidth60 readonly-field" id="besoinAMOXPrevision" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinFichePatientPrevision" class="inputTblCenterWidth60 readonly-field" id="besoinFichePatientPrevision" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinRegistrePrevision" class="inputTblCenterWidth60 readonly-field" id="besoinRegistrePrevision" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinCarnetRapportCRENASPrevision" class="inputTblCenterWidth60 readonly-field" id="besoinCarnetRapportCRENASPrevision" readonly="readonly" value="" required="required">
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="titleTblLeftrBoldBlue fixeTd">Validé</td>
+                                                {% if valueDataMoisProjection is not empty %}
+                                                    {% set increment = 0 %}
+                                                    {% set numProjectionProjete = 1 %} 
+                                                    {% for mois in lstMoisProjectionAnneePrevisionnelle %}
+                                                        <td class="textTblCenter">
+                                                            <input type="text" name="ValidatedDataMonth{{ numProjectionProjete }}" value="{% if lstValueValidatedDataMonth is defined and lstValueValidatedDataMonth is iterable %} {{ lstValueValidatedDataMonth[increment]["ValidatedDataMonth"] }} {% endif %} " class="inputTblCenterWidth40 ValidatedDataMonth">
+                                                        </td>
+                                                        {% set increment = increment + 1 %}
+                                                        {% set numProjectionProjete = numProjectionProjete + 1 %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="TotalValidatedDataMonth" name="TotalValidatedDataMonth" value="" class="inputTblCenterWidth40 readonly-field" readonly>
+                                                </td>
+
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="nbrCSBCRENAS" id="nbrCSBCRENASValidated" class="inputTblCenterWidth40 readonly-field" readonly value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ arrDataCrenasUser.nbrCSBCRENAS }} {% endif %}"  required="required"/>
+                                                </td>
+
+                                                <!-- Théorique : Quantité nécessaire en intrants nutrition -->
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinAPTEValidated" class="inputTblCenterWidth60 readonly-field" id="besoinAPTEValidated" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinAMOXValidated" class="inputTblCenterWidth60 readonly-field" id="besoinAMOXValidated" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinFichePatientValidated" class="inputTblCenterWidth60 readonly-field" id="besoinFichePatientValidated" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinRegistreValidated" class="inputTblCenterWidth60 readonly-field" id="besoinRegistreValidated" readonly="readonly" value="" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="besoinCarnetRapportCRENASValidated" class="inputTblCenterWidth60 readonly-field" id="besoinCarnetRapportCRENASValidated" readonly="readonly" value="" required="required">
+                                                </td>
+                                            <tr>
+                                        {% endif %}
+                                    </tbody> 
+                                </table>
+                            </div>
+                            {% if (lstValueMoisProjectionAnneePrevisionnelle is not empty ) %}
+                                {% if lstValueValidatedDataMonth is not iterable %} 
+                                <div class="col-lg-6 centerContentDiv">
+                                    <input type="submit" name="btnEnregistrerPrevisionCrenas" value="Enregistrer le résultat du prévision" class="btn btn-success"/> 
+                                </div>
+                                {% endif %} 
+                                {% if lstValueValidatedDataMonth is defined and lstValueValidatedDataMonth is iterable %}
+                                    <div class="col-lg-6 centerContentDiv">
+                                        <input type="submit" name="btnEnregistrerValidationCrenas" value="Enregistrer la validation" class="btn btn-danger"/> 
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+                <form method="post" action="{{ path('app_creni_validation_save') }}" name="valdiationCreniForm"> 
+                    <input type="hidden" name="DataCreniId" value="{% if (dataCreni is defined and dataCreni.id is defined ) %} {{ dataCreni.id }} {% endif %}">
+                    <input type="hidden" name="DataCommandeSemestrielleId" value="{% if (dataCommandeSemestrielle is defined and dataCommandeSemestrielle.idCommandeSemestrielle is defined ) %} {{ dataCommandeSemestrielle.idCommandeSemestrielle}} {% endif %}">
+                    <input type="hidden" name="ResponsableId" value="{{ responsableId }}">
+                    <input type="hidden" name="isUserHavingDataCreni" value="{{ isUserHavingDataCreni }}">
+                    <input type="hidden" name="isUserHavingDataValidationCreni" value="{{ isUserHavingDataValidationCreni }}">
+                    <div class="row"> 
+                        <div class="col-lg-12">
+                            <div class="table-responsive table-wrapper">
+                                <table class="table table-bordered table-fixed-header" id="tblValidationAdmissionCreni" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="3"></th>
+                                            <th class="titleTblCenterBoldGreen" colspan="7">Projections du nombre d'admissions pour le prochain semestre </th>
+
+                                            <th class="titleTblCenterBold" rowspan="2">F75<br/>Boites</th>
+                                            <th class="titleTblCenterBold" rowspan="2">F100<br/>Boites</th>
+                                            <th class="titleTblCenterBold" rowspan="2">ReSoMal<br/>sachet</th>
+                                            <th class="titleTblCenterBold" rowspan="2">PN<br/>sachet</th>
+                                            <th class="titleTblCenterBold" rowspan="2">Fiche de suivi CRENI<br/>unité</th>
+                                            <th class="titleTblCenterBold" rowspan="2">Fiche de suivi intensif<br/>unité</th>
+                                            <th class="titleTblCenterBold" rowspan="2">Kit médicaments CRENI 10 patients<br/>kit</th>
+                                            <th class="titleTblCenterBold" rowspan="2">Registre CRENI<br/>Unité</th>
+                                            <th class="titleTblCenterBold" rowspan="2">Carnet de rapports mensuels CRENI<br/>Unité</th>
+
+                                            <th class="titleTblCenterBoldBlue" colspan="19">KIT CRENI</th>
+                                        </tr>
+                                        <tr>
+                                             
+                                            <th class="titleTblCenterBold">{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}</th> 
+                                            <th class="titleTblCenterBold">{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}</th> 
+                                            <th class="titleTblCenterBold">{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}</th> 
+                                            <th class="titleTblCenterBold">{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}</th> 
+                                            <th class="titleTblCenterBold">{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}</th> 
+                                            <th class="titleTblCenterBold">{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}</th> 
+                                            <th class="titleTblCenterBold">Total</th>
+
+                                            <th class="textTblCenterSmall">Amoxici.pdr/oral sus 125mg/5ml/BOT-100ml </th>
+                                            <th class="textTblCenterSmall">Nystatin oral sus 100,000IU/ml/BOT-30ml </th> 
+                                            <th class="textTblCenterSmall">Fluconazole 50mg caps/PAC-7 (non pas injection) </th>
+                                            <th class="textTblCenterSmall">Ciprofloxacin 250mg <br/>tab/PAC-10 </th> 
+                                            <th class="textTblCenterSmall">Ampicillinpdr/inj 500mg <br/>vial/BOX-100 </th>
+                                            <th class="textTblCenterSmall">Gentamicininj 40mg/ml 2ml amp/BOX-50 </th> 
+                                            <th class="textTblCenterSmall">Sod.lactat.comp.inj 500ml w/g.set/BOX-20 </th>
+                                            <th class="textTblCenterSmall">Glucose inj 5% 500ml  <br/>w/giv.set/BOX-20 </th>
+                                            <th class="textTblCenterSmall">Glucose hyperton.inj  <br/>50% 50mL vl/BOX-25 </th> 
+                                            <th class="textTblCenterSmall">Furosemideinj 10mg/ml <br/>2ml amp/BOX-10 </th>
+                                            <th class="textTblCenterSmall">Chlorhexidine conc. sol. 5%/BOT-100ml</th> 
+                                            <th class="textTblCenterSmall">Miconazole nitrate cream 2%/TBE-30g</th> 
+                                            <th class="textTblCenterSmall">Tetracyclineeyeointment 1%/TBE-5g</th> 
+                                            <th class="textTblCenterSmall">Tube,feeding,CH08, <br/>L40cm,ster,disp</th> 
+                                            <th class="textTblCenterSmall">Tube,feeding,CH05, <br/>L40cm,ster,disp</th> 
+                                            <th class="textTblCenterSmall">Syringe,disp,2ml,w/ndl,21G/BOX-100</th> 
+                                            <th class="textTblCenterSmall">Syringe,disp,10ml, <br/>ster/BOX-100</th> 
+                                            <th class="textTblCenterSmall">Syringe,disp,20ml, <br/>ster/BOX-100</th> 
+                                            <th class="textTblCenterSmall">Syringe,feeding, <br/>50ml,luer tip,ster</th> 
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if dataCreniMoisProjetionAdmission.id is defined %} 
+                                        {% set totalProjectionAdmission =  dataCreniMoisProjetionAdmission.DataMois01ProjectionAnneePrevisionnelle + dataCreniMoisProjetionAdmission.DataMois02ProjectionAnneePrevisionnelle + dataCreniMoisProjetionAdmission.DataMois03ProjectionAnneePrevisionnelle + dataCreniMoisProjetionAdmission.DataMois04ProjectionAnneePrevisionnelle + dataCreniMoisProjetionAdmission.DataMois05ProjectionAnneePrevisionnelle + dataCreniMoisProjetionAdmission.DataMois06ProjectionAnneePrevisionnelle %}
+                                            <tr>
+                                                <td class="titleTblLeftrBoldBlue fixeTd">Bon de commande</td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois01ProjectionEstimatedDistrict" class="DataMoisProjectionEstimatedDistrict inputTblCenterWidth50 readonly-field" readonly name="DataMois01ProjectionEstimatedDistrict"  value="{{ dataCreniMoisProjetionAdmission.DataMois01ProjectionAnneePrevisionnelle | default('') }}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois02ProjectionEstimatedDistrict" class="DataMoisProjectionEstimatedDistrict inputTblCenterWidth50 readonly-field" readonly name="DataMois02ProjectionEstimatedDistrict"  value="{{ dataCreniMoisProjetionAdmission.DataMois02ProjectionAnneePrevisionnelle | default('') }}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois03ProjectionEstimatedDistrict" class="DataMoisProjectionEstimatedDistrict inputTblCenterWidth50 readonly-field" readonly name="DataMois03ProjectionEstimatedDistrict"  value="{{ dataCreniMoisProjetionAdmission.DataMois03ProjectionAnneePrevisionnelle | default('') }}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois04ProjectionEstimatedDistrict" class="DataMoisProjectionEstimatedDistrict inputTblCenterWidth50 readonly-field" readonly name="DataMois04ProjectionEstimatedDistrict"  value="{{ dataCreniMoisProjetionAdmission.DataMois04ProjectionAnneePrevisionnelle | default('') }}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois05ProjectionEstimatedDistrict" class="DataMoisProjectionEstimatedDistrict inputTblCenterWidth50 readonly-field" readonly name="DataMois05ProjectionEstimatedDistrict"  value="{{ dataCreniMoisProjetionAdmission.DataMois05ProjectionAnneePrevisionnelle | default('') }}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois06ProjectionEstimatedDistrict" class="DataMoisProjectionEstimatedDistrict inputTblCenterWidth50 readonly-field" readonly name="DataMois06ProjectionEstimatedDistrict"  value="{{ dataCreniMoisProjetionAdmission.DataMois06ProjectionAnneePrevisionnelle | default('') }}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMoisTotalProjectionEstimatedDistrict" class="DataMoisTotalProjectionEstimatedDistrict inputTblCenterWidth50 readonly-field" readonly name="DataMoisTotalProjectionEstimatedDistrict"  value="{{ totalProjectionAdmission | default('') }}" required="required">
+                                                </td>
+
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="f75Boites" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="f75Boites" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.f75Boites }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="f100Boites" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="f100Boites" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.f100Boites }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="ReSoMalSachet" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="ReSoMalSachet" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.ReSoMalSachet }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="pnSachet" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="pnSachet" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.pnSachet }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="ficheSuiviCreni" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="ficheSuiviCreni" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.ficheSuiviCreni }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="ficheSuiviIntensif" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="ficheSuiviIntensif" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.ficheSuiviIntensif }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="kitMedicamentsCreni10Patients" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="kitMedicamentsCreni10Patients" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.kitMedicamentsCreni10Patients }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="registreCreni" class="inputTblCenterWidth50 registreCreni readonly-field" readonly id="registreCreni" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.registreCreni }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" name="carnetRapportMensuelCreni" class="inputTblCenterWidth50 carnetRapportMensuelCreni readonly-field" readonly id="carnetRapportMensuelCreni" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.carnetRapportMensuelCreni }} {% endif %}" required="required">
+                                                </td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td class="titleTblLeftrBoldBlue fixeTd">Prévision</td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois01ProjectionEstimatedCentral" class="DataMoisProjectionEstimatedCentral inputTblCenterWidth50" name="DataMois01ProjectionEstimatedCentral"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois01ProjectionEstimatedCentral is defined) %} {{ dataValueValidatedMonthCreni.DataMois01ProjectionEstimatedCentral }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois02ProjectionEstimatedCentral" class="DataMoisProjectionEstimatedCentral inputTblCenterWidth50" name="DataMois02ProjectionEstimatedCentral"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois02ProjectionEstimatedCentral is defined) %} {{ dataValueValidatedMonthCreni.DataMois02ProjectionEstimatedCentral }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois03ProjectionEstimatedCentral" class="DataMoisProjectionEstimatedCentral inputTblCenterWidth50" name="DataMois03ProjectionEstimatedCentral"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois03ProjectionEstimatedCentral is defined) %} {{ dataValueValidatedMonthCreni.DataMois03ProjectionEstimatedCentral }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois04ProjectionEstimatedCentral" class="DataMoisProjectionEstimatedCentral inputTblCenterWidth50" name="DataMois04ProjectionEstimatedCentral"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois04ProjectionEstimatedCentral is defined) %} {{ dataValueValidatedMonthCreni.DataMois04ProjectionEstimatedCentral }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois05ProjectionEstimatedCentral" class="DataMoisProjectionEstimatedCentral inputTblCenterWidth50" name="DataMois05ProjectionEstimatedCentral"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois05ProjectionEstimatedCentral is defined) %} {{ dataValueValidatedMonthCreni.DataMois05ProjectionEstimatedCentral }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois06ProjectionEstimatedCentral" class="DataMoisProjectionEstimatedCentral inputTblCenterWidth50" name="DataMois06ProjectionEstimatedCentral"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois06ProjectionEstimatedCentral is defined) %} {{ dataValueValidatedMonthCreni.DataMois06ProjectionEstimatedCentral }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMoisTotalProjectionEstimatedCentral" class="DataMoisTotalProjectionEstimatedCentral inputTblCenterWidth50 readonly-field" readonly name="DataMoisTotalProjectionEstimatedCentral"  value="" required="required">
+                                                </td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td class="titleTblLeftrBoldBlue fixeTd">Validé</td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois01ProjectionValidated" class="DataMoisProjectionValidated inputTblCenterWidth50" name="DataMois01ProjectionValidated"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois01ProjectionValidated is defined) %} {{ dataValueValidatedMonthCreni.DataMois01ProjectionValidated }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois02ProjectionValidated" class="DataMoisProjectionValidated inputTblCenterWidth50" name="DataMois02ProjectionValidated"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois02ProjectionValidated is defined) %} {{ dataValueValidatedMonthCreni.DataMois02ProjectionValidated }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois03ProjectionValidated" class="DataMoisProjectionValidated inputTblCenterWidth50" name="DataMois03ProjectionValidated"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois03ProjectionValidated is defined) %} {{ dataValueValidatedMonthCreni.DataMois03ProjectionValidated }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois04ProjectionValidated" class="DataMoisProjectionValidated inputTblCenterWidth50" name="DataMois04ProjectionValidated"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois04ProjectionValidated is defined) %} {{ dataValueValidatedMonthCreni.DataMois04ProjectionValidated }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois05ProjectionValidated" class="DataMoisProjectionValidated inputTblCenterWidth50" name="DataMois05ProjectionValidated"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois05ProjectionValidated is defined) %} {{ dataValueValidatedMonthCreni.DataMois05ProjectionValidated }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMois06ProjectionValidated" class="DataMoisProjectionValidated inputTblCenterWidth50" name="DataMois06ProjectionValidated"  value="{% if (dataValueValidatedMonthCreni is defined and dataValueValidatedMonthCreni.DataMois06ProjectionValidated is defined) %} {{ dataValueValidatedMonthCreni.DataMois06ProjectionValidated }} {% endif %}" required="required">
+                                                </td>
+                                                <td class="textTblCenter">
+                                                    <input type="text" id="DataMoisTotalProjectionValidated" class="DataMoisTotalProjectionValidated inputTblCenterWidth50 readonly-field" readonly name="DataMoisTotalProjectionValidated"  value="" required="required">
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table> 
+                            </div>
+                            <div class="col-lg-6 centerContentDiv">
+                                <input type="submit" name="btnEnregistrerPrevisionCreni" value="Enregistrer le résultat du prévision CRENI" class="btn btn-success"/> 
+                            </div>
+                            <div class="col-lg-6 centerContentDiv">
+                                <input type="submit" name="btnEnregistrerValidationCreni" value="Enregistrer la validation CRENI" class="btn btn-danger"/> 
+                            </div>
+                        </div> 
+
+                    </div>
+                
+            </div>
+            <div class="">
+                <a href="{{ path('app_sp_rmanut_region', {'regionId': district.regionId}) }}" class="btn btn-secondary btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-arrow-left"></i>
+                    </span>
+                    <span class="text">Retour à la liste des districts par région</span>
+                </a> 
+            </div> 
+        </div>
+    
+    </div>
+{% endblock %}

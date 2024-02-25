@@ -1,0 +1,30 @@
+<table class="table table-bordered">
+    <tr>
+        <td class="titleTblCenterBoldGreen">SDU Fiche</td>
+        <td class="titleTblCenterBoldGreen">Nombre Total CSB</td>
+        <td class="titleTblCenterBoldGreen">Nombre CSB CRENAS</td>
+        <td class="textTblCenterBoldPink">Taux de couverture CRENAS</td>
+        <td class="titleTblCenterBoldGreen">Nombre CSB CRENAS qui ont soumis leurs Commandes </td>
+        <td class="textTblCenterBoldPink">Taux d'envoi de rapport bon de commande des CSB CRENAS </td>
+    </tr>
+    <tr>
+        <td class="textTblCenter">
+            <input type="text" name="sduFiche" id="sduFiche" class="inputTblCenterWidth40" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.sduFiche }} {% endif %}"  required="required"/>
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="nbrTotalCsb" id="nbrTotalCsb" class="inputTblCenterWidth40" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.nbrTotalCsb }} {% endif %}"  required="required"/>
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="nbrCSBCRENAS" id="nbrCSBCRENAS" class="inputTblCenterWidth40" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.nbrCSBCRENAS }} {% endif %}"  required="required"/>
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="tauxCouvertureCRENAS" id="tauxCouvertureCRENAS" class="inputTblCenterWidth80 readonly-field" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.tauxCouvertureCRENAS }} {% endif %}"  required="required"/>
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="nbrCSBCRENASCommande" id="nbrCSBCRENASCommande" class="inputTblCenterWidth80" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.nbrCSBCRENASCommande }} {% endif %}"  required="required"/>
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="tauxEnvoiCommandeCSBCRENAS" id="tauxEnvoiCommandeCSBCRENAS" class="inputTblCenterWidth80 readonly-field" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.tauxEnvoiCommandeCSBCRENAS }} {% endif %}"  required="required"/>
+        </td>
+    </tr>
+</table>

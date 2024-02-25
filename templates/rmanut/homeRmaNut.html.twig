@@ -1,0 +1,168 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RMA NUT
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<h2>Téléversement RMA Nut</h2>
+			<div class="row">
+				<div class="alert alert-dismissible alert-primary">
+					<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+					<i class="fa fa-info-circle" style="font-size:20px; color: #005174;"></i>&nbsp;&nbsp;Téléchargez ici vos fichiers RMA Nut
+					<br/>
+					<ul>
+						<li>Le fichier peut avoir une taille maximale de
+							<b>6 mégaoctets</b>.</li>
+						<li>Le format accepté est le format
+							<b>Microsoft Excel au format .xls ou .xlsx</b>. Veuillez vous assurer que votre document est enregistré prélablement sous l'un de ce format, compatible avec Microsoft Office, OpenOffice et les suites bureautiques courantes.</li>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-4">
+						<table class="table table-bordered">
+							<tr>
+								<td class="titleTblRightBold">Province</td>
+								<td>{{ dataUser.nomFRProvince }}</td>
+							</tr>
+							<tr>
+								<td class="titleTblRightBold">Région</td>
+								<td>{{ dataUser.nomRegion }}</td>
+							</tr>
+							<tr>
+								<td class="titleTblRightBold">District</td>
+								<td>{{ dataUser.nomDistrict }}</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-lg-8">
+						<table class="table table-bordered">
+							<tr>
+								<td class="titleTblRightBold">Nom</td>
+								<td>{{ dataUser.nomUser }}</td>
+							</tr>
+							<tr>
+								<td class="titleTblRightBold">Prénoms</td>
+								<td>{{ dataUser.prenomsUser }}</td>
+							</tr>
+							<tr>
+								<td class="titleTblRightBold">Email</td>
+								<td>{{ dataUser.emailUser }}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="row mx-0 justify-content-center" style="margin-top:50px; margin-bottom:100px;">
+					<div class="col-md-7 col-lg-5 px-lg-2 col-xl-200 px-xl-0 px-xxl-3">
+
+						{% if app.session.flashbag.has('success') and dataRMANut is not null %}
+							<div class="alert alert-dismissible alert-success alert-fade-out">
+								<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+								<strong>Téléversement avec succès</strong>
+								<br/>
+								Votre téléchargement a été téléversé avec succès. Merci!
+							</div>
+						{% endif %}
+
+						{# {% if app.session.flashbag.has('error') %}
+													<div class="alert alert-dismissible alert-danger">
+														<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+														<strong>Erreur de fichier téléverser</strong>
+														<br/>
+														Le format accepté est le format Microsoft Excel au format .xls ou .xlsx.
+													</div>
+												{% endif %} #}
+						{% if (dataRMANut is null ) %}
+							<form method="post" action="{{ path('app_rmanut_uploadFile') }}" class="w-300 rounded-1 p-4 border bg-white" enctype="multipart/form-data">
+								<p class="text-center h3 fw-bold mb-4 mx-1 mx-md-4 mt-1">Envoyé le fichier RMA Nut</p>
+								<label class="d-block mb-4">
+									<input required name="rmanut_file" type="file" class="form-control"/>
+								</label>
+
+								<div class="mb-3">
+									<a class="btn btn-secondary" href="{{ path('app_accueil') }}">Retour à l'acceuil</a>
+									<button type="submit" class="btn btn-primary px-3 rounded-3">
+										Téléverser le fichier
+									</button>
+								</div>
+							</form>
+						{% else %}
+							<div class="card text-white bg-success mb-3" style="max-width: 50rem;">
+								<div class="card-header">RMA Nut déjà téléversé</div>
+								<div class="card-body">
+									<h4 class="card-title">RMA Nut</h4>
+									<p class="card-text">Votre fichier a été téléversé avec succès ! Vous pouvez le télécharger en utilisant le lien ci-dessous
+									</p>
+									<a href="{{ asset('uploads/RMANut/' ~ dataRMANut.newFileName) }}" target="_blank" style="color: white; font-weight: bold;">Télécharger le fichier</a>
+								</div>
+
+								<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateFileModal">
+									Modifier le fichier
+								</button>
+							</div>
+
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		{% if (dataRMANut is not null ) %}
+		<!-- Modal pour la mise à jour du fichier -->
+		<div class="modal fade" id="updateFileModal" tabindex="-1" aria-labelledby="updateFileModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="updateFileModalLabel">Modifier le fichier</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form
+							method="post" action="{{ path('app_rmanut_updateFile', {'idCommandeTrimestrielle': dataRMANut.idCommandeTrimestrielle}) }}" class="w-300 rounded-1 p-4 border bg-white" enctype="multipart/form-data" id="updateFileForm">
+							{# Afficher le champ de mise à jour du fichier #}
+							<label class="d-block mb-4">
+								<input required name="rmanut_file" id="fileInput" type="file" class="form-control"/>
+								<input type="hidden" name="hidNameFile" value="{{dataRMANut.newFileName}}">
+							</label>
+							<div class="mb-3">
+								<button type="submit" id="submitButton" class="btn btn-primary px-3 rounded-3" disabled>
+									Mettre à jour le fichier
+								</button>
+								<p id="errorMessage" style="color: red;"></p>
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+
+		<script>
+			// Ajouter un gestionnaire d'événements pour le changement de l'input file
+			document.getElementById('fileInput').addEventListener('change', function () {
+				var fileInput = document.getElementById('fileInput');
+				var submitButton = document.getElementById('submitButton');
+				var errorMessage = document.getElementById('errorMessage');
+
+				// Vérifier si le champ de fichier est vide
+				if (fileInput.files.length === 0) {
+					submitButton.disabled = true;
+					errorMessage.innerText = 'Veuillez sélectionner un fichier.';
+				} else {
+					submitButton.disabled = false;
+					errorMessage.innerText = '';
+				}
+			});
+			document.addEventListener('DOMContentLoaded', function () {
+				// Récupérez le modal
+				var updateFileModal = new bootstrap.Modal(document.getElementById('updateFileModal'));
+
+				// Ajoutez un gestionnaire d'événements pour l'événement de fermeture du modal
+				updateFileModal._element.addEventListener('hidden.bs.modal', function () {
+					// Réinitialisez la valeur de l'input à vide
+					document.getElementById('fileInput').value = '';
+				});
+			});
+		</script>
+	{% endblock %}

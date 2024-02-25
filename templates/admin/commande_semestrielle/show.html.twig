@@ -1,0 +1,42 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}CommandeSemestrielle{% endblock %}
+
+{% block body %}
+    <h1>Commande semestrielle</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ commande_semestrielle.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ commande_semestrielle.Nom }}</td>
+            </tr>
+            <tr>
+                <th>DateDebut</th>
+                <td>{{ commande_semestrielle.DateDebut ? commande_semestrielle.DateDebut|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateFin</th>
+                <td>{{ commande_semestrielle.DateFin ? commande_semestrielle.DateFin|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>IsActive</th>
+                <td>{{ commande_semestrielle.IsActive ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ commande_semestrielle.Slug }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_commande_semestrielle_index') }}">back to list</a>
+
+    <a href="{{ path('app_commande_semestrielle_edit', {'id': commande_semestrielle.id}) }}">edit</a>
+
+    {{ include('admin/commande_semestrielle/_delete_form.html.twig') }}
+{% endblock %}

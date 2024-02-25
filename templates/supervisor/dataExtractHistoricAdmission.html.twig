@@ -1,0 +1,319 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Superviseur central - historique d'admission réel{% endblock %}
+
+{% block body %}
+<div class="container-supervisor">
+    <div class="centerContentDiv">
+        <button type="button" class="btn btn-success" onclick="window.location='{{ path('app_sp_rmanut_region', {'regionId': district.regionId}) }}'">Retour</button>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="titleTblRightBold"><h6>Consultation District</h6></td>
+                    <td><h6 class="text-warning">{{ district.districtNom }}</h6></td>
+                    <td class="titleTblRightBold">Nom du responsable</td>
+                    <td>{{ district.nomUser }}</td>
+                    <td class="titleTblRightBold">Prénoms du responsable</td>
+                    <td>{{ district.prenomUser }}</td>
+                    <td class="titleTblRightBold">Email du responsable</td>
+                    <td>{{ district.email }}</td>
+                    <td class="titleTblRightBold">Téléphone du responsable</td>
+                    <td>{{ district.telephoneUser }}</td> 
+                </tr>  
+                <tr>
+                    <td class="titleTblRightBold" ><h6>Télécharger le RMA Nut envoyé</h6></td>
+                    <td colspan="9"><a href="{{ asset('uploads/RMANut/' ~ district.newFileName) }}" target="_blank" style="color: #73a839; font-weight: bold;">{{ district.newFileName }}</a></td>
+                </tr> 
+            </table>
+        </div>
+    </div>
+
+    <form method="post" action="{{ path('export_excel_historic_crenas_crenis') }}">
+        <div class="centerContentDiv" id="divBtnExport"> 
+            <button class="btn btn-success" type="submit">Exporter en format Excel</button>
+            <input type="hidden" name="hidDistrictName" value="{{district.districtNom}}"/> 
+        </div><br/>
+        <div class="row margin-left-right-10">
+            <!-- DEBUT : INFORMATION CONCERNANT RMA NUT POUR CRENAS --> 
+            <div class="col-lg-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered ">
+                        <tr class="table-info">
+                            <td class="titleTblCenterBoldBlue" colspan="4">CRENAS</td>
+                        </tr>
+                        <tr class="table-success">
+                            {% set currentYear = 'now'|date('Y') %}
+                            {% set lastYear = currentYear - 1 %}
+                            <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ lastYear }}</td>
+                            <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ currentYear }} </td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Janvier</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[0] }}" class="inputTblCenterWidth40"  name="mois1LastCrenas" id="mois1LastCrenas"></td>
+                            <td class="titleTblCenterBold">Janvier</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[0] }}" class="inputTblCenterWidth40"  name="mois1NowCrenas" id="mois1NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Février</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[1] }}" class="inputTblCenterWidth40"  name="mois2LastCrenas" id="mois2LastCrenas"></td>
+                            <td class="titleTblCenterBold">Février</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[1] }}" class="inputTblCenterWidth40"  name="mois2NowCrenas" id="mois2NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Mars</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[2] }}" class="inputTblCenterWidth40"  name="mois3LastCrenas" id="mois3LastCrenas"></td>
+                            <td class="titleTblCenterBold">Mars</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[2] }}" class="inputTblCenterWidth40"  name="mois3NowCrenas" id="mois3NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Avril</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[3] }}" class="inputTblCenterWidth40"  name="mois4LastCrenas" id="mois4LastCrenas"></td>
+                            <td class="titleTblCenterBold">Avril</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[3] }}" class="inputTblCenterWidth40"  name="mois4NowCrenas" id="mois4NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Mai</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[4] }}" class="inputTblCenterWidth40"  name="mois5LastCrenas" id="mois5LastCrenas"></td>
+                            <td class="titleTblCenterBold">Mai</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[4] }}" class="inputTblCenterWidth40"  name="mois5NowCrenas" id="mois5NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Juin</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[5] }}" class="inputTblCenterWidth40"  name="mois6LastCrenas" id="mois6LastCrenas"></td>
+                            <td class="titleTblCenterBold">Juin</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[5] }}" class="inputTblCenterWidth40"  name="mois6NowCrenas" id="mois6NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Juillet</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[6] }}" class="inputTblCenterWidth40"  name="mois7LastCrenas" id="mois7LastCrenas"></td>
+                            <td class="titleTblCenterBold">Juillet</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[6] }}" class="inputTblCenterWidth40"  name="mois7NowCrenas" id="mois7NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Août</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[7] }}" class="inputTblCenterWidth40"  name="mois8LastCrenas" id="mois8LastCrenas"></td>
+                            <td class="titleTblCenterBold">Août</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[7] }}" class="inputTblCenterWidth40"  name="mois8NowCrenas" id="mois8NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Septembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[8] }}" class="inputTblCenterWidth40"  name="mois9LastCrenas" id="mois9LastCrenas"></td>
+                            <td class="titleTblCenterBold">Septembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[8] }}" class="inputTblCenterWidth40"  name="mois9NowCrenas" id="mois9NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Octobre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[9] }}" class="inputTblCenterWidth40"  name="mois10LastCrenas" id="mois10LastCrenas"></td>
+                            <td class="titleTblCenterBold">Octobre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[9] }}" class="inputTblCenterWidth40"  name="mois10NowCrenas" id="mois10NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Novembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[10] }}" class="inputTblCenterWidth40"  name="mois11LastCrenas" id="mois11LastCrenas"></td>
+                            <td class="titleTblCenterBold">Novembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[10] }}" class="inputTblCenterWidth40"  name="mois11NowCrenas" id="mois11NowCrenas"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Décembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCrenas[11] }}" class="inputTblCenterWidth40"  name="mois12LastCrenas" id="mois12LastCrenas"></td>
+                            <td class="titleTblCenterBold">Décembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCrenas[11] }}" class="inputTblCenterWidth40"  name="mois12NowCrenas" id="mois12NowCrenas"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered ">
+                        <tr class="table-info">
+                            {% set currentYear = 'now'|date('Y') %}
+                            {% set nextYear = currentYear + 1 %}
+                            <td class="titleTblCenterBoldBlue" colspan="2">
+                                Bon de commande CRENAS <br/>Projections du nombre d'admissions <br/> année {{ nextYear }}
+                            </td>
+                        </tr>
+                        {% if valueDataMoisProjection is not empty %}
+                            {% set increment = 0 %}
+                            {% set numProjectionProjete = 1 %}
+                            {% for mois in lstMoisProjectionAnneePrevisionnelle %}  
+                                <tr>
+                                {% set moisId = "moisProjection_" ~ mois|replace({' ': '_'}) %}
+                                    <td class="titleTblCenterBold"> {{ mois|replace({' ': '_'}) }} </td>                                        
+                                    <td class="textTblCenter"> <input type="text" class="bonCommandeValueCrenas inputTblCenterWidth40" value="{{ lstValueMoisProjectionAnneePrevisionnelle[arrDataCrenasUser["id"]][increment] | default('') }}" name="moisProjectionAnneePrevisionnelle{{ numProjectionProjete }}" id="{{ moisId }}"> </td>
+                                    <input type="hidden" name="nameMoisProjectionAnneePrevisionnel{{numProjectionProjete}}" value="{{ mois|replace({' ': '_'}) }}"
+                                </tr>
+                                {% set numProjectionProjete = numProjectionProjete + 1 %}
+                                {% set increment = increment + 1 %}
+                            {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="2">
+                                {# Bon de commande CRENAS non disponible pour ce district  #}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </table> 
+                </div>
+            </div>
+            <!-- FIN : INFORMATION CONCERNANT RMA NUT POUR CRENAS -->
+
+            <!-- DEBUT : INFORMATION CONCERNANT RMA NUT POUR CRENI -->
+            <div class="col-lg-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered ">
+                        <tr class="table-info">
+                            <td class="titleTblCenterBoldBlue" colspan="4">CRENI</td>
+                        </tr>
+                        <tr class="table-success">
+                            {% set currentYear = 'now'|date('Y') %}
+                            {% set lastYear = currentYear - 1 %}
+                            <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ lastYear }}</td>
+                            <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ currentYear }} </td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Janvier</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[0] }}" class="inputTblCenterWidth40"  name="mois1LastCreni" id="mois1LastCreni"></td>
+                            <td class="titleTblCenterBold">Janvier</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[0] }}" class="inputTblCenterWidth40"  name="mois1NowCreni" id="mois1NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Février</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[1] }}" class="inputTblCenterWidth40"  name="mois2LastCreni" id="mois2LastCreni"></td>
+                            <td class="titleTblCenterBold">Février</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[1] }}" class="inputTblCenterWidth40"  name="mois2NowCreni" id="mois2NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Mars</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[2] }}" class="inputTblCenterWidth40"  name="mois3LastCreni" id="mois3LastCreni"></td>
+                            <td class="titleTblCenterBold">Mars</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[2] }}" class="inputTblCenterWidth40"  name="mois3NowCreni" id="mois3NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Avril</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[3] }}" class="inputTblCenterWidth40"  name="mois4LastCreni" id="mois4LastCreni"></td>
+                            <td class="titleTblCenterBold">Avril</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[3] }}" class="inputTblCenterWidth40"  name="mois4NowCreni" id="mois4NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Mai</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[4] }}" class="inputTblCenterWidth40"  name="mois5LastCreni" id="mois5LastCreni"></td>
+                            <td class="titleTblCenterBold">Mai</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[4] }}" class="inputTblCenterWidth40"  name="mois5NowCreni" id="mois5NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Juin</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[5] }}" class="inputTblCenterWidth40"  name="mois6LastCreni" id="mois6LastCreni"></td>
+                            <td class="titleTblCenterBold">Juin</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[5] }}" class="inputTblCenterWidth40"  name="mois6NowCreni" id="mois6NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Juillet</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[6] }}" class="inputTblCenterWidth40"  name="mois7LastCreni" id="mois7LastCreni"></td>
+                            <td class="titleTblCenterBold">Juillet</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[6] }}" class="inputTblCenterWidth40"  name="mois7NowCreni" id="mois7NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Août</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[7] }}" class="inputTblCenterWidth40"  name="mois8LastCreni" id="mois8LastCreni"></td>
+                            <td class="titleTblCenterBold">Août</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[7] }}" class="inputTblCenterWidth40"  name="mois8NowCreni" id="mois8NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Septembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[8] }}" class="inputTblCenterWidth40"  name="mois9LastCreni" id="mois9LastCreni"></td>
+                            <td class="titleTblCenterBold">Septembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[8] }}" class="inputTblCenterWidth40"  name="mois9NowCreni" id="mois9NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Octobre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[9] }}" class="inputTblCenterWidth40"  name="mois10LastCreni" id="mois10LastCreni"></td>
+                            <td class="titleTblCenterBold">Octobre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[9] }}" class="inputTblCenterWidth40"  name="mois10NowCreni" id="mois10NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Novembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[10] }}" class="inputTblCenterWidth40"  name="mois11LastCreni" id="mois11LastCreni"></td>
+                            <td class="titleTblCenterBold">Novembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[10] }}" class="inputTblCenterWidth40"  name="mois11NowCreni" id="mois11NowCreni"></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="titleTblCenterBold">Décembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesLastCreni[11] }}" class="inputTblCenterWidth40"  name="mois12LastCreni" id="mois12LastCreni"></td>
+                            <td class="titleTblCenterBold">Décembre</td>
+                            <td class="textTblCenter"><input type="text" value="{{ valuesNowCreni[11] }}" class="inputTblCenterWidth40"  name="mois12NowCreni" id="mois12NowCreni"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered ">
+                        <tr class="table-info">
+                            {% set currentYear = 'now'|date('Y') %}
+                            {% set nextYear = currentYear + 1 %}
+                            <td class="titleTblCenterBoldBlue" colspan="2">
+                                Bon de commande CRENI <br/>Projections du nombre d'admissions <br/> année {{ nextYear }}
+                            </td>
+                        </tr>
+                        <tr>
+                            {% if dataCreniMoisProjetionAdmission.id is defined %} 
+                                <tr>
+                                    <td class="titleTblCenterBold">{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}</td> 
+                                    <td class="textTblCenter">
+                                        <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois01ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni1" id="moisProjection_{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}"> 
+                                        <input type="hidden" value="{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni1">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="titleTblCenterBold">{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}</td> 
+                                    <td class="textTblCenter">
+                                        <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois02ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni2" id="moisProjection_{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}">
+                                        <input type="hidden" value="{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni2">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="titleTblCenterBold">{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}</td> 
+                                    <td class="textTblCenter">
+                                        <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois03ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni3" id="moisProjection_{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}"> 
+                                        <input type="hidden" value="{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni3">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="titleTblCenterBold">{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}</td> 
+                                    <td class="textTblCenter">
+                                        <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois04ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni4" id="moisProjection_{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}"> 
+                                        <input type="hidden" value="{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni4">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="titleTblCenterBold">{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}</td> 
+                                    <td class="textTblCenter">
+                                        <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois05ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni5" id="moisProjection_{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}"> 
+                                        <input type="hidden" value="{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni5">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="titleTblCenterBold">{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}</td> 
+                                    <td class="textTblCenter">
+                                        <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois06ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni6" id="moisProjection_{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}"> 
+                                        <input type="hidden" value="{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni6">
+                                    </td>
+                                </tr> 
+                            {% else %}
+                                <td colspan="2">
+                                    {# Bon de commande CRENI non disponible pour ce district  #}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    </table> 
+                </div>                    
+            </div>
+            <!-- FIN : INFORMATION CONCERNANT RMA NUT POUR CRENI -->
+
+            
+        </div>
+    </form> 
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+<table class="table table-bordered">
+    <tr class="table-primary">
+        <td class="titleTblCenterBold">F75<br/>Boites</td>
+        <td class="titleTblCenterBold">F100<br/>Boites</td>
+        <td class="titleTblCenterBold">ReSoMal<br/>sachet</td>
+        <td class="titleTblCenterBold">PN<br/>sachet</td>
+        <td class="titleTblCenterBold">Fiche de suivi CRENI<br/>unité</td>
+        <td class="titleTblCenterBold">Fiche de suivi intensif<br/>unité</td>
+        <td class="titleTblCenterBold">Kit médicaments CRENI 10 patients<br/>kit</td>
+        <td class="titleTblCenterBold">Registre CRENI<br/>Unité</td>
+        <td class="titleTblCenterBold">Carnet de rapports mensuels CRENI<br/>Unité</td>
+    </tr>
+    <tr>
+        <td class="textTblCenter">
+            <input type="text" name="f75Boites" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="f75Boites" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.f75Boites }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="f100Boites" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="f100Boites" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.f100Boites }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="ReSoMalSachet" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="ReSoMalSachet" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.ReSoMalSachet }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="pnSachet" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="pnSachet" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.pnSachet }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="ficheSuiviCreni" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="ficheSuiviCreni" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.ficheSuiviCreni }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="ficheSuiviIntensif" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="ficheSuiviIntensif" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.ficheSuiviIntensif }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="kitMedicamentsCreni10Patients" class="inputTblCenterWidth50 quantiteficheKitCreni readonly-field" readonly id="kitMedicamentsCreni10Patients" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.kitMedicamentsCreni10Patients }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="registreCreni" class="inputTblCenterWidth50 registreCreni" id="registreCreni" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.registreCreni }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="carnetRapportMensuelCreni" class="inputTblCenterWidth50 carnetRapportMensuelCreni" id="carnetRapportMensuelCreni" value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.carnetRapportMensuelCreni }} {% endif %}" required="required">
+        </td>
+    </tr>
+</table>

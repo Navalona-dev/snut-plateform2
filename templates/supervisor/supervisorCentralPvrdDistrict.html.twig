@@ -1,0 +1,118 @@
+{% extends 'supervisorBase.html.twig' %}
+
+{% block title %}Superviseur central- PVRD visualisation{% endblock %}
+
+{% block body %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Procès - Verbal de Récéption Définitive (PVRD) - district : {{ dataPvrd.NomDistrict }}</h1>
+    <p class="mb-4">Vous êtes sur la page dédiée à la visualisation de la PVRD envoyé par le district  {{ dataPvrd.NomDistrict }}. </p>
+    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Liste des RMA Nut par région</h6>
+        </div>
+        <div class="card-body">  
+            <table class="table table-bordered">
+                <tr>
+                    <td class="titleTblRightBold">Site</td>
+                    <td style="width: 20%;">
+                        {{ dataPvrd.Site }} 
+                    </td>
+                    <td class="titleTblRightBold" rowspan="5">
+                        Fichier PVRD :<br/> 
+                        {% if (dataPvrd.NewFileName is defined and dataPvrd.NewFileName is not null ) %}
+                        <img width="100%"  src="{{ asset('uploads/PVRD/' ~ dataPvrd.NewFileName) }}" name="ImagePvrd" />
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="titleTblRightBold">Date de réception</td>
+                    <td>  
+                        {{ dataPvrd.DateReception|date('d/m/Y') }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="titleTblRightBold">Date de PVRD</td>
+                    <td>
+                        {{ dataPvrd.DatePvrd|date('d/m/Y') }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="titleTblRightBold">N° Bon de Livraison/Transfert des Intrants de Santé :</td>
+                    <td>
+                        {{ dataPvrd.NumeroBonLivraison }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="titleTblRightBold">Fournisseur :</td>
+                    <td>
+                        {{ dataPvrd.Fournisseur }}
+                    </td>
+                </tr>
+            </table>
+            <table class="table table-bordered">
+                <tr>
+                    <td class="titleTblLeftBold" colspan="3">Liste des produits :</td>  
+                <tr>
+                {% if (dataPvrdProduit is defined and dataPvrdProduit is not null) %}
+                    <tr>
+                        <td class="titleTblCenterBold">
+                            <label class="form-label">Désignation du produit </label>
+                        </td>
+                            
+                        <td class="titleTblCenterBold">
+                            <label class="form-label">Période</label>
+                        </td>
+                            
+                        <td class="titleTblCenterBold">
+                            <label class="form-label">Quantité sur BL </label>
+                        </td>
+                            
+                        <td class="titleTblCenterBold">
+                            <label class="form-label">Quantité recue </label>
+                        </td>
+                        <td class="titleTblCenterBold">
+                            <label class="form-label">Ecart</label>
+                        </td>
+                    </tr>
+                    {% for pvrdProduit in dataPvrdProduit %}
+                        <tr>
+                            <td class="textTblCenter">
+                                {{ pvrdProduit.ProduitNom }}     
+                            </td>
+                            <td class="textTblCenter">
+                                {{ pvrdProduit.Periode }} 
+                            </td>
+                            <td class="textTblCenter"> 
+                                {{ pvrdProduit.QuantiteInscritSurBL }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ pvrdProduit.QuantiteRecue }}
+                            </td>
+                            <td class="textTblCenter">
+                                {% if (pvrdProduit.EcartEntreQuantite > 0) %}
+                                <span class="badge bg-danger badge-pill" style="font-size: 14px; color: #FFF"> {{ pvrdProduit.EcartEntreQuantite }} </span> 
+                                {% else %}
+                                <span class="badge bg-success badge-pill" style="font-size: 14px; color: #FFF"> {{ pvrdProduit.EcartEntreQuantite }} </span>
+                                    
+                                {% endif %}
+                            </td>
+                            
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        </div>
+        <div class="centerContentDiv">
+            <a href="{{ path('app_sp_pvrd_region', {'regionId': dataPvrd.IdRegion }) }}" class="btn btn-secondary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-arrow-left"></i>
+                </span>
+                <span class="text">Retour à la liste par région</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

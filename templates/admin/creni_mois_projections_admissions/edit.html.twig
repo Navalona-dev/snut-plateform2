@@ -1,0 +1,193 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Mois de projection{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}" type="text/css"/>
+{% endblock %}
+{% block body %}
+<div class="col-md-12">
+		<div class="card ">
+			<div class="card-header card-header-green card-header-text">
+				<div class="card-text">
+					<h4 class="card-title">Modifier mois de projection</h4>
+				</div>
+			</div>
+			<div class="card-body ">
+				{{ form_start(form, {'action': path('app_creni_mois_projections_admissions_edit', { 'id': creni_mois_projections_admission.id }), 'method': 'POST', 'attr': {'enctype':'multipart/form-data', 'class': 'form-horizontal'}}) }}
+              
+				  <div class="row">
+					<label class="col-sm-2 col-form-label">Commande</label>
+						<div class="col-sm-10">
+							<div class="form_group">
+								{{ form_widget(form.CommandeSemestrielle) }}
+							</div>
+						</div>
+				</div>
+                 <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 01 d'admission CRENAS enregistré</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois01AdmissionCreniPrecedent) }}
+						</div>
+					</div>
+				</div>
+				   <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 02 d'admission CRENAS enregistré</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois02AdmissionCreniPrecedent) }}
+						</div>
+					</div>
+				</div>
+				  <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 03 d'admission CRENAS enregistré</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois03AdmissionCreniPrecedent) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 04 d'admission CRENAS enregistré</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois04AdmissionCreniPrecedent) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 05 d'admission CRENAS enregistré</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois05AdmissionCreniPrecedent) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 06 d'admission CRENAS enregistré</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois06AdmissionCreniPrecedent) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 01 d'admission qui avait été projeté</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois01AdmissionProjeteAnneePrecedent) }}
+						</div>
+					</div>
+				</div>
+                 <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 02 d'admission qui avait été projeté</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois02AdmissionProjeteAnneePrecedent) }}
+						</div>
+					</div>
+				</div>
+                 <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 03 d'admission qui avait été projeté</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois03AdmissionProjeteAnneePrecedent) }}
+						</div>
+					</div>
+				</div>
+                 <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 04 d'admission qui avait été projeté</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois04AdmissionProjeteAnneePrecedent) }}
+						</div>
+					</div>
+				</div>
+                 <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 05 d'admission qui avait été projeté</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois05AdmissionProjeteAnneePrecedent) }}
+						</div>
+					</div>
+				</div>
+                 <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 06 d'admission qui avait été projeté</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois06AdmissionProjeteAnneePrecedent) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 01 d'admission prévisionnelle</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois01ProjectionAnneePrevisionnelle) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 02 d'admission prévisionnelle</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois02ProjectionAnneePrevisionnelle) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 03 d'admission prévisionnelle</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois03ProjectionAnneePrevisionnelle) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 04 d'admission prévisionnelle</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois04ProjectionAnneePrevisionnelle) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 05 d'admission prévisionnelle</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois05ProjectionAnneePrevisionnelle) }}
+						</div>
+					</div>
+				</div>
+                <div class="row">
+                <label class="col-sm-2 col-form-label">Mois 06 d'admission prévisionnelle</label>
+					<div class="col-sm-10">
+						<div class="form_group">
+							{{ form_widget(form.Mois06ProjectionAnneePrevisionnelle) }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer ">
+				{{ form_widget(form.save) }}
+			</div>
+			{{ form_end(form) }}
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script src="{{asset('assets/js/select2.min.js')}}"></script>
+	<script>
+		$(document).ready(function () {
+	
+				$(".mul-select").select2({
+				placeholder: "Choisir province", // placeholder
+				tags: true,
+				tokenSeparators: ['/', ',', ';', " "]
+				});
+
+		});
+
+		
+	</script>
+{% endblock %}

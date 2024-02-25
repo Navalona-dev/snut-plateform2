@@ -1,0 +1,42 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}CommandeTrimestrielle{% endblock %}
+
+{% block body %}
+    <h1>CommandeTrimestrielle</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ commande_trimestrielle.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ commande_trimestrielle.Nom }}</td>
+            </tr>
+            <tr>
+                <th>DateDebut</th>
+                <td>{{ commande_trimestrielle.DateDebut ? commande_trimestrielle.DateDebut|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateFin</th>
+                <td>{{ commande_trimestrielle.DateFin ? commande_trimestrielle.DateFin|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>IsActive</th>
+                <td>{{ commande_trimestrielle.isActive ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ commande_trimestrielle.Slug }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_commande_trimestrielle_index') }}">back to list</a>
+
+    <a href="{{ path('app_commande_trimestrielle_edit', {'id': commande_trimestrielle.id}) }}">edit</a>
+
+    {{ include('admin/commande_trimestrielle/_delete_form.html.twig') }}
+{% endblock %}

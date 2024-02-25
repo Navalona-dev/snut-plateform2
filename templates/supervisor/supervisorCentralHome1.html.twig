@@ -1,0 +1,793 @@
+{% extends 'supervisorBase.html.twig' %}
+{% block title %}
+	Superviseur central- accueil
+{% endblock %}
+{% block body %}
+	<div class="card shadow mb-4">
+		<div class="centerContentDiv">
+			<h3>Tableau de Bord indicateurs logistiques</h3>
+		</div> 
+		<div id="flashMessage"></div> 
+		<div class="card-body">
+			<a class="btn btn-warning" href="{{ path('app_sp_accueil_sychronise_dashboard') }}">Actualiser</a>
+		</div>
+		<div class="card-body">
+			<div
+				class="row d-flex flex-wrap">
+				<!-- DISTRIBUTION -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<a style="text-decoration: none" href="#distribution">
+						<div class="card border-left-primary shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">DISTRIBUTION</div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-bars fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+				<!-- CRENAS -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<a style="text-decoration: none" href="#crenas">
+						<div class="card border-left-success shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-success text-uppercase mb-1">CRENAS</div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-file fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+				<!-- GESTION DE PEREMPTION -->
+					<div class="col-xl-3 col-md-6 mb-4"> <a style="text-decoration: none" href="#peremption">
+						<div class="card border-left-warning shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">GESTION DE PEREMPTION</div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+				<!-- RETRO INFORMATION -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<a style="text-decoration: none" href="#retroinfo">
+						<div class="card border-left-warning shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">MESSAGES/RETRO INFORMATION</div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-clipboard fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="card-body">
+			<!-- Distribution Section - Distribution Page -->
+			<section
+				id="distributtion" class="distributtion">
+				<!-- Section Title -->
+				<div class="container section-title" data-aos="fade-up">
+					<h2>DISTRIBUTION</h2>
+				</div>
+				<!-- End Section Title -->
+				<div class="container"> 
+					<div class="table-responsive table-wrapper"> 
+						<div class="row margin-left-right-20 margin-top-40">
+							<div class="col-md-12">
+								<table class="table table-bordered table-fixed-header" id="tableDashboardDistribution">
+									<thead>
+										<tr class="table-success">
+											<th class="textTblCenterBold">
+												<h4 class="title">
+													TAUX D'ENVOI PVRD MADAGASCAR: Année en cours 2024
+												</h4>
+											</th>										
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										{% if allTauxPvrd is defined and allTauxPvrd is iterable %}
+											{% for result in allTauxPvrd %}
+												<tr>
+													<td class="text-center">{{ result.slugTrimestrielle }}</td>
+													<td class="text-center">{{ result.TauxEnvoiPvrd }} %</td>
+												</tr> 
+											{% endfor %}
+										{% endif %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div><br>
+					<!--
+					<div class="row">
+						<div class="col-md-6">
+							<a class="btn btn-warning d-flex justify-content-center" style="text-decoration: none" href="dashboard1/detailCrenas">
+								Voir détail
+							</a>
+						</div>
+					</div>
+					-->
+				</div> 
+			</section>
+			<!-- End Distribution Section -->
+
+
+			<br/><br/><br/>
+			<!-- Crenas Section - Crenas Page -->
+			<section
+				id="crenas" class="crenas">
+				<!-- Section Title -->
+				<div class="container section-title" data-aos="fade-up">
+					<h2>CRENAS</h2>
+				</div>
+				<!-- End Section Title -->
+				<div class="container">
+					<div class="table-responsive table-wrapper">
+						<div class="row margin-left-right-20 margin-top-40">
+							<div class="col-md-12">
+								<table class="table table-bordered table-fixed-header" id="tableDashboardCrenas">
+									<thead>
+										<tr class="table-success">
+											<th class="textTblCenterBold">
+												<h4 class="title">STATUT DE STOCK M-1 DU MOIS EN COURS (PLUMPY NYUT)</h4>
+											</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="text-center">TAUX SURSTOCK</td>
+											<td class="text-center">{{ pourcentagePNSurStock }}%</td>
+										</tr>
+										<tr>
+											<td class="text-center">TAUX STOCK NORMAL</td>
+											<td class="text-center">{{ pourcentagePNNormal }}%</td>
+										</tr>
+										<tr>
+											<td class="text-center">TAUX SOUS STOCK</td>
+											<td class="text-center">{{ pourcentagePNSousStock }}%</td>
+										</tr>
+										<tr>
+											<td class="text-center">TAUX RUPTURE</td>
+											<td class="text-center">{{ pourcentagePNRupture }}%</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- End Service Item -->
+					</div><br>
+
+					<div class="row">
+						<div class="col-md-6">
+							<a class="btn btn-warning d-flex justify-content-center" id="collapseDetailsButton" data-toggle="collapse" href="#collapseDetails" role="button" aria-expanded="false" aria-controls="collapseDetails">Voir détail</a>
+						</div>
+						<div class="col-md-6">
+							<a class="btn btn-warning d-flex justify-content-center" id="collapseRuptureButton" data-toggle="collapse" href="#collapseRupture" role="button" aria-expanded="false" aria-controls="collapseRupture">Liste district en rupture de stock</a>
+						</div>
+					</div>
+					<div class="collapse" id="collapseDetails">
+						<div class="card card-body">
+							<h4>STATUT DE STOCK ACTUEL PAR REGION CRENAS</h4>
+
+							<div class="table-responsive table-wrapper">
+								<div class="row margin-left-right-20 margin-top-40">
+									<div class="col-md-12">
+										<table class="table table-bordered table-fixed-header" id="tableDashboardCrenasDetails">
+											<thead>
+												<tr class="table-success">
+													<th class="textTblCenterBold">REGION</th>
+													<th>DISTRICT</th>
+													<th>PRODUITS</th>
+													<th>STATUT</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for result in allStockDatasByStatus %}
+													<tr>
+														<td class="text-center">{{ result['regionNom'] }}</td>
+														<td class="text-center">{{ result['districtNom'] }}</td>
+														<td class="text-center">Plumpy Nut</td>
+														<td style="padding: 0">
+															<span style="color: blue;">
+																SurStock :
+																{{ result['totalNombreSurStock']|default(0) }}
+															</span>,
+															<span style="color: green;">
+																Stock Normal :
+																{{ result['totalNombreNormal']|default(0) }}
+															</span>,
+															<span style="color: #f6c23e;">
+																Sous Stock :
+																{{ result['totalNombreSoustock']|default(0) }}
+															</span>,
+															<span style="color: red;">
+																En Rupture :
+																{{ result['totalNombreRupture']|default(0) }}
+															</span>
+														</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- End Service Item -->
+							</div>
+						</div>
+					</div>
+					<div class="collapse" id="collapseRupture">
+						<div
+							class="card card-body">
+							{# <h4>PLUMPY NUT</h4> #}
+							<div class="center">
+								<h4>
+									LISTE DES DISTRICT CRENAS EN RUPTURE DE STOCK
+								</h4>
+							</div>
+
+							<div class="table-responsive table-wrapper">
+								<div class="row margin-left-right-20 margin-top-40">
+									<div class="col-md-12">
+										<table class="table table-bordered table-fixed-header" id="tableDashboardCrenasRupture">
+											<thead>
+												<tr class="table-success">
+													<th class="textTblCenterBold">REGION</th>
+													<th>DISTRICT</th>
+													<th>NOMBRE DE RUPTURES</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for result in allStockDatasByStatus %}
+													{% if result['totalNombreRupture'] > 0 %}												
+														<tr>
+															<td class="text-center">{{ result['regionNom'] }}</td>
+															<td class="text-center">{{ result['districtNom'] }}</td>
+															<td class="text-center">{{ result['totalNombreRupture']|default(0) }}</td>
+														</tr>
+													{% endif %}
+													
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- End Service Item -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- End Crenas Section -->
+			{# <br><br><br>
+																																																                        			            <!-- Creni Section - Creni Page -->
+																																																                        			            <section
+																																																                        			            id="creni" class="creni">
+																																																                        			            <!--  Section Title -->
+																																																                        			            <div class="container section-title" data-aos="fade-up">
+																																																                        			            <h2>CRENI</h2>
+																																																                        			            </div>
+																																																                        			            <!-- End Section Title -->
+																																																                        			            <div class="container">
+																																																                        			            
+																																																                        			            <div class="table-responsive table-wrapper">
+																																																                        			            
+																																																                        			            <div class="row margin-left-right-20 margin-top-40">
+																																																                        			            <div class="col-md-12">
+																																																                        			            <table class="table table-bordered table-fixed-header" id="tableDashboardCrenif75">
+																																																                        			            <thead>
+																																																                        			            <tr class="table-success">
+																																																                        			            <th class="textTblCenterBold">
+																																																                        			            <h4 class="title">
+																																																                        			            	STATUT DE STOCK M-1 DU MOIS EN COURS F75
+																																																                        			            </h4>
+																																																                        			            </th>
+																																																                        			            <th></th>
+																																																                        			            </tr>
+																																																                        			            </thead>
+																																																                        			            <tbody>
+																																																                        			            <tr>
+																																																                        			            <td class="text-center">TAUX SURSTOCK</td>
+																																																                        			            <td class="text-center">20%</td>
+																																																                        			            </tr>
+																																																                        			            <tr>
+																																																                        			            <td class="text-center">TAUX STOCK NORMAL</td>
+																																																                        			            <td class="text-center">30%</td>
+																																																                        			            </tr>
+																																																                        			            <tr>
+																																																                        			            <td class="text-center">TAUX SOUS STOCK</td>
+																																																                        			            <td class="text-center">35%</td>
+																																																                        			            </tr>
+																																																                        			            <tr>
+																																																                        			            <td class="text-center">TAUX RUPTURE</td>
+																																																                        			            <td class="text-center">15%</td>
+																																																                        			            </tr>
+																																																                        			            </tbody>
+																																																                        			            </table>
+																																																                        			            </div>
+																																																                        			            </div>
+																																																                        			            </div>
+																																																                        			            <br>
+																																																                        			            
+																																																                        			            <div class="table-responsive table-wrapper">
+																																																                        			            
+																																																                        			            <div class="row margin-left-right-20 margin-top-40">
+																																																                        			            <div class="col-md-12">
+																																																                        			            <table class="table table-bordered table-fixed-header" id="tableDashboardCrenif100">
+																																																                        			            <thead>
+																																																                        			            <tr class="table-success">
+																																																                        			            <th class="textTblCenterBold">
+																																																                        			            <h4 class="title">
+																																																                        			            	STATUT DE STOCK M-1 DU MOIS EN COURS F100
+																																																                        			            </h4>
+																																																                        			            </th>
+																																																                        			            <th></th>
+																																																                        			            </tr>
+																																																                        			            </thead>
+																																																                        			            <tbody>
+																																																                        			            <tr>
+																																																                        			            <td class="text-center">TAUX SURSTOCK</td>
+																																																                        			            <td class="text-center">20%</td>
+																																																                        			            </tr>
+																																																                        			            <tr>
+																																																                        			            <td class="text-center">TAUX STOCK NORMAL</td>
+																																																                        			            <td class="text-center">30%</td>
+																																																                        			            </tr>
+																																																                        			            <tr>
+																																																                        			            <td class="text-center">TAUX SOUS STOCK</td>
+																																																                        			            <td class="text-center">35%</td>
+																																																                        			            </tr>
+																																																                        			            <tr>
+																																																                        			            <td class="text-center">TAUX RUPTURE</td>
+																																																                        			            <td class="text-center">15%</td>
+																																																                        			            </tr>
+																																																                        			            </tbody>
+																																																                        			            </table>
+																																																                        			            </div>
+																																																                        			            </div>
+																																																                        			            </div>
+																																																                        			            <br>
+																																																                        			            <div class="row">
+																																																                        			            <div class="col-md-6">
+																																																                        			            <a class="btn btn-warning d-flex justify-content-center" style="text-decoration: none" href="dashboard1/detailCrenas">
+																																																                        			            Voir détail
+																																																                        			            </a>
+																																																                        			            </div>
+																																																                        			            <div class="col-md-6">
+																																																                        			            <a class="btn btn-warning d-flex justify-content-center" style="text-decoration: none" href="dashboard1/detailCrenas">
+																																																                        			            Liste district en ripture de stock
+																																																                        			            </a>
+																																																                        			            </div>
+																																																                        			            </div>
+																																																                        			            </div>
+																																																                        			            </section> #}
+			<!-- End Creni Section -->
+			<br/>
+			<br/>
+			<br/>
+			<!-- Peremption Section - Peremption Page -->
+			<section id="peremption" class="peremption"> <!-- Section Title -->
+				<div class="container section-title" data-aos="fade-up">
+					<h2>QANTITE DES PRODUITS A RISQUE DE PEREMPTION MADAGASCAR</h2>
+				</div>
+				<!-- End Section Title -->
+				<div class="container">
+					<div class="table-responsive table-wrapper">
+						<div class="row margin-left-right-20 margin-top-40">
+							<div class="col-md-12">
+								<table class="table table-bordered table-fixed-header" id="tableDashboardPeremption">
+									<thead>
+										<tr class="table-success">
+											<th></th>
+											<th class="textTblCenterBold">
+												<h4 class="title">QUANTITE A EXPIRER D'ICI 3 MOIS</h4>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="text-center">PN</td>
+											<td class="text-center">{{ quantitiesProductRiskExpiryPN }}</td>
+										</tr>
+										<tr>
+											<td class="text-center">F75</td>
+											<td class="text-center">{{ quantitiesProductRiskExpiryF75 }}</td>
+										</tr>
+										<tr>
+											<td class="text-center">F100</td>
+											<td class="text-center">{{ quantitiesProductRiskExpiryF100 }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- End Service Item -->
+					</div><br/>
+
+					<div class="row">
+						<div class="col-md-6">
+							<a class="btn btn-warning d-flex justify-content-center" data-toggle="collapse" href="#collapseRuptureDetails" role="button" aria-expanded="false" aria-controls="collapseRuptureDetails">
+								Voir détail
+							</a>
+						</div>
+					</div>
+					<div class="collapse" id="collapseRuptureDetails">
+						<div class="card card-body">
+							<h4>QANTITE DES PRODUITS A RISQUE DE PEREMPTION PAR REGION D'ICI TROIS MOIS</h4>
+
+							<div class="table-responsive table-wrapper">
+								<div class="row margin-left-right-20 margin-top-40">
+									<div class="col-md-12">
+										<table class="table table-bordered table-fixed-header" id="tableDashboardRuptureDetails">
+											<thead>
+												<tr class="table-success">
+													<th class="textTblCenterBold">REGION</th>
+													<th>DISTRICT</th>
+													<th>Plumpy Nut</th>
+													<th>F75</th>
+													<th>F100</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for result in allQuantitiesExpiry %}
+													<tr>
+														<td class="text-center">{{ result['regionNom'] }}</td>
+														<td class="text-center">{{ result['districtNom'] }}</td>
+														<td class="text-center">{{ result['nombreQuantitiesExpiryPn']|default(0) }}</td>
+														<td class="text-center">{{ result['nombreQuantitiesExpiryF75']|default(0) }}</td>
+														<td class="text-center">{{ result['nombreQuantitiesExpiryF100']|default(0) }}</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- End Service Item -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- End Peremption Section -->
+			<br/>
+			<br/>
+			<br/>
+			<!-- Retro inforamtion Section - Retro information Page -->
+			<section id="retroinfo" class="retroinfo">
+				<!-- Section Title -->
+				<div class="container section-title" data-aos="fade-up">
+					<h2>MESSAGE/RETRO INFORMATION</h2>
+				</div>
+				<!-- End Section Title -->
+
+				<div class="container">
+					<form method="post" action="{{ path('app_dashboard1_retroinfo', {'role': 'ROLE_CENTRAL_SUPERVISOR'}) }}" enctype="multipart/form-data">
+						<div class="card card-body">
+							<div class="row">
+								<div class="col-md-2">
+									Adresser à
+								</div>
+								<div class="col-md-6">
+									<div class="form-group" title="...">
+										<input type="checkbox" name="chkAllCentral" id="chkAllCentral">&nbsp; A tous les CGIS NUT
+										<br>
+										<input type="checkbox" name="chkAllRnr" id="chkAllRnr">&nbsp; A tous les RNR
+										<br>
+										<input type="checkbox" name="chkAllRnd" id="chkAllRnd">&nbsp; A tous les RND
+									</div>										
+									<p>OU</p>
+									<label for="selectCentral">Selective CGIS NUT</label>
+									<select name="selectCentral" id="selectCentral" class="form-control">
+										<option value="">Veuillez sélectionner.</option>
+										{% for centralSupervisor in allCentralSupervisor %}
+											{% if centralSupervisor.idUser != app.user.id %}
+												<option value="{{ centralSupervisor.idUser }}">
+													{{ centralSupervisor.nomUser|default('') ~ ' ' ~ centralSupervisor.prenomsUser|default('') }}
+												</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<p></p>
+									<p>OU</p>
+									<label for="selectRnr">Selective RNR</label>
+									<select name="selectRnr" id="selectRnr" class="form-control">
+										<option value="">Veuillez sélectionner.</option>
+										{% for regionalSupervisor in allRegionalSupervisors %}
+											{% if regionalSupervisor.idUser != app.user.id %}
+												<option value="{{ regionalSupervisor.idUser }}">
+													{{ regionalSupervisor.nomUser|default('') ~ ' ' ~ regionalSupervisor.prenomsUser|default('') }}
+												</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<p></p>
+									<p>OU</p>
+									<label for="selectRnd">Selective RND</label>
+									<select name="selectRnd" id="selectRnd" class="form-control">
+										<option value="">Veuillez sélectionner.</option>
+										{% for districtSupervisor in allDistrictAgents %}
+											{% if districtSupervisor.idUser != app.user.id %}
+												<option value="{{ districtSupervisor.idUser }}">
+													{{ districtSupervisor.nomUser|default('') ~ ' ' ~ districtSupervisor.prenomsUser|default('') }}
+												</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<label for="txtTextMessage">Message</label>
+									<textarea name="txtTextMessage" id="txtTextMessage" class="form-control"></textarea>
+								</div>
+							</div>
+							<div>
+								<input type="file" name="piecesJointeMessage" id="piecesJointeMessage" class="form-control"><br>
+								<button id="sendMessage" class="btn btn-primary" type="submit">
+									Envoyer
+								</button>
+							</div>
+
+						</div>
+					</form>
+
+					<br>
+
+					<div class="row">
+						<div class="col-md-6">
+							<a class="btn btn-warning d-flex justify-content-center" data-toggle="collapse" id="collapseSentMessageBtn" href="#collapseSentMessage" role="button" aria-expanded="false" aria-controls="collapseSentMessage">
+								Messages envoyés
+							</a>
+						</div>
+						<div class="col-md-6">
+							<a class="btn btn-warning d-flex justify-content-center" data-toggle="collapse" id="collapseMessageReceivedBtn" href="#collapseMessageReceived" role="button" aria-expanded="false" aria-controls="collapseMessageReceived">
+								Messages reçus 
+								{% if unreadMessageCount > 0 %}
+									( {{ unreadMessageCount }} {% if unreadMessageCount == 1 %}non lue{% else %}non lues{% endif %} )
+								{% endif %}
+							</a>
+						</div>
+					</div>
+
+					<div class="collapse" id="collapseSentMessage">
+						<div class="card card-body">
+							<div class="container section-title" data-aos="fade-up" id="titreSent">
+								<h4>ENVOYES</h>
+							</div>
+							<div class="table-responsive table-wrapper">
+								<div class="row margin-left-right-20 margin-top-40">
+									<div class="col-md-12">
+										<table class="table table-bordered table-fixed-header" id="tableDashboardSentMessage">
+											<thead>
+												<tr class="table-success">
+													<th class="textTblCenterBold">Date</th>
+													<th>Destinataire</th>
+													<th>Message</th>
+													<th>Pieces jointes</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for message in sentMessages %}															
+													<tr>																
+														<td class="text-center">{{ message.date|date('d/m/Y') }}</td>
+														<td class="text-center">
+															{{ message.nomRecipient }}
+															<input type="hidden" name="hidIdMessage" value="{{message.id}}">
+														</td>
+														<td class="text-center">
+																{{ message.textMessage }}
+														</td>
+													</a>
+														<td class="text-center">
+														{% if message.pieceJointes|length > 0 %}
+															{% for pieceJointe in message.pieceJointes %}
+																<a href="{{ asset('uploads/retroinfo/' ~ pieceJointe.fileName) }}" target="_blank" style="color: #73a839; font-weight: bold;">
+																	<span style="font-size: 12px;">
+																		{{pieceJointe.fileName}}
+																	</span>
+																</a>																				
+															{% endfor %}
+														{% endif %}
+														</td>
+														<td>
+															{# <a data-toggle="modal" href="#btnDeleteAfficheModal_{{message.id }}" class="btn btn-xs btn-danger">
+																<i class="glyphicon glyphicon-trash"></i>
+																Supprimer
+															</a> #}
+															<div class="modal fade" id="btnDeleteAfficheModal_{{message.id }}">
+																<div class="modal-dialog">
+																	<div class="modal-content">
+																		<div class="modal-header">
+																			<h4 class="modal-title">Confirmation</h4>
+																			<button type="button" class="close" data-dismiss="modal">x</button>
+																		</div>
+																		<div class="modal-body">
+																			{# <a href="{{ path('message_delete', {'id': message.id, 'option': 'for_me'}) }}" class="btn btn-outline-danger">Supprimer pour moi</a> #}
+																			{# <p></p> #}
+																			<a href="{{ path('app_dashboard1_retroinfo_delete_message', {'id': message.id, 'option': 'for_all', 'role' : 'ROLE_CENTRAL_SUPERVISOR'}) }}" class="btn btn-outline-danger">Supprimer</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End collapseSentMessage -->
+
+					<div class="collapse" id="collapseMessageReceived">
+						<div class="card card-body">
+							<div class="container section-title" data-aos="fade-up" id="titreRecu">
+								<h4>RECUS</h>
+							</div>
+							<div class="table-responsive table-wrapper">
+								<div class="row margin-left-right-20 margin-top-40">
+									<div class="col-md-12">
+										<table class="table table-bordered table-fixed-header" id="tableDashboardSentMessage">
+											<thead>
+												<tr class="table-success">
+													<th class="textTblCenterBold">Date</th>
+													<th class="textTblCenterBold">Expéditeur</th>
+													<th class="textTblCenterBold">Message</th>
+													<th class="textTblCenterBold">Pieces jointes</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for message in receivedMessages %}
+													{% if not message.isDeletedPerRecipient %}
+
+														<tr {% if not message.isRead %} style="background: darkgray;" {% endif %}>
+															<td class="text-center">{{ message.date|date('d/m/Y') }}</td>
+															<td class="text-center">{{ message.nomSender }}</td>
+															<td class="text-center">																
+																{% if not message.isRead %} <a href="{{ path('app_dashboard1_retroinfo_update_message', {'id': message.id, 'isread': true, 'role':'ROLE_CENTRAL_SUPERVISOR' }) }}"> {% endif %}
+																	{% if not message.isRead %}
+																		(Non lu)
+																	{% endif %}
+																	{{ message.textMessage }}
+																{% if not message.isRead %}	</a> {% endif %}
+															</td>
+															<td class="text-center">
+																{% if message.pieceJointes|length > 0 %}
+																	{% for pieceJointe in message.pieceJointes %}
+																		<a href="{{ asset('uploads/retroinfo/' ~ pieceJointe.fileName) }}" target="_blank" style="color: #73a839; font-weight: bold;">
+																			<span style="font-size: 12px;">
+																				{{ pieceJointe.fileName }}
+																			</span>
+																		</a>
+																	{% endfor %}
+																{% endif %}
+															</td>
+															<td>
+																{# <a data-toggle="modal" href="#deleteReceived_{{message.id}}" class="btn btn-xs btn-danger">
+																	<i class="glyphicon glyphicon-trash"></i>
+																	Supprimer
+																</a> #}
+																<div class="modal fade" id="deleteReceived_{{message.id}}">
+																	<div class="modal-dialog">
+																		<div class="modal-content">
+																			<div class="modal-header">
+																				<h4 class="modal-title">Confirmation</h4>
+																				<button type="button" class="close" data-dismiss="modal">x</button>
+																			</div>
+																			<div class="modal-body">
+																				<a href="{{ path('app_dashboard1_retroinfo_delete_message', {'id': message.id, 'option': 'for_me', 'role' : 'ROLE_CENTRAL_SUPERVISOR'}) }}" class="btn btn-outline-danger">Supprimer</a>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</td>
+														</tr>
+													{% endif %}
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End collapseMessageReceived -->
+
+				</div>
+			</section>
+		</div>
+		<!-- End Peremption Section -->
+	</div>
+
+	{% set deletedA = app.request.query.get('deleted_a') %}
+	{% set deletedM = app.request.query.get('deleted_m') %}
+	{% set uptadedread = app.request.query.get('uptadedread') %}
+	<script>
+		$(document).ready(function() {
+            $('#selectCentral, #selectRnr, #selectRnd').select2();
+		});
+		window.onload = function() {
+			var currentUrl = window.location.href;
+			var deletedA = {{deletedA|default(0)}};
+			var deletedM = {{deletedM|default(0)}};
+			var uptadedread = {{uptadedread|default(0)}};
+
+			// Extraire la partie de base de l'URL
+			var baseUrl = currentUrl.split("/").slice(0, 3).join("/");
+
+			// Vérifier si l'URL contient les mots clés spécifiques
+			if (currentUrl.includes('deletemessage') || currentUrl.includes('sendmessage') || currentUrl.includes('updatemessage') || deletedA || deletedM || uptadedread) {
+				if (currentUrl.includes('deletemessage') || deletedA || deletedM) {
+					var flashMessage = document.createElement('div');
+					flashMessage.classList.add('alert', 'alert-success');
+					flashMessage.innerHTML = 'Le message a été supprimé avec succès.';
+					var titreRecuElement = document.getElementById('flashMessage');
+					titreRecuElement.appendChild(flashMessage);
+					// Supprimer le message après 3 secondes (3000 millisecondes)
+					setTimeout(function() {
+						flashMessage.remove();
+					}, 3000);
+				}
+				if (currentUrl.includes('sendmessage')) {
+					var flashMessage = document.createElement('div');
+					flashMessage.classList.add('alert', 'alert-success');
+					flashMessage.innerHTML = 'Le message a été envoyé avec succès.';
+					var titreRecuElement = document.getElementById('flashMessage');
+					titreRecuElement.appendChild(flashMessage);
+					// Supprimer le message après 3 secondes (3000 millisecondes)
+					setTimeout(function() {
+						flashMessage.remove();
+					}, 3000);
+				}
+				if (uptadedread) {
+					var flashMessage = document.createElement('div');
+					flashMessage.classList.add('alert', 'alert-success');
+					flashMessage.innerHTML = 'Le message a été lu.';
+					var titreRecuElement = document.getElementById('flashMessage');
+					titreRecuElement.appendChild(flashMessage);
+					// Supprimer le message après 3 secondes (3000 millisecondes)
+					setTimeout(function() {
+						flashMessage.remove();
+					}, 3000);
+				}
+				// Construire la nouvelle URL en ajoutant "/retro_information" à la partie de base de l'URL
+				var newUrl = baseUrl + '#retroinfo';
+				setTimeout(function() {
+					// Rediriger vers la nouvelle URL
+					window.location.href = newUrl;
+				}, 3000); // 3000 millisecondes (3 secondes)
+				
+				console.log(currentUrl);
+				console.log(baseUrl);
+			}
+		};
+	</script>
+</div>
+{% endblock %}

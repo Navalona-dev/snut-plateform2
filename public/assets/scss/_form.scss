@@ -1,0 +1,49 @@
+/* Remove Focus Boxes */
+
+.topnav-user .dropdown-item.active, .topnav-user .dropdown-item:active {
+    text-decoration: none;
+    background-color: transparent;
+}
+
+select:focus {
+  outline: 1px solid lighten($secondary-color, 47%);
+}
+button:focus {
+  outline: none;
+  background-color: lighten($button-color, 4%);
+}
+
+label {
+  font-size: $label-font-size;
+  color: $input-border-color;
+}
+
+
+.register-box {
+    
+    .card-header  {
+    
+        background: $primary-color;
+        margin: -15px 15px 0;
+        border-radius: 3px;
+        border: 0;
+        box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(169, 205, 46, 0.4);
+
+        .card-title {
+            color: #ffffff;
+            font-size: 1.25rem;
+            line-height: 1.4em;
+            font-weight: 400;
+        }
+    }
+    
+    
+}
+.form-group {
+    
+    .custom-select {
+        background: url('../images/custom-select.png') no-repeat right .75rem center ;
+    }
+    
+}
+

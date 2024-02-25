@@ -1,0 +1,70 @@
+<table class="table table-bordered">
+    <tr>
+        <td class="titleTblCenterBoldGreen" colspan="{{nombreMoisWithTotal}}">Nombre d'admissions CRENAS enregistré</td>
+        <td class="titleTblCenterBoldGreen" colspan="{{nombreMoisWithTotal}}">Nombre d'admissions qui avait été projeté </td>
+        <td class="titleTblCenterBoldGreen" rowspan="2">Résultat</td>
+        <td class="titleTblCenterBoldGreen" colspan="{{nombreMoisWithTotal}}">Projections du nombre d'admissions</td>
+        <td class="titleTblCenterBoldGreen" rowspan="2">Résultat</td>
+    </tr>
+    <tr> 
+        {% for mois in lstMoisAdmissionCRENASAnneePrecedent %}
+            <td class="textTblCenter">{{ mois }}</td>
+        {% endfor %}
+            <td class="textTblCenterBoldPink">Total</td>
+        {% for mois in lstMoisAdmissionProjeteAnneePrecedent %}
+            <td class="textTblCenter">{{ mois }}</td>
+        {% endfor %}
+        <td class="textTblCenterBoldPink">Total</td>
+        {% for mois in lstMoisProjectionAnneePrevisionnelle %}
+            <td class="textTblCenter">{{ mois }}</td>
+        {% endfor %}
+        <td class="textTblCenterBoldPink">Total</td>
+    </tr>
+    <tr>
+        {% set numAdmissionCRENAS = 1 %}
+        {% set incrementationAdmissionCRENAS = 0 %} 
+        {% for moisVal in lstMoisAdmissionCRENASAnneePrecedent %}
+            <td class="textTblCenter">
+                <input type="text" class="moisAdmissionCRENASAnneePrecedent inputTblCenterWidth50" name="moisAdmissionCRENASAnneePrecedent{{numAdmissionCRENAS}}"  value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ lstValueMoisAdmissionCRENASAnneePrecedent[incrementationAdmissionCRENAS] | default('') }} {% endif %}" required="required">
+            </td>
+            {% set numAdmissionCRENAS = numAdmissionCRENAS + 1 %}
+            {% set incrementationAdmissionCRENAS = incrementationAdmissionCRENAS + 1 %}
+        {% endfor %}
+
+        <td class="textTblCenter">
+            <input type="text" id="totalCRENASAnneePrecedent" name="totalCRENASAnneePrecedent"  value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.totalCRENASAnneePrecedent }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
+        </td>
+
+        {% set numAdmissionProjete = 1 %}
+        {% set incrementationAdmissionProjeteAnneePrecedent = 0 %} 
+        {% for moisVal in lstMoisAdmissionProjeteAnneePrecedent %}
+            <td class="textTblCenter"><input type="text" class="moisAdmissionProjeteAnneePrecedent inputTblCenterWidth50" name="moisAdmissionProjeteAnneePrecedent{{numAdmissionProjete}}" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ lstValueMoisAdmissionProjeteAnneePrecedent[incrementationAdmissionProjeteAnneePrecedent] | default('') }} {% endif %}" required="required"></td>
+            {% set numAdmissionProjete = numAdmissionProjete + 1 %}
+            {% set incrementationAdmissionProjeteAnneePrecedent = incrementationAdmissionProjeteAnneePrecedent + 1 %}
+        {% endfor %}
+
+        <td class="textTblCenter">
+            <input type="text" id="totalProjeteAnneePrecedent" name="totalProjeteAnneePrecedent"  value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.totalProjeteAnneePrecedent }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
+        </td>
+
+        <td class="textTblCenter">
+            <input type="text" id="resultatAnneePrecedent" name="resultatAnneePrecedent" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.resultatAnneePrecedent }} {% endif %}" class="inputTblCenterWidth50"/>
+        </td>
+
+        {% set numProjectionProjete = 1 %}
+        {% set incrementationProjectionAnneePrevisionnelle = 0 %}
+        {% for moisVal in lstMoisProjectionAnneePrevisionnelle %}
+            <td class="textTblCenter"><input type="text" class="moisProjectionAnneePrevisionnelle inputTblCenterWidth50" name="moisProjectionAnneePrevisionnelle{{numProjectionProjete}}" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ lstValueMoisProjectionAnneePrevisionnelle[incrementationProjectionAnneePrevisionnelle] | default('') }} {% endif %}" required="required"></td>
+             {% set numProjectionProjete = numProjectionProjete + 1 %}
+             {% set incrementationProjectionAnneePrevisionnelle = incrementationProjectionAnneePrevisionnelle + 1 %}
+        {% endfor %}
+
+        <td class="textTblCenter">
+            <input type="text" id="totalAnneeProjection" name="totalAnneeProjection" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.totalAnneeProjection }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
+        </td>
+
+        <td class="textTblCenter">
+            <input type="text" id="resultatAnneeProjection" name="resultatAnneeProjection" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.resultatAnneeProjection }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
+        </td>
+    </tr>    
+</table>

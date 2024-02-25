@@ -1,0 +1,420 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Superviseur central- CRENAS{% endblock %}
+
+{% block body %}
+    <div class="container-supervisor">
+        <div class="centerContentDiv">
+            <button type="button" class="btn btn-success" onclick="window.location='{{ path('app_accueil') }}'">Retour</button>
+        </div>
+        <div class="row"> 
+            <div class="col-lg-12">
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="titleTblRightBold"><h4>Information bon de commande CRENAS </h4></td>
+                        <td><h4 class="text-warning">{{ dataGroupe[0].nomGroupe }}</h4></td>
+                        <td class="titleTblRightBold">Nom</td>
+                        <td>{{ dataUser.nomUser }}</td>
+                        <td class="titleTblRightBold">Prénoms</td>
+                        <td>{{ dataUser.prenomsUser }}</td>
+                        <td class="titleTblRightBold">Email</td>
+                        <td>{{ dataUser.emailUser }}</td>
+                        <td class="titleTblRightBold">Téléphone</td>
+                        <td>{{ dataUser.telephone }}</td> 
+                    </tr>  
+                </table>
+            </div>  
+        </div>
+
+        {% set nombreMois = dataMoisProjection|length %}
+        {% set nombreMoisWithTotal = nombreMois + 1 %}
+
+        <div class="row divWithScroll  margin-left-right-20 table-wrapper">
+            <table class="table table-bordered table-fixed-header" id="tableCrenas">
+                <thead>
+                    <tr class="table-success">
+                        <th colspan="66" class="textTblLeftBold">
+                            Liste des données CRENAS (
+                                {% set province = "" %}
+                                {% for groupe  in dataGroupe %}
+                                    {% if province == "" %}
+                                        {% set province = groupe.provinceNomFR %}
+                                    {% else %}
+                                        {% set province = province ~ "," ~ groupe.provinceNomFR %}
+                                    {% endif %} 
+                                {% endfor %}
+                                {{ province }}
+                            )
+                        </th>
+                    </tr>
+                    <!-- En-tête du tableau --> 
+                    <tr class="table-success">
+                        <th class="textTblCenterBold" rowspan="3">Province</th>
+                        <th class="textTblCenterBold" rowspan="3">Région</th>
+                        <th class="textTblCenterBold" rowspan="3">District (Responsables)</th> 
+
+                        <th class="titleTblCenterBoldGreen" colspan="{{nombreMoisWithTotal}}">Nombre d'admissions CRENAS enregistré</th>
+                        <th class="titleTblCenterBoldGreen" colspan="{{nombreMoisWithTotal}}">Nombre d'admissions qui avait été projeté </th>
+                        <th class="titleTblCenterBoldGreen" rowspan="3">Résultat</th>
+                        <th class="titleTblCenterBoldGreen" colspan="{{nombreMoisWithTotal}}">Projections du nombre d'admissions</th>
+                        <th class="titleTblCenterBoldGreen" rowspan="3">Résultat</th>
+
+                        <th colspan="5" class="titleTblCenterBoldBlue">Quantité nécessaire en intrants nutrition <br/><span style="color:#73a839;">(Besoins théoriques)</span></th>
+                        
+                        <th colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable à l’inventaire AMOX en Boite de 100 cp (SDU total BSD) <br/><span style="color:#73a839;">(SDU AMOX Boite de 100 cp au niveau BSD)</span></th>
+                        <th colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  AMOX à l’inventaire  en Boite de 100 cp (SDU total CSB) <br/><span style="color:#73a839;">(SDU AMOX Boite de 100 cp au niveau CSB)</span></th>
+                        <th rowspan="3" class="textTblCenterBoldPink">TOTAL SDU <br/>AMOX Boite de <br>100 Cp SDSP</th>
+
+                        <th colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  PN à l’inventaire en CARTON (SDU total BSD) <br/><span style="color:#73a839;">(SDU PN en Carton au niveau BSD)</span></th>
+                        <th colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  PN à l’inventaire en CARTON (SDU total CSB) <br/><span style="color:#73a839;">(SDU PN en Carton au niveau CSB)</span></th>
+                        <th rowspan="3" class="textTblCenterBoldPink">TOTAL SDU <br/>PN en carton<br>SDSP</th>
+
+                        <th rowspan="3" class="titleTblCenterBoldGreen">SDU Fiche</th>
+                        <th rowspan="3" class="titleTblCenterBoldGreen">Nombre Total CSB</th>
+                        <th rowspan="3" class="titleTblCenterBoldGreen">Nombre CSB <br/>CRENAS</th>
+                        <th rowspan="3" class="textTblCenterBoldPink">Taux de couverture <br/>CRENAS</th>
+                        <th rowspan="3" class="titleTblCenterBoldGreen">Nombre CSB CRENAS <br/>qui ont soumis <br/>leurs Commandes </th>
+                        <th rowspan="3" class="textTblCenterBoldPink">Taux d'envoi <br/>de rapport bon de commande <br/>des CSB CRENAS </th>
+
+                    </tr> 
+                    <tr class="table-success">
+                        {% for mois in lstMoisAdmissionCRENASAnneePrecedent %}
+                            <th class="titleTblCenterBold" rowspan="2" >{{ mois }}</th>
+                        {% endfor %}
+                            <th class="textTblCenterBoldPink" rowspan="2" >Total</th>
+                        {% for mois in lstMoisAdmissionProjeteAnneePrecedent %}
+                            <th class="titleTblCenterBold" rowspan="2" >{{ mois }}</th>
+                        {% endfor %}
+                        <th class="textTblCenterBoldPink" rowspan="2" >Total</th>
+                        {% for mois in lstMoisProjectionAnneePrevisionnelle %}
+                            <th class="titleTblCenterBold" rowspan="2" >{{ mois }}</th>
+                        {% endfor %}
+                        <th class="textTblCenterBoldPink" rowspan="2">Total</th> 
+
+                        <th class="titleTblCenterBold" rowspan="2">ATPE (en carton)</th>
+                        <th class="titleTblCenterBold" rowspan="2">AMOX (boite de 100)</th>
+                        <th class="titleTblCenterBold" rowspan="2">Fiche patient (unité)</th>
+                        <th class="titleTblCenterBold" rowspan="2">Registre (unité) </th>
+                        <th class="titleTblCenterBold" rowspan="2">Carnet de Rapport CRENAS (unité) </th> 
+
+                        <th class="titleTblCenterBold" colspan="2">Lot A</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot B</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot C</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot D</th>
+                        <th class="titleTblCenterBold" ></th> 
+
+                        <th class="titleTblCenterBold" colspan="2">Lot A</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot B</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot C</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot D</th>
+                        <th class="titleTblCenterBold" ></th>
+
+                        <th class="titleTblCenterBold" colspan="2">Lot A</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot B</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot C</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot D</th>
+                        <th class="titleTblCenterBold" ></th> 
+
+                        <th class="titleTblCenterBold" colspan="2">Lot A</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot B</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot C</th>
+                        <th class="titleTblCenterBold" colspan="2">Lot D</th>
+                        <th class="titleTblCenterBold" ></th>  
+                    </tr> 
+                    <tr class="table-success">
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterBoldPink">Total</th>
+
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterBoldPink">Total</th>
+
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterBoldPink">Total</th>
+
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterSmall">Quantité</th>
+                        <th class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</th> 
+                        <th class="textTblCenterBoldPink">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Fin en-tête du tableau -->
+                    {% for dataCrenas in lstDataCrenasGroupe %} 
+                        <tr>
+                            <td class="titleTblLeftrBoldBlue">{{ dataCrenas.nomProvince }}</td>
+                            <td class="titleTblLeftrBoldBlue">{{ dataCrenas.nomRegion }}</td>
+                            <td class="titleTblLeftrBoldBlue fixeTd">{{ dataCrenas.nomDistrict }} <br/>({{ dataCrenas.nomUser }} {{ dataCrenas.prenomUser }})</td>  
+                            {% set numAdmissionCRENAS = 1 %}
+                            {% set incrementationAdmissionCRENAS = 0 %} 
+                            {% for moisVal in lstMoisAdmissionCRENASAnneePrecedent %}
+                                <td class="textTblCenter">
+                                    {{ lstValueMoisAdmissionCRENASAnneePrecedent[dataCrenas.id][incrementationAdmissionCRENAS] | default('') }} 
+                                </td>
+                                {% set numAdmissionCRENAS = numAdmissionCRENAS + 1 %}
+                                {% set incrementationAdmissionCRENAS = incrementationAdmissionCRENAS + 1 %}
+                            {% endfor %}
+
+                            <td class="textTblCenter">
+                                {{ dataCrenas.totalCRENASAnneePrecedent }}
+                            </td>
+
+                            {% set numAdmissionProjete = 1 %}
+                            {% set incrementationAdmissionProjeteAnneePrecedent = 0 %} 
+                            {% for moisVal in lstMoisAdmissionProjeteAnneePrecedent %}
+                                <td class="textTblCenter">
+                                    {{ lstValueMoisAdmissionProjeteAnneePrecedent[dataCrenas.id][incrementationAdmissionProjeteAnneePrecedent] | default('') }}
+                                </td>
+                                {% set numAdmissionProjete = numAdmissionProjete + 1 %}
+                                {% set incrementationAdmissionProjeteAnneePrecedent = incrementationAdmissionProjeteAnneePrecedent + 1 %}
+                            {% endfor %}
+
+                            <td class="textTblCenter">
+                                {{ dataCrenas.totalProjeteAnneePrecedent }}
+                            </td>
+
+                            <td class="textTblCenter">
+                                {{ dataCrenas.resultatAnneePrecedent }}
+                            </td>
+
+                            {% set numProjectionProjete = 1 %}
+                            {% set incrementationProjectionAnneePrevisionnelle = 0 %}
+                            {% for moisVal in lstMoisProjectionAnneePrevisionnelle %}
+                                <td class="textTblCenter">
+                                    {{ lstValueMoisProjectionAnneePrevisionnelle[dataCrenas.id][incrementationProjectionAnneePrevisionnelle] | default('') }} 
+                                </td>
+                                {% set numProjectionProjete = numProjectionProjete + 1 %}
+                                {% set incrementationProjectionAnneePrevisionnelle = incrementationProjectionAnneePrevisionnelle + 1 %}
+                            {% endfor %}
+
+                            <td class="textTblCenter">
+                                {{ dataCrenas.totalAnneeProjection }}
+                            </td>
+
+                            <td class="textTblCenter">
+                                {{ dataCrenas.resultatAnneeProjection }}
+                            </td>
+
+                            <!-- Quantité nécessaire en intrants nutrition (Besoins théoriques) -->
+                            <td class="textTblCenter">
+                                {{ dataCrenas.besoinAPTE }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.besoinAMOX }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.besoinFichePatient }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.besoinRegistre }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.besoinCarnetRapportCRENAS }}
+                            </td>
+
+                            <!-- SDU AMOX Boite de 100 cp au niveau BSD -->
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite01AmoxSDUCartonBSD }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration01AmoxSDUCartonBSD|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite02AmoxSDUCartonBSD }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration02AmoxSDUCartonBSD|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite03AmoxSDUCartonBSD }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration03AmoxSDUCartonBSD|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite04AmoxSDUCartonBSD }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration04AmoxSDUCartonBSD|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.totalAmoxSDUCartonBSD }}
+                            </td>
+
+                            <!-- SDU AMOX Boite de 100 cp au niveau CSB -->
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite01AmoxSDUCartonCSB }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration01AmoxSDUCartonCSB|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite02AmoxSDUCartonCSB }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration02AmoxSDUCartonCSB|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite03AmoxSDUCartonCSB }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration03AmoxSDUCartonCSB|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite04AmoxSDUCartonCSB }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration04AmoxSDUCartonCSB|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.totalAmoxSDUCartonCSB }}
+                            </td>
+
+                            <!-- TOTAL SDU AMOX Boite de 100 Cp SDSP -->
+                            <td class="textTblCenter">{{ dataCrenas.totalAmoxSDUCartonSDSP }}</td>
+
+                            <!-- SDU PN en Carton au niveau BSD -->
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite01PnSDUCartonBSD }}
+                            </td>
+                            <td class="textTblCenter"> 
+                                {{ dataCrenas.dateExpiration01PnSDUCartonBSD|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite02PnSDUCartonBSD }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration02PnSDUCartonBSD|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite03PnSDUCartonBSD }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration03PnSDUCartonBSD|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite04PnSDUCartonBSD }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration04PnSDUCartonBSD|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.totalPnSDUCartonBSD }}
+                            </td>
+
+                            <!-- SDU PN en Carton au niveau CSB -->
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite01PnSDUCartonCSB }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration01PnSDUCartonCSB|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite02PnSDUCartonCSB }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration02PnSDUCartonCSB|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite03PnSDUCartonCSB }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration03PnSDUCartonCSB|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.quantite04PnSDUCartonCSB }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.dateExpiration04PnSDUCartonCSB|date('Y-m-d') }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCrenas.totalPnSDUCartonCSB }}
+                            </td>
+
+                            <!-- TOTAL SDU PN en carton SDSP -->
+                            <td class="textTblCenter">{{ dataCrenas.totalPnSDUCartonSDSP }}</td>
+
+                            <td class="textTblCenter">{{ dataCrenas.sduFiche }}</td>
+                            <td class="textTblCenter">{{ dataCrenas.nbrTotalCsb }}</td>
+                            <td class="textTblCenter">{{ dataCrenas.nbrCSBCRENAS }}</td>
+                            <td class="textTblCenter">{{ dataCrenas.tauxCouvertureCRENAS }}</td>
+                            <td class="textTblCenter">{{ dataCrenas.nbrCSBCRENASCommande }}</td>
+                            <td class="textTblCenter">{{ dataCrenas.tauxEnvoiCommandeCSBCRENAS }}</td>
+                        </tr>
+                    {% endfor %}  
+                </tbody>
+            </table>
+        </div>
+
+        <div class="centerContentDiv">
+            <button type="button" class="btn btn-success" onclick="window.location='{{ path('app_crenas_group_export_excel', {'groupId': dataGroupe[0].idGroupe}) }}'">Exporter en format Excel</button>
+        </div>
+    </div>  
+    <script>  
+        $(document).ready(function() {
+            $('#tableCrenas').DataTable({
+                dom: 'Blfrtip', 
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tout"]],
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Export Excel',
+                        exportOptions: {
+                            columns: ':visible' // Exporter toutes les colonnes visibles
+                        }
+                    }
+                ],
+                "language": {
+                    "decimal": ",",
+                    "thousands": ".",
+                    "sEmptyTable": "Aucune donnée disponible dans le tableau",
+                    "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                    "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrée",
+                    "sInfoFiltered": "(filtré à partir de _MAX_ entrées au total)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": " ",
+                    "sLengthMenu": "Afficher _MENU_ entrées",
+                    "sLoadingRecords": "Chargement...",
+                    "sProcessing": "Traitement...",
+                    "sSearch": "Rechercher :",
+                    "sZeroRecords": "Aucun enregistrement correspondant trouvé",
+                    "oPaginate": {
+                        "sFirst": "Premier",
+                        "sLast": "Dernier",
+                        "sNext": "Suivant",
+                        "sPrevious": "Précédent"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                        "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

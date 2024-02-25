@@ -1,0 +1,54 @@
+{% extends 'supervisorBase.html.twig' %}
+
+{% block title %}Superviseur central- Groupe CRENAS{% endblock %}
+
+{% block body %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">CRENAS</h1>
+    <p class="mb-4">Vous êtes actuellement sur la page consacrée à la visualisation des CRENAS répartis par groupe. Vous y trouverez une liste des provinces regroupées, permettant de consulter les informations concernant les bons de commande reçus des districts affiliés à chaque groupe.</p>
+    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Liste des groupes</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive table-wrapper"> 
+                <table class="table table-bordered table-fixed-header" id="dataTableGroupeCrenas" width="100%" cellspacing="0">
+                    <thead>
+                        <tr> 
+                            <th class="textTblCenterBoldPink">Groupe</th>
+                            <th class="textTblCenterBoldPink">Provinces</th> 
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th class="textTblCenterBoldPink">Groupe</th>
+                            <th class="textTblCenterBoldPink">Provinces</th>
+                        </tr> 
+                    </tfoot>
+                    <tbody>
+                        {% for key, groupe in lstGroupData %}
+                            <tr>
+                                <td class="titleTblCenterBoldGreen">{{ key }}</td>
+                                <td>
+                                    <ul class="no-decoration">
+                                        {% for element in groupe %}
+                                            <li><a href="{{ path('app_accueil_sp_crenas_in_groupe', {'groupId': element.idGroupe}) }}">{{ element.provinceNomFR }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> 
+
+</div>
+
+{% endblock %}

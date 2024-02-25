@@ -1,0 +1,243 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PVRD{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <h2>Procès - Verbal de Récéption Définitive (PVRD) </h2>
+    </div>
+    {% if (dataPvrd is null ) %}
+        <form id="dynamicForm" method="post" action="{{ path('app_pvrd_save') }}" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td class="titleTblRightBold">Site</td>
+                            <td>
+                                <input type="text" name="Site" id="pvrdSite" value="" required="required" style="width: 400px;"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="titleTblRightBold">Date de réception</td>
+                            <td>  
+                                <input type="date" name="DateReception" class="inputTblCenterWidth150" id="pvrdDateReception" value="" required="required">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="titleTblRightBold">Date de PVRD</td>
+                            <td>
+                                <input type="date" name="DatePvrd" class="inputTblCenterWidth150" id="pvrdDatePvrd" value="" required="required">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="titleTblRightBold">N° Bon de Livraison/Transfert des Intrants de Santé :</td>
+                            <td>
+                                <input type="text" name="NumeroBonLivraison" id="pvrdNumeroBonLivraison" value="" required="required" style="width: 400px;"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="titleTblRightBold">Fournisseur :</td>
+                            <td>
+                                <input type="text" name="Fournisseur" id="pvrdFournisseur" value="" required="required" style="width: 400px;"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="titleTblRightBold">
+                                Téléversé le fichier PVRD :
+                            </td>
+                            <td>
+                                <label class="d-block mb-4"> 
+                                    <input required name="pvrd_file" type="file" class="form-control" />
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-2"></div>
+            </div> 
+            <div class="row">
+                <table id="dynamicFields" class="table table-bordered">
+                    <tr class="dynamicField">
+                        <td class="titleTblRightBold">
+                            <label class="form-label" for="produit_1">Désignation du produit </label>
+                        </td>
+                        <td>
+                            <select name="designation[]" id="designation_1" class="form-control" required="required">
+                                <option value="">Veuillez sélectionner un produit.</option>
+                                {% for produit in dataProduit %}
+                                    <option value="{{ produit.IdProduit }}">{{ produit.NomProduit }}</option>
+                                {% endfor %} 
+                            </select>
+                        </td>
+                        <td class="titleTblRightBold">
+                            <label class="form-label" for="periode_1">Période</label>
+                        </td>
+                        <td>
+                            <select name="periode[]" id="periode_1" class="form-control" required="required">
+                                <option value="">Veuillez sélectionner la période</option>
+                                {% for periode in dataPeriode %}
+                                    <option value="{{ periode.Slug }}">{{ periode.nomCommande }}</option>
+                                {% endfor %} 
+                            </select>
+                        </td>
+                        <td class="titleTblRightBold">
+                            <label class="form-label" for="quantiteBl_1">Quantité sur BL </label>
+                        </td>
+                        <td>
+                            <input type="number" required="required" name="quantiteBl[]" id="quantiteBl_1" class="form-control inputTblCenterWidth100">
+                        </td>
+                        <td class="titleTblRightBold">
+                            <label class="form-label" for="quantiteRecue_1">Quantité recue </label>
+                        </td>
+                        <td>
+                            <input type="number" required="required" name="quantiteRecue[]" id="quantiteRecue_1" class="form-control inputTblCenterWidth100">
+                        </td>
+                        <td>
+                            <button type="button"  class="btn btn-danger removeField">Supprimer</button>
+                        </td>
+                    </tr>
+                </table> 
+            </div>
+            <div class="row">
+                <div class="col-lg-6"> 
+                </div>
+                <div class="col-lg-6" style="text-align:right">
+                    <button type="button" id="addNewField" class="btn btn-success">Ajouter nouveau produit</button>
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col-lg-6" style="text-align:right">
+                    <a class="btn btn-secondary" href="/">Retour à l'acceuil</a> 
+                </div>
+                <div class="col-lg-6">
+                    <button id="submitBtn" class="btn btn-primary" type="submit"> Enregistré le PVRD </button> 
+                </div>
+            </div> 
+        </form>
+    {% else %} 
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <div class="card text-white bg-success mb-3" style="max-width: 800px">
+                    <div class="card-header">Pvrd enregistré avec succès</div>
+                    <div class="card-body">
+                    <h4 class="card-title">Bravo!</h4>
+                    <p class="card-text">Votre PVRD est enregistré et envoyé, vous pouvez le télécharger ou visualiser en utilisant le lien ci-dessous </p> 
+                    <a href="{{ asset('uploads/Pvrd/' ~ dataPvrd.NewFileName) }}" target="_blank" style="color: white; font-weight: bold;">Télécharger le fichier</a> 
+                    </div>
+                </div>
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="titleTblRightBold">Site</td>
+                        <td>
+                            {{ dataPvrd.Site }} 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="titleTblRightBold">Date de réception</td>
+                        <td>  
+                            {{ dataPvrd.DateReception|date('d/m/Y') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="titleTblRightBold">Date de PVRD</td>
+                        <td>
+                            {{ dataPvrd.DatePvrd|date('d/m/Y') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="titleTblRightBold">N° Bon de Livraison/Transfert des Intrants de Santé :</td>
+                        <td>
+                            {{ dataPvrd.NumeroBonLivraison }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="titleTblRightBold">Fournisseur :</td>
+                        <td>
+                            {{ dataPvrd.Fournisseur }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="titleTblRightBold">
+                            Fichier PVRD :
+                        </td>
+                        <td>
+                            <img width="50%" height="50%" src="{{ asset('uploads/PVRD/' ~ dataPvrd.NewFileName) }}" name="ImagePvrd" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-lg-2"></div>
+        </div> 
+    {% endif %}
+</div>  
+ 
+    <script>
+        $(document).ready(function() {
+            let fieldIndex = 1; // Index pour les champs ajoutés dynamiquement
+
+            // Fonction pour supprimer une ligne
+            function removeField(row) {
+                row.remove();
+            }
+
+            $('#addNewField').on('click', function() { 
+                fieldIndex++; // Incrémentation de l'index pour un nouveau champ
+                const newField = `
+                    <tr class="dynamicField">
+                        <td class="titleTblRightBold">
+                            <label class="form-label" for="produit_${fieldIndex}">Désignation du produit </label>
+                        </td> 
+                        <td>
+                            <select name="designation[]" id="designation_${fieldIndex}" class="form-control" required="required">
+                                <option value="">Veuillez sélectionner un produit.</option>
+                                {% for produit in dataProduit %}
+                                    <option value="{{ produit.IdProduit }}">{{ produit.NomProduit }}</option>
+                                {% endfor %} 
+                            </select>
+                        </td>
+                        <td class="titleTblRightBold">
+                            <label class="form-label" for="periode_${fieldIndex}">Période</label>
+                        </td> 
+                        <td>
+                            <select name="periode[]" id="periode_${fieldIndex}" class="form-control" required="required">
+                                <option value="">Veuillez sélectionner la période</option>
+                                {% for periode in dataPeriode %}
+                                    <option value="{{ periode.Slug }}">{{ periode.nomCommande }}</option>
+                                {% endfor %} 
+                            </select>
+                        </td>
+                        <td class="titleTblRightBold">
+                            <label class="form-label" for="quantiteBl_${fieldIndex}">Quantité sur BL </label>
+                        </td>
+                        <td>
+                            <input type="number" name="quantiteBl[]" required="required" id="quantiteBl_${fieldIndex}" class="form-control inputTblCenterWidth100">
+                        </td>
+                        <td class="titleTblRightBold">
+                            <label class="form-label" for="quantiteRecue_${fieldIndex}">Quantité recue </label>
+                        </td>
+                        <td>
+                            <input type="number" name="quantiteRecue[]" required="required" id="quantiteRecue_${fieldIndex}" class="form-control inputTblCenterWidth100">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger removeField">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+                $('#dynamicFields').append(newField);
+            });
+
+            // Gérer la suppression de la ligne
+            $('#dynamicFields').on('click', '.removeField', function() {
+                const rowToRemove = $(this).closest('tr'); // Trouver la ligne parente du bouton
+                removeField(rowToRemove); // Appeler la fonction pour supprimer la ligne
+            });
+
+            $('#submitBtn').on('submit', function(event) {
+                event.preventDefault(); 
+            });
+        });
+    </script> 
+{% endblock %}

@@ -1,0 +1,83 @@
+/*html, body {
+	overflow-y: hidden;
+}*/
+#info {
+	background-color: #087198;
+	position: absolute;
+	color: #fff;
+	font-size: 12px;
+	font-weight: bold;
+	max-width: 250px;
+	padding: 12px;
+	margin: 10px 0 0 40px;
+	border-radius: 4px;
+	font-size: 13px;
+	cursor: pointer;
+	z-index: 235;
+	opacity: 0.85;
+}
+
+#coordinates {
+	position: absolute;
+	color: #000;
+	font-size: 45px;
+	font-weight: bold;
+	padding: 12px;
+	/*margin: 0px 0 0 40px;*/
+	bottom: 35px;
+	border-radius: 4px;
+	font-size: 13px;
+	cursor: pointer;
+	z-index: 235;
+}
+
+.element {
+	/*background-color: #087198;*/
+	position: absolute;
+	color: #222;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px;
+	top: 10px;
+	right: 25px;
+	border-radius: 4px;
+	font-size: 13px;
+	cursor: pointer;
+	z-index: 235;
+	opacity: 0.85;
+}
+
+#map_content {
+	float:right;
+	width: 30%;
+	margin:auto;
+    position:absolute;
+    top: 60%;
+    right: 3%;
+    /*background: #fff*/
+}
+
+#map {
+	width: 100%;
+	height: 500px;
+	z-index: 123;
+}
+
+#export_map {
+	bottom: 2px; 
+	left: 2px;
+	position: absolute;
+	z-index: 124;
+}
+
+#export-png {
+	color: #000; 
+	/*font: #000; */
+	font-size: 15px;
+	text-decoration-line: none;
+}
+
+#export-png:hover {
+	cursor: pointer;
+	color: #757D75;
+}

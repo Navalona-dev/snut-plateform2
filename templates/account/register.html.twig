@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <section class="vh-100" style="background-color: #eee;">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <p class="text-center h1 fw-bold mb-0 mx-1 mx-md-4 mt-4">Inscription dans la plateforme SNUT</p> 
+                        {{ form_errors(registrationForm)|raw }}
+                        <div class="card-body p-md-5">
+                            <div class="row justify-content-center">
+                                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                                    {{ form_start(registrationForm) }}
+                                        <div class="d-flex flex-row align-items-center mb-1"> 
+                                                <div class="form-outline flex-fill mb-0"> 
+                                                    {{ form_label(registrationForm.Province, 'Province', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                    <div class="error-message">
+                                                        {{ form_errors(registrationForm.Province)|raw }}
+                                                    </div>
+                                                    {{ form_widget(registrationForm.Province) }} 
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-1"> 
+                                                <div class="form-outline flex-fill mb-0"> 
+                                                    {{ form_label(registrationForm.Region, 'Region', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                    <div class="error-message">
+                                                        {{ form_errors(registrationForm.Region)|raw }}
+                                                    </div>
+                                                    {{ form_widget(registrationForm.Region) }} 
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-1">
+                                                <div class="form-outline flex-fill mb-0"> 
+                                                    {{ form_label(registrationForm.District, 'District', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                    <div class="error-message">
+                                                        {{ form_errors(registrationForm.District)|raw }}
+                                                    </div>
+                                                    {{ form_widget(registrationForm.District) }} 
+                                                </div>  
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-1" >
+                                                <div id="divCHU"  class="form-outline flex-fill mb-0" style="display: none;"> 
+                                                    {{ form_label(registrationForm.CentreHospitalierUniversitaire, 'Centre Hospitalier Universitaire', { 'label_attr': {'class': 'form-label mt-2'} }) }} 
+                                                    <div class="error-message">
+                                                        {{ form_errors(registrationForm.CentreHospitalierUniversitaire)|raw }}
+                                                    </div>
+                                                    {{ form_widget(registrationForm.CentreHospitalierUniversitaire) }} 
+                                                </div>  
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-1"> 
+                                                <div class="form-outline flex-fill mb-0">
+                                                    {{ form_label(registrationForm.Nom, 'Nom', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                    <div class="error-message">
+                                                        {{ form_errors(registrationForm.Nom)|raw }}
+                                                    </div>
+                                                    {{ form_widget(registrationForm.Nom) }} 
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-1"> 
+                                                <div class="form-outline flex-fill mb-0">
+                                                    {{ form_label(registrationForm.Prenoms, 'Prénoms', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                    {{ form_widget(registrationForm.Prenoms) }}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-1"> 
+                                                <div class="form-outline flex-fill mb-0">
+                                                    {{ form_label(registrationForm.Telephone, 'Téléphone (+261)', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                    <div class="error-message">
+                                                        {{ form_errors(registrationForm.Telephone)|raw }}
+                                                    </div>
+                                                    {{ form_widget(registrationForm.Telephone) }}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-1"> 
+                                                <div class="form-outline flex-fill mb-0">
+                                                    {{ form_label(registrationForm.email, 'Email (Login)', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                    <div class="error-message">
+                                                        {{ form_errors(registrationForm.email)|raw }}
+                                                    </div>
+                                                    {{ form_widget(registrationForm.email) }} 
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-1"> 
+                                                <div class="form-outline flex-fill mb-0">
+                                                    {{ form_label(registrationForm.plainPassword, 'Mot de passe', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                    <div class="error-message">
+                                                        {{ form_errors(registrationForm.plainPassword)|raw }}
+                                                    </div>
+                                                    {{ form_widget(registrationForm.plainPassword) }} 
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-4"> 
+                                                <div class="form-outline flex-fill mb-0">
+                                                    {{ form_label(registrationForm.agreeTerms, 'Condition et terme', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                    {{ form_widget(registrationForm.agreeTerms) }}  
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-1"> 
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <a class="btn btn-secondary" href="{{ path('app_accueil') }}">Retour à l'acceuil</a>
+                                                    <button type="submit" class="btn btn-primary">Enregistrer</button> 
+                                                </div>
+                                            </div>
+                                        {{ form_end(registrationForm) }}
+                                    </div>
+                                    <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2"> 
+                                        <img src="images/draw1.webp" class="img-fluid" alt="Sample image"> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+        $(function() {
+            $("#divCHU").hide();
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sélectionnez les éléments de sélection
+            const provinceSelect = document.querySelector('.province-select');
+            const regionSelect = document.querySelector('.region-select'); 
+            const districtSelect = document.querySelector('.district-select'); 
+            const chuSelect = document.querySelector('.chu-select')
+            
+            // Écoutez les changements dans la sélection de la province
+            provinceSelect.addEventListener('change', function() {            
+                // Récupérez la valeur sélectionnée
+                const selectedProvince = provinceSelect.value; 
+                fetch('/regionProvince?province_id=' + selectedProvince)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Mettez à jour la sélection de la région
+                        regionSelect.innerHTML = '<option value="">Sélectionnez une région</option>';
+                        data.forEach(region => {
+                            regionSelect.innerHTML += `<option value="${region.id}"> ${region.name} </option>`;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la requête AJAX :', error);
+                    });
+            }); 
+
+            // Écoutez les changements dans la sélection de la région
+            regionSelect.addEventListener('change', function(){
+                // Récupérez la valeur sélectionnée
+                const selectedRegion = regionSelect.value; 
+                fetch('/districtRegion?region_id=' + selectedRegion)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Mettez à jour la sélection de la région
+                        districtSelect.innerHTML = '<option value="">Sélectionnez un district</option>';
+                        data.forEach(district => {
+                            districtSelect.innerHTML += `<option value="${district.id}"> ${district.name} </option>`;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la requête AJAX :', error);
+                    });
+            });
+
+            // Écoutez les changements dans la sélection de la district
+            districtSelect.addEventListener('change', function() {
+                // Récupérez la valeur sélectionnée
+                const selectedDistrict = districtSelect.value;  
+                fetch('/chuDistrict?district_id=' + selectedDistrict)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Mettez à jour la sélection de la région
+                        chuSelect.innerHTML = '<option value="">Sélectionnez une CHU</option>';
+                        data.forEach(district => {
+                            chuSelect.innerHTML += `<option value="${district.id}"> ${district.name} </option>`;
+                        });
+                        // Vérifiez si data est supérieur à zéro
+                        if (data.length > 0) {
+                            $("#divCHU").show();
+                        } else {
+                            $("#divCHU").hide();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la requête AJAX :', error);
+                    });
+            });
+            
+        });
+    </script>
+{% endblock %}
+

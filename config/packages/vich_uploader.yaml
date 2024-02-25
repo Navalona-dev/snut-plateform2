@@ -1,0 +1,28 @@
+vich_uploader:
+    db_driver: orm
+
+    metadata:
+       type: attribute
+
+    mappings:
+       uploads_rmanut:
+           uri_prefix: '%RMA_NUT_BASEPATH%'
+           upload_destination: '%kernel.project_dir%/public/%RMA_NUT_BASEPATH%'
+           namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+           inject_on_load: true
+           delete_on_update: true
+           delete_on_remove: true
+       uploads_pvrd:
+           uri_prefix: '%PVRD_BASEPATH%'
+           upload_destination: '%kernel.project_dir%/public/%PVRD_BASEPATH%'
+           namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+           inject_on_load: true
+           delete_on_update: true
+           delete_on_remove: true
+       uploads_retroinfo:
+           uri_prefix: '%RETROINFO_BASEPATH%'
+           upload_destination: '%kernel.project_dir%/public/%RETROINFO_BASEPATH%'
+           namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+           inject_on_load: true
+           delete_on_update: true
+           delete_on_remove: true

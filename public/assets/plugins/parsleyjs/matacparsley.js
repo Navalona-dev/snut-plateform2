@@ -1,0 +1,1 @@
+$('#formExo01').parsley().options.requiredMessage = "Ce champ est requis";

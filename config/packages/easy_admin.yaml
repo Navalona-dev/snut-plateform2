@@ -1,0 +1,22 @@
+easy_admin:
+  entities:
+    Groupe:
+      class: App\Entity\Groupe
+      form:
+        type: App\Form\GroupeType
+        fields:
+          - 'nom'
+          - { property: 'provinces', type: 'entity', type_options: { class: 'App\Entity\Province', multiple: true } }
+    Province:
+      class: App\Entity\Province
+      form:
+        fields:
+          - 'nom'
+          - { property: 'districts', type: 'entity', type_options: { class: 'App\Entity\District', multiple: true } }
+    District:
+      class: App\Entity\District
+      form:
+        fields:
+          - 'nom'
+          - { property: 'type', type: 'choice', type_options: { choices: { 'enclavé': 'Enclavé', 'non_enclavé': 'Non enclavé' } } }
+          - { property: 'province', type: 'entity', type_options: { class: 'App\Entity\Province' } }

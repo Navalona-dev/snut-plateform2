@@ -1,0 +1,190 @@
+/* Wizard */
+
+.wizard {
+     display: flex;
+    .audible {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .steps {
+
+        padding: 0;
+
+        &>ul {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: stretch;
+            margin-bottom: 0;
+
+            li {
+                flex-grow: 1;
+
+                a {
+                    display: inline-block;
+                    text-align: left;
+                    width: 100%;
+                    background-color: $light-color;
+                    border-radius: 5px;
+
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+
+                .number {
+                    display: inline-block;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    font-size: 18px;
+                    border: 2px solid $dark-color;
+                    color: $dark-color;
+                    margin-right: 10px;
+                    line-height: 30px;
+                    text-align: center;
+                    
+                    @media (max-width: 767px) {
+                         margin-right: 0;
+                        
+                    }
+                }
+
+                .bd-wizard-step-title {
+                    font-size: 16px;
+                    color: $dark-color;
+
+                    @media (max-width: 767px) {
+                        display: none;
+                        
+                    }
+                }
+
+                &.current,
+                &.done {
+                    
+                    a {
+                        background-color: $primary-color;
+                    }
+                    .number {
+                        color: #ffffff;
+                        border-color: #ffffff;
+                    }
+
+                    .bd-wizard-step-title{
+                        color: #ffffff;
+                    }
+                }
+            }
+        }
+    }
+
+    .content {
+        margin-bottom: 45px;
+
+        .title {
+            display: none;
+        }
+
+        .section-heading {
+            font-size: 24px;
+            color: #030303;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #030303
+        }
+        label {
+            font-size: 15px;
+            color: #919aa3;
+            font-weight: normal;
+            margin-bottom: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-control {
+            min-height: calc(1.5em + .75rem + 2px);
+        
+
+            &::placeholder {
+                color: #919aa3;
+            }
+        }
+    }
+
+    .actions {
+
+        margin-top: 53px;
+
+        &>ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        li {
+
+            &:first-child, &:first-child.disabled + li {
+                margin-left: 0;
+            }
+
+            a {
+                display: inline-block;
+        
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            &.disabled {
+                display: none;
+            }
+        }
+    }
+}
+
+
+
+.wizard {
+    
+    fieldset {
+        position: relative;
+        
+    }
+    .loader-overlay {
+        
+        background: rgba(255, 255, 255, 0.4) url('../images/spinner.gif') no-repeat center;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+}
+
+
+
+.account-pages {
+    .card {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+    }
+    
+}

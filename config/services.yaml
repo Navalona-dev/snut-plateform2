@@ -1,0 +1,63 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    RMA_NUT_BASEPATH: '/uploads/RMANut'
+    PVRD_BASEPATH: '/uploads/PVRD'
+    RETROINFO_BASEPATH: '/uploads/retroinfo'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\Service\GroupeService:
+        public: true
+
+    App\Finder\UserFinder:
+        public: true
+    
+    App\Finder\AnneePrevisionelleFinder:
+        public: true
+
+    App\Finder\RmaNutFinder:
+        public: true
+    
+    App\Finder\GroupeFinder:
+        public: true
+
+    App\Finder\CommandeTrimestrielleFinder:
+        public: true
+    
+    App\Finder\CommandeSemestrielleFinder:
+        public: true
+
+    App\Finder\MoisProjectionAdmissionFinder:
+        public: true
+        
+    App\Finder\CreniMoisProjectionAdmissionFinder:
+        public: true
+    
+    App\Finder\DataCrenasFinder:
+        public: true
+    
+    App\Finder\DataCrenasMoisProjectionAdmissionFinder:
+        public: true
+    
+    App\Finder\DataCreniMoisProjectionAdmissionFinder:
+        public: true
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones

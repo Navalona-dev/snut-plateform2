@@ -1,0 +1,29 @@
+<table class="table table-bordered ">
+    <tr class="table-info">
+        <td colspan="5" class="titleTblCenterBoldBlue">Quantité nécessaire en intrants nutrition <br/><span style="color:#73a839;">(Besoins théoriques)</span></td>
+    </tr>
+    <tr class="table-active">
+        <td class="titleTblCenterBold">ATPE (en carton)</td>
+        <td class="titleTblCenterBold">AMOX (boite de 100)</td>
+        <td class="titleTblCenterBold">Fiche patient (unité)</td>
+        <td class="titleTblCenterBold">Registre (unité) </td>
+        <td class="titleTblCenterBold">Carnet de Rapport CRENAS (unité) </td>
+    </tr>
+    <tr>
+        <td class="textTblCenter">
+            <input type="text" name="besoinAPTE" class="inputTblCenterWidth60 readonly-field" id="besoinAPTE" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.besoinAPTE }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="besoinAMOX" class="inputTblCenterWidth60 readonly-field" id="besoinAMOX" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.besoinAMOX }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="besoinFichePatient" class="inputTblCenterWidth60 readonly-field" id="besoinFichePatient" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.besoinFichePatient }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="besoinRegistre" class="inputTblCenterWidth60 readonly-field" id="besoinRegistre" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.besoinRegistre }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="besoinCarnetRapportCRENAS" class="inputTblCenterWidth60 readonly-field" id="besoinCarnetRapportCRENAS" readonly="readonly" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.besoinCarnetRapportCRENAS }} {% endif %}" required="required">
+        </td>
+    </tr>
+</table>

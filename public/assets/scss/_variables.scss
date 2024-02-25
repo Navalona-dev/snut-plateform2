@@ -1,0 +1,75 @@
+// Variables
+// Heading Color
+$heading-color: #303030;
+
+// Text Color
+$text-color: #707070;
+
+// Default Background
+$bg-default: #70c745;
+
+// Gray Background
+$bg-gray: #f2f4f5;
+
+// Primary Color
+$primary-color: #a9cd2e;
+
+// White Color
+$white-color: #ffffff;
+
+
+
+$light-color: #f4f4f4;
+// Dark Color
+$dark-color: #acb2b5;
+
+// Border Color
+$border-color: #ebebeb;
+
+// Hover Color
+$hover-color: #70c745;
+
+// Footer Color
+$footer-color: #2d2d2d;
+
+// Secondary Color
+$secondary-color: #b7b7b7;
+
+$button-color: #a9cd2e;
+
+
+
+$error-color : #a9cd2e;
+
+$success-color: #a9cd2e;
+// Fonts
+
+$font-family-base: 'Roboto', sans-serif;
+$font-family-base1: 'Quicksand', sans-serif;
+$font-family-base2: 'Open Sans', sans-serif;
+
+$fonts-p-size : 1rem !default; // Assumes the browser default, typically `16px`
+
+$button-color: $secondary-color !default;
+
+
+
+
+
+/*** Forms ***/
+// Text Inputs + Textarea
+$input-border-color: color("grey", "base") !default;
+$input-bg-color: #fff !default;
+$input-error-color: $error-color !default;
+$input-success-color: $success-color !default;
+$input-focus-color: $secondary-color !default;
+$label-font-size: .8rem !default;
+$input-disabled-color: rgba(0,0,0, .26) !default;
+$input-disabled-solid-color: #BDBDBD !default;
+
+// Radio Buttons
+$radio-fill-color: $secondary-color !default;
+$radio-empty-color: #5a5a5a !default;
+
+
+

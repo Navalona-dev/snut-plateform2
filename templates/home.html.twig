@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}  
+    <div class="jumbotron"> 
+        <div class="row">
+            <div class="col-lg-6">
+                <img src="images/BannerSNUT.jpg" style="height: 250px;"/>
+            </div>
+            <div class="col-lg-6" style="text-align: center;">
+                <h2 class="display-7">Bienvenue sur la Plateforme SNUT Madagascar</h2>  
+                {% if app.user %}
+                    <p style="font-size:20px; font-weight:bold;">Bonjour {{ app.user.Nom }} {{ app.user.Prenoms }}!</p>
+
+                    {% if app.session.flashbag.has('success') %} 
+                        {% for flashMessage in app.flashes('success') %}
+                        
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i> {{ flashMessage|raw }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% if is_granted('ROLE_REGIONAL_SUPERVISOR') %}
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <a class="btn btn-warning" href="{{ path('app_crenas') }}">Visualiser les RMA Nut par région</a> 
+                            </div>
+                            <div class="col-lg-4">
+                                <a class="btn btn-warning" href="{{ path('app_crenas') }}">Visualiser les bon de commande CRENAS par région</a> 
+                            </div>
+                            <div class="col-lg-4">
+                                <a class="btn btn-warning" href="{{ path('app_creni') }}">Visualiser les bon de commande CRENI par région</a> 
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row"> 
+                                <div class="col-lg-3">
+                                    <a class="btn btn-success" href="{{ path('app_rmanut') }}">{% if (dataRMANut is defined and dataRMANut is null ) %} Déposer {% else %} Consulter {% endif %} le fichier RMA Nut</a> 
+                                </div>
+                                <div class="col-lg-3">
+                                    <a class="btn btn-success" href="{{ path('app_crenas') }}">{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} Modifier {% else %} Remplir {% endif %} le bon de commande CRENAS</a> 
+                                </div>
+                                <div class="col-lg-3">
+                                    <a class="btn btn-success" href="{{ path('app_creni') }}">{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} Modifier {% else %} Remplir {% endif %} le bon de commande CRENI</a> 
+                                </div>
+                                <div class="col-lg-3">
+                                    <a class="btn btn-success" href="{{ path('app_pvrd') }}">{% if (dataPvrd is defined and dataPvrd is null) %} Déposer {% else %} Consulter {% endif %} le fichier PVRD</a> 
+                                </div> 
+                        </div>
+                    {% endif %}
+                    <div class="row justify-content-center align-items-center" style="margin-top: 20px;">
+                        <a href="{{ path('app_logout') }}" style="font-weight: bold; color: #FF6B8F;">Se déconnecter</a>
+                    </div>
+                {% else %}
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"> 
+                            <span style='font-weight:bold;'><a href="{{ path('app_login') }}" style="color:#59b43c !important;">Se connecter</a>
+                            &nbsp;&nbsp; <a href="{{ path('app_register') }}" style="color: #59b43c !important;">S'inscrire</a></span>
+                        </li>
+                    </ul>
+                {% endif %} 
+            </div>  
+        </div>     
+        
+        <div class="container my-5">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2>Notre Mission</h2>
+                    <p>Notre mission est de faciliter l'accès aux données cruciales liées à la nutrition, aux fichiers RMA Nut, aux informations sur les CRENAS et CRENI au niveau des districts de Madagascar.</p>
+                </div>
+                <div class="col-lg-6">
+                    <h2>Ce que nous offrons :</h2>
+                    <ul>
+                        <li><strong>Données Nutritionnelles :</strong> Accédez aux données nutritionnelles les plus récentes et aux rapports RMA Nut pour suivre la situation nutritionnelle à Madagascar.</li>
+                        <li><strong>Informations sur les CRENAS et CRENI :</strong> Explorez les informations essentielles concernant les Centres de Récupération et d'Education Nutritionnelle Ambulatoire pour la Malnutrition Aiguë Sévère sans complications (CRENAS) et les Centres de Récupération et d'Education Nutritionnelle Intensif 
+pour la Malnutrition Aiguë avec complications (CRENI) dans les districts malgaches.</li>
+                        <li><strong>Partage et Collaboration :</strong> Collaborez avec d'autres professionnels de la nutrition pour améliorer la santé et le bien-être de la population malgache.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>  
+{% endblock %}

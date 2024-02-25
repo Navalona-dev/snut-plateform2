@@ -1,0 +1,88 @@
+{% extends 'supervisorBase.html.twig' %}
+
+{% block title %}Superviseur central- RMA Nut visualisation{% endblock %}
+
+{% block body %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">RMA Nut</h1>
+    <p class="mb-4">Vous êtes sur la page dédiée à la visualisation des RMA Nut par région. Vous y trouverez le nombre de districts dans chaque région, les RMA Nut reçus de ces districts, ainsi que le nombre de districts pouvant envoyer des bons de commande CRENAS et CRENI.</p>
+    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Liste des RMA Nut par région</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive table-wrapper"> 
+                <table class="table table-bordered table-fixed-header" id="dataTableRMANut" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="textTblCenterBoldPink">N°</th> 
+                            <th class="textTblCenterBoldPink">Région</th>
+                            <th class="textTblCenterBoldPink">Chef lieu</th>
+                            <th class="textTblCenterBoldPink">Nombre des districts</th>
+                            <th class="textTblCenterBoldPink">Nombre des RMA Nut reçu</th>
+                            <th class="textTblCenterBoldPink">District éligible pour CRENAS</th>
+                            <th class="textTblCenterBoldPink">District éligible pour CRENI</th>
+                        </tr> 
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th class="textTblCenterBoldPink">N°</th> 
+                            <th class="textTblCenterBoldPink">Région</th>
+                            <th class="textTblCenterBoldPink">Chef lieu</th>
+                            <th class="textTblCenterBoldPink">Nombre des districts</th>
+                            <th class="textTblCenterBoldPink">Nombre des RMA Nut reçu</th>
+                            <th class="textTblCenterBoldPink">District éligible pour CRENAS</th>
+                            <th class="textTblCenterBoldPink">District éligible pour CRENI</th>
+                        </tr> 
+                    </tfoot>
+                    <tbody>
+                        {% set increment = 1 %}
+                        {% for region in lstRegionRMANut %}
+                            <tr>
+                                <td>{{ increment }}</td>
+                                <td class="titleTblLeftrBoldBlue">
+                                    <a href="{{ path('app_sp_rmanut_region', {'regionId': region.regionId}) }}"> 
+                                        {{ region.regionNom }} 
+                                    </a> 
+                                </td>
+                                <td>{{ region.regionChefLieu }}</td>
+                                <td class="titleTblCenterBoldBlue">{{ region.nombreDeDistricts }}</td>
+                                {% if (region.nombreRMANuts > 0) %}
+                                    <td class="titleTblCenterBoldGreen">
+                                        <span class="badge bg-success badge-pill" style="font-size: 14px; color: #FFF">
+                                            {{ region.nombreRMANuts }}
+                                        </span>
+                                    </td>
+                                    {% else %}
+                                    <td class="titleTblCenterBoldGreen">
+                                        <span class="badge bg-danger badge-pill" style="font-size: 14px; color: #FFF">
+                                            {{ region.nombreRMANuts }}
+                                        </span>
+                                    </td>
+                                {% endif %}
+                                <td class="titleTblCenterBoldGreen">
+                                    <span class="badge bg-dark badge-pill" style="font-size: 14px; color: #FFF">
+                                        {{ region.nombreDistrictEligibleCrenas }}
+                                    </span>
+                                </td>
+                                <td class="titleTblCenterBoldGreen">
+                                    <span class="badge bg-dark badge-pill" style="font-size: 14px; color: #FFF">
+                                        {{ region.nombreDistrictEligibleCreni }}
+                                    </span>
+                                </td>
+                                {% set increment = increment +1 %} 
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+
+</div> 
+{% endblock %}

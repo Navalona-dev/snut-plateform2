@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <section class="vh-100" style="background-color: #eee;">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <p class="text-center h2 fw-bold mb-0 mx-1 mx-md-4 mt-4">Inscription: <span style="color:#FA688F;">Superviseur Central</span></p> 
+                        {{ form_errors(registrationSupervisorCentralForm)|raw }}
+                        <div class="card-body p-md-5">
+                            <div class="row justify-content-center">
+                                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                                    {{ form_start(registrationSupervisorCentralForm) }} 
+                                        <div class="d-flex flex-row align-items-center mb-1"> 
+                                            <div class="form-outline flex-fill mb-0">
+                                                {{ form_label(registrationSupervisorCentralForm.Nom, 'Nom', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                <div class="error-message">
+                                                    {{ form_errors(registrationSupervisorCentralForm.Nom)|raw }}
+                                                </div>
+                                                {{ form_widget(registrationSupervisorCentralForm.Nom) }} 
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mb-1"> 
+                                            <div class="form-outline flex-fill mb-0">
+                                                {{ form_label(registrationSupervisorCentralForm.Prenoms, 'Prénoms', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                {{ form_widget(registrationSupervisorCentralForm.Prenoms) }}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mb-1"> 
+                                            <div class="form-outline flex-fill mb-0">
+                                                {{ form_label(registrationSupervisorCentralForm.Telephone, 'Téléphone (+261)', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                <div class="error-message">
+                                                    {{ form_errors(registrationSupervisorCentralForm.Telephone)|raw }}
+                                                </div>
+                                                {{ form_widget(registrationSupervisorCentralForm.Telephone) }}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mb-1"> 
+                                            <div class="form-outline flex-fill mb-0">
+                                                {{ form_label(registrationSupervisorCentralForm.email, 'Email (Login)', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                <div class="error-message">
+                                                    {{ form_errors(registrationSupervisorCentralForm.email)|raw }}
+                                                </div>
+                                                {{ form_widget(registrationSupervisorCentralForm.email) }} 
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mb-1"> 
+                                            <div class="form-outline flex-fill mb-0">
+                                                {{ form_label(registrationSupervisorCentralForm.plainPassword, 'Mot de passe', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                <div class="error-message">
+                                                    {{ form_errors(registrationSupervisorCentralForm.plainPassword)|raw }}
+                                                </div>
+                                                {{ form_widget(registrationSupervisorCentralForm.plainPassword) }} 
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mb-4"> 
+                                            <div class="form-outline flex-fill mb-0">
+                                                {{ form_label(registrationSupervisorCentralForm.agreeTerms, 'Condition et terme', { 'label_attr': {'class': 'form-label mt-2'} }) }} <span style="color:#c71c22">(*)</span>
+                                                {{ form_widget(registrationSupervisorCentralForm.agreeTerms) }}  
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mb-1"> 
+                                            <div class="form-outline flex-fill mb-0">
+                                                <a class="btn btn-secondary" href="{{ path('app_accueil') }}">Retour à l'acceuil</a>
+                                                <button type="submit" class="btn btn-primary">Enregistrer</button> 
+                                            </div>
+                                        </div>
+                                    {{ form_end(registrationSupervisorCentralForm) }}
+                                </div>
+                                <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2"> 
+                                    <img src="images/checklist-153371_640.webp" class="img-fluid" alt="Sample image"> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script> 
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sélectionnez les éléments de sélection
+            const provinceSelect = document.querySelector('.province-select');
+            const regionSelect = document.querySelector('.region-select'); 
+            const districtSelect = document.querySelector('.district-select');
+            
+            // Écoutez les changements dans la sélection de la province
+            provinceSelect.addEventListener('change', function() {            
+                // Récupérez la valeur sélectionnée
+                const selectedProvince = provinceSelect.value; 
+                fetch('/regionProvince?province_id=' + selectedProvince)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Mettez à jour la sélection de la région
+                        regionSelect.innerHTML = '<option value="">Sélectionnez une région</option>';
+                        data.forEach(region => {
+                            regionSelect.innerHTML += `<option value="${region.id}"> ${region.name} </option>`;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la requête AJAX :', error);
+                    });
+            }); 
+
+            // Écoutez les changements dans la sélection de la région
+            regionSelect.addEventListener('change', function(){
+                // Récupérez la valeur sélectionnée
+                const selectedRegion = regionSelect.value; 
+                fetch('/districtRegion?region_id=' + selectedRegion)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Mettez à jour la sélection de la région
+                        districtSelect.innerHTML = '<option value="">Sélectionnez un district</option>';
+                        data.forEach(district => {
+                            districtSelect.innerHTML += `<option value="${district.id}"> ${district.name} </option>`;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la requête AJAX :', error);
+                    });
+            });
+            
+        });
+    </script>
+{% endblock %}

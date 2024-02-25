@@ -1,0 +1,219 @@
+.font-10 {
+  font-size: 10px !important;
+}
+
+.font-12 {
+  font-size: 12px !important;
+}
+
+.font-13 {
+  font-size: 13px !important;
+}
+
+.font-14 {
+  font-size: 14px !important;
+}
+
+.font-15 {
+  font-size: 15px !important;
+}
+
+.font-16 {
+  font-size: 16px !important;
+}
+
+.font-18 {
+  font-size: 18px !important;
+}
+
+.font-20 {
+  font-size: 20px !important;
+}
+.text-center {
+  text-align: center;
+}
+.voirie-block label {
+
+  color: #000;
+  font-size: 17px;
+  white-space: nowrap;
+}
+
+
+/*btn-primary*/
+.button-items .btn-primary {
+  background-color: #44a2d2;
+  border: 1px solid #44a2d2;
+  border-radius: 30px;
+  font-size: 16px;
+}
+
+.button-items .btn-warning {
+    background-color: #f9bc0b;
+    border: 1px solid #f9bc0b;
+    border-radius: 30px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.main-wrapper h2 {
+    font-size: 22px;
+}
+
+.nav-tabs .nav-link, .nav-pills .nav-link {
+    color: #313a46;
+    font-weight: 600;
+    background-color: grey;
+}
+.nav-pills .nav-link {
+    color: white;
+    border-radius: 0rem;
+    border: 1px solid #818080;
+    margin-right: 2px;
+    height: 4rem;
+    font-family: 'oswald',sans-serif;
+    vertical-align: middle;
+}
+.nav-pills h5 {
+    font-size: 15px;
+}
+
+.main-wrapper .btn-round {
+    border-radius: 30px;
+}
+.main-wrapper .btn-success {
+    background-color: #0acf97;
+    border: 1px solid #0acf97;
+    border-radius: 30px;
+}
+
+.main-wrapper .btn {
+    border-radius: 3px;
+    font-family: "oswald", sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 30px;
+}
+
+.main-wrapper .form-control {
+    font-size: 13px;
+    height: 38px;
+}
+
+.main-wrapper h4 {
+    line-height: 22px;
+    font-size: 18px;
+}
+
+
+.traitement-sidebar .card-header {
+    font-size: 19px;
+}
+
+
+.table_group .card-title {
+    font-size: 20px;
+}
+.table_group h5 {
+    font-size: 16px;
+}
+
+
+.form-croquis .label-form-croquis, .label-form-croquis{
+    color: #86939e;
+    width: 272px;
+    font-weight: 600;
+    font-size: .775rem;
+    line-height: 30px;
+}
+.form-croquis  .vich-image {
+    width: 100%;
+
+}
+
+.btn-attache {
+    background-color: #a9cd2e !important;
+    color: #fff;
+    max-width: 400px;
+    margin: auto;
+}
+
+
+/* ======
+15. Progress
+   ====== */
+   .progress-suivi {
+    background-color: #e9ecef;
+    border-radius: 50px;
+    height: 10px;
+  }
+
+  .progress-bar-suivi {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    white-space: nowrap;
+    transition: width .6s ease;
+    color: #fff;
+  }
+
+  .progress-animated-suivi {
+    /*width: 0;*/
+    -webkit-animation: progress 3s ease-in-out forwards;
+            animation: progress 3s ease-in-out forwards;
+  }
+
+  @-webkit-keyframes progress-suivi {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes progress-suivi {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @-webkit-keyframes show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Progressbar Vertical */
+  /*.progress-vertical-bottom-suivi,
+  .progress-vertical-suivi {
+    min-height: 250px;
+    height: 250px;
+    width: 10px;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0;
+    margin-right: 20px;
+  }
+
+  .progress-vertical-bottom .progress-bar-suivi {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+  }*/

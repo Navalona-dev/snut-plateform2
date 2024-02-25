@@ -1,0 +1,74 @@
+{% extends 'supervisorBase.html.twig' %}
+
+{% block title %}Superviseur central- PVRD visualisation{% endblock %}
+
+{% block body %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Procès - Verbal de Récéption Définitive (PVRD)</h1>
+    <p class="mb-4">Vous êtes sur la page dédiée à la visualisation des PVRD par région. Vous y trouverez le nombre de districts dans chaque région, les PVRD reçus de ces districts.</p>
+    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Liste des PVRD par région</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive table-wrapper"> 
+                <table class="table table-bordered table-fixed-header" id="dataTablePvrd" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="textTblCenterBoldPink">N°</th> 
+                            <th class="textTblCenterBoldPink">Région</th>
+                            <th class="textTblCenterBoldPink">Chef lieu</th>
+                            <th class="textTblCenterBoldPink">Nombre des districts</th>
+                            <th class="textTblCenterBoldPink">Nombre des PVRD reçu</th> 
+                        </tr> 
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th class="textTblCenterBoldPink">N°</th> 
+                            <th class="textTblCenterBoldPink">Région</th>
+                            <th class="textTblCenterBoldPink">Chef lieu</th>
+                            <th class="textTblCenterBoldPink">Nombre des districts</th>
+                            <th class="textTblCenterBoldPink">Nombre des PVRD reçu</th> 
+                        </tr> 
+                    </tfoot>
+                    <tbody>
+                        {% set increment = 1 %}
+                        {% for region in lstRegionPvrd %}
+                            <tr>
+                                <td>{{ increment }}</td>
+                                <td class="titleTblLeftrBoldBlue">
+                                    <a href="{{ path('app_sp_pvrd_region', {'regionId': region.regionId}) }}"> 
+                                        {{ region.regionNom }} 
+                                    </a> 
+                                </td>
+                                <td>{{ region.regionChefLieu }}</td>
+                                <td class="titleTblCenterBoldBlue">{{ region.nombreDeDistricts }}</td>
+                                {% if (region.nombrePvrds > 0) %}
+                                    <td class="titleTblCenterBoldGreen">
+                                        <span class="badge bg-success badge-pill" style="font-size: 14px; color: #FFF">
+                                            {{ region.nombrePvrds }}
+                                        </span>
+                                    </td>
+                                    {% else %}
+                                    <td class="titleTblCenterBoldGreen">
+                                        <span class="badge bg-danger badge-pill" style="font-size: 14px; color: #FFF">
+                                            {{ region.nombrePvrds }}
+                                        </span>
+                                    </td>
+                                {% endif %}
+                                {% set increment = increment +1 %} 
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+
+</div> 
+{% endblock %}

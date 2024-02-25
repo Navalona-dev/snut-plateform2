@@ -1,0 +1,1 @@
+$('#formAlign').parsley().options.requiredMessage = "Ce champ est obligatoire";

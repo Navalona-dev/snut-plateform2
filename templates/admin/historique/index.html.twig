@@ -1,0 +1,167 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Historiques{% endblock %}
+{% block stylesheets %}
+
+<link href="{{ asset('assets/css/codemirror/codemirror.css') }}" rel="stylesheet">
+
+	<style type="text/css">
+    .CodeMirror{
+        /*overflow-y: scroll;*/
+        height: 600px;
+    }
+
+    .summernote .CodeMirror{
+        overflow-y: scroll;
+        height: 350px;
+    }
+    
+</style>
+{% endblock %}
+{% block body %}
+    <div class="row" style="width:100%">
+         <div class="col-md-4">
+            <div class="form-group bmd-form-group">
+                <label class="bmd-label-floating">Référence dossier</label>
+                <input type="text" class="form-control" id="referenceDossier">
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="form-group bmd-form-group">
+                <label class="bmd-label-floating" id="labelDate">Date</label>
+                <input type="text" class="form-control" id ="date_log">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group bmd-form-group">
+                <button type="submit" class="btn btn-primary" onclick="return getInfoHistoriqueDossier()">Afficher historique</button>
+            </div>
+        </div>
+    </div>
+       
+    <div class="row mt-5" style="width:100%">   
+
+    <div class="col-md-12">
+       <div id="loader" class="loader-overlay">&nbsp;</div>
+        <div class="latexCode">
+            <textarea id="historiques">{{ historiques }}</textarea>
+        </div>
+
+
+    </div>
+    </div>
+
+    
+
+{% endblock %}
+{% block javascripts %}
+<script src="{{ asset('assets/js/datepicker-fr.js') }}"></script>
+<script src="{{ asset('assets/plugins/codemirror/codemirror.js') }}"></script>
+<script type="application/javascript">
+    $(document).ready(function(){
+$("#loader").show();
+$("#date_log").on( "blur", function(){
+    
+    if ($("#date_log").val() !== "" && $("#date_log").val() !== undefined && $("#date_log").val() !== null) {
+        console.log("date_log", $("#date_log").val().length);
+        $("#labelDate").addClass("bmd-label-floating");
+    } else {
+        $("#labelDate").removeClass("bmd-label-floating");
+    }
+} );
+
+
+			$.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+			$( "#date_log" ).datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, 
+                changeYear: true ,  onSelect: function(selectedDate) {
+                    console.log("selectedDate", selectedDate);
+                    $("#labelDate").addClass("bmd-label-floating");
+                    $('#date_log').val(selectedDate);
+		        }
+             });
+		    $('#date_log').datepicker();
+
+            $(document).on('keyup','#date_log',function(e) {
+  	
+                        var date_log = $('#date_log').val().match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+                        
+                        if(date_log !== null && date_log !== undefined) {
+                            $('#date_log')[0].style.borderBottom = "1px solid #9e9e9e";
+                        } else {
+                            if ($('#date_log') !== undefined) {
+                                $('#date_log')[0].style.borderBottom = "1px solid red";
+                            }
+                            return;
+                        }
+	            });
+
+        var editor_historique = CodeMirror.fromTextArea(document.getElementById("historiques"), {
+            lineNumbers: true,
+            inMathMode: true,
+            matchBrackets: true,
+            readOnly: true,
+            mode: 'html',
+        });
+
+        /*editor_translate.on('change', editor => {
+            var translationText = editor.getValue();
+            $.ajax({
+                type: 'post',
+                url: '/gomyclic/environnement/update-translate-template/from-ajax',
+                data: {translationText},
+                success: function (response) {
+
+                },
+                error: function () {
+                    $(".chargementError").css('display', 'block');
+                }
+            })
+        });*/
+        
+       
+   
+    });
+
+function getInfoHistoriqueDossier() {
+    /*$(".loadBody").css('display', 'block');
+
+    $(".editCode").css('display', 'none');*/
+    var referenceDossier = $("#referenceDossier").val();
+
+    var date_log = $('#date_log').val().match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+   
+    
+    if (date_log === null || date_log === undefined || referenceDossier === "" || referenceDossier === undefined || referenceDossier === null) {
+        return false;
+    }
+   
+    $.ajax({
+        type: 'post',
+        url: '/admin/historique-dossier/from-ajax',
+        data: {referenceDossier: referenceDossier, date_log: date_log[0]},
+        success: function (response) {
+            //$(".loadBody").css('display', 'none');
+
+            $(".latexCode").replaceWith(response);
+            var editor_historique = CodeMirror.fromTextArea(document.getElementById("historiques"), {
+            lineNumbers: true,
+            inMathMode: true,
+            matchBrackets: true,
+            readOnly: true,
+            mode: 'html',
+        });
+            return false;
+        },
+        error: function () {
+            //$(".loadBody").css('display', 'none');
+            //$(".chargementError").css('display', 'block');
+
+        }
+
+    });
+
+    return false;
+}
+</script>
+{% endblock %}

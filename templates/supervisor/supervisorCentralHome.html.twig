@@ -1,0 +1,206 @@
+{% extends 'supervisorBase.html.twig' %}
+
+{% block title %}Superviseur central- accueil
+{% endblock %}
+
+{% block body %}
+
+	<form method="post" action="{{ path('app_dashboard_export') }}">
+		<div class="card shadow mb-4">
+			<div class="centerContentDiv">
+				<h3>Tableau de Bord</h3>
+			</div>
+			<div class="card-body">
+				<div class="row margin-left-right-20">
+
+					<div class="row d-flex flex-wrap">
+						<!-- NB DISTRICT -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-left-primary shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+												NB DISTRICT</div>
+											<div class="h5 mb-0 font-weight-bold text-gray-800">{{NumberDistrict}}</div>
+										</div>
+										<div class="col-auto">
+											<i class="fas fa-bars fa-2x text-gray-300"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- RAPPORTS ATTENDUS -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-left-success shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+												RAPPORTS ATTENDUS</div>
+											<div class="h5 mb-0 font-weight-bold text-gray-800">{{RapportAttendus}}</div>
+										</div>
+										<div class="col-auto">
+											<i class="fas fa-file fa-2x text-gray-300"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- RAPPORTS PARVENUS -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-left-info shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-info text-uppercase mb-1">RAPPORTS PARVENUS
+											</div>
+											<div class="row no-gutters align-items-center">
+												<div class="col-auto">
+													<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{RapportParvenus}}</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-auto">
+											<i class="fas fa-briefcase fa-2x text-gray-300"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- TAUX DE RAPPORTAGE -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-left-warning shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+												TAUX DE RAPPORTAGE</div>
+											<div class="h5 mb-0 font-weight-bold text-gray-800">{{TauxRapportage}}
+												%</div>
+										</div>
+										<div class="col-auto">
+											<i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- TAUX DE PROMPTITUDE -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-left-warning shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+												TAUX DE PROMPTITUDE</div>
+											<div class="h5 mb-0 font-weight-bold text-gray-800">{{TauxProptitude}}
+												%</div>
+										</div>
+										<div class="col-auto">
+											<i class="fas fa-clipboard fa-2x text-gray-300"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive table-wrapper">
+
+					<div class="row margin-left-right-20 margin-top-40">
+						<div class="col-md-12">
+							<table class="table table-bordered table-fixed-header" id="tableDashboard">
+								<thead>
+									<tr class="table-success">
+										<th class="textTblCenterBold" rowspan="2">PROVINCES</th>
+										<th class="textTblCenterBold" rowspan="2">REGIONS</th>
+										<th class="textTblCenterBold" rowspan="2">DISTRICTS</th>
+										<th class="textTblCenterBold" rowspan="2">PROMPTITUDE</th>
+										<th class="textTblCenterBold" colspan="3">COMPLETUDE</th>
+										<th class="textTblCenterBold" rowspan="2">POURCENTAGE COMPLETUDE</th>
+									</tr>
+									<tr class="table-success">
+										<th class="textTblCenterBold">RMA Snut</th>
+										<th class="textTblCenterBold">BC CRENAS</th>
+										<th class="textTblCenterBold">BC CRENI</th>
+									</tr>
+								</thead>
+								<thead></thead>
+								<tbody>
+									{% set increment = 1 %}
+									{% for districtWithDetails in LstDistrictWithDetails %}
+										<tr>
+											<td class="text-center">{{districtWithDetails["provinceNom"]}}</td>
+											<td class="text-center">{{districtWithDetails["regionNom"]}}</td>
+											<td class="text-center">{{districtWithDetails["districtNom"]}}</td>
+											<td class="text-center">{{(districtWithDetails["promptitude"]) ? "Oui" : "Non"}}</td>
+											<td class="text-center">{{(districtWithDetails["a_fichier_rma_nut"]) ? "Oui" : "Non"}}</td>
+											<td class="text-center">
+												{% if districtWithDetails["isEligibleForCrenas"] %}
+													{{ districtWithDetails["a_data_crenas"] ? "Oui" : "Non" }}
+												{% else %}
+													<span style="color: red;">Non Applicable</span>
+												{% endif %}
+											</td>
+											<td class="text-center">
+												{% if districtWithDetails["isEligibleForCreni"] %}
+													{{ districtWithDetails["a_data_creni"] ? "Oui" : "Non Applicable" }}
+												{% else %}
+													<span style="color: red;">Non Applicable</span>
+												{% endif %}
+											</td>
+											<td class="text-center">
+												{% set totalVariables = 0 %}
+												{% set totalValue = 0 %}
+								
+												{% if districtWithDetails["isEligibleForCreni"] %}
+													{% set totalVariables = totalVariables + 1 %}
+													{% set totalValue = totalValue + districtWithDetails["a_data_creni"] %}
+												{% endif %}
+								
+												{% if districtWithDetails["isEligibleForCrenas"] %}
+													{% set totalVariables = totalVariables + 1 %}
+													{% set totalValue = totalValue + districtWithDetails["a_data_crenas"] %}
+												{% endif %}
+								
+												{% set totalVariables = totalVariables + 1 %}
+												{% set totalValue = totalValue + districtWithDetails["a_fichier_rma_nut"] %}
+								
+												{% if totalVariables > 0 %}
+													{% set pourcentage = (totalValue * 100) / totalVariables %}
+													{{ pourcentage|number_format(2, '.', ',') }}
+												{% else %}
+													0
+												{% endif %}
+											</td>
+										</tr>
+										{% set increment = increment +1 %}
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<input type="hidden" value="{{ NumberDistrict }}" name="hidNumberDistrict">
+					<input type="hidden" value="{{ RapportAttendus }}" name="hidRapportAttendus">
+					<input type="hidden" value="{{ RapportParvenus }}" name="hidRapportParvenus">
+					<input type="hidden" value="{{ TauxRapportage }}" name="hidTauxRapportage">
+					<input type="hidden" value="{{ TauxProptitude }}" name="hidTauxProptitude">
+
+					<div class="centerContentDiv" style="display:none">
+						<button class="btn btn-success" type="submit">Exporter en format Excel</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</form>
+{% endblock %}

@@ -1,0 +1,252 @@
+{% extends 'base_admin.html.twig' %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+
+{% block title %}Edit{% endblock %}
+{% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}" type="text/css" />
+{{ encore_entry_link_tags('app') }}
+
+{% endblock %}
+{% block body %}
+<div class="account-pages mt-5 mb-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="register-box col-md-6">
+                        <div class="card">
+
+                           <div class="card-header card-header-primary">
+                                  <h4 class="card-title mb-0">Créer un compte</h4>
+                            </div>
+
+                            <div class="card-body p-4">
+
+                                {{ form_start(form, {'action': path('admin_user_edit', { 'user': id }), 'method': 'POST'}) }}
+                                    <div class="row">
+                                        <div class="col-lg-12">
+											<div class="form-group input-field">
+
+                                                {{ form_widget(form.niveau) }}
+
+                                            </div>
+											<div class="form-group input-field">
+
+                                                {{ form_widget(form.id_region) }}
+
+                                            </div>
+
+											<div class="form-group input-field">
+
+                                                {{ form_widget(form.id_commune) }}
+
+                                            </div>
+											<div class="form-group input-field">
+
+                                                {{ form_widget(form.privileges) }}
+
+                                            </div>
+                                            <div class="form-group input-field">
+
+                                                {{ form_widget(form.nom) }}
+                                                 <label class="bmd-label-floating" for="fullname">Nom Complet</label>
+                                            </div>
+                                            <div class="form-group input-field">
+
+                                                {{ form_widget(form.prenom) }}
+                                                <label class="bmd-label-floating" for="fullname">Prénoms d'utilisateur</label>
+                                            </div>
+
+                                            <div class="form-group input-field">
+
+                                                {{ form_widget(form.telephone) }}
+                                                <label for="emailaddress" class="bmd-label-floating">Telephone</label>
+                                            </div>
+
+                                            <div class="form-group input-field">
+
+                                                {{ form_widget(form.username) }}
+                                                <label class="bmd-label-floating" for="emailaddress">Identifiant</label>
+                                                {{ form_errors(form.username) }}
+                                            </div>
+
+                                            <div class="form-group input-field">
+
+                                                {{ form_widget(form.email) }}
+                                                {{ form_errors(form.email) }}
+                                                <label class="bmd-label-floating" for="emailaddress">Entrer Email</label>
+                                            </div>
+
+                                            <div class="form-group input-field">
+
+                                                {{ form_widget(form.password.first) }}
+                                                <label for="password" class="bmd-label-floating">Mot de Passe</label>
+                                            </div>
+
+                                            <div class="form-group input-field">
+
+                                                {{ form_widget(form.password.second) }}
+                                                <label for="password" class="bmd-label-floating">Confirmer Mot de Passe</label>
+                                            </div>
+                                            <div class="form-group input-field">
+                                                <label for="photo" class="bmd-label-floating" style="color:#9e9e9e">Photo :</label>
+                                                {{ form_widget(form.imageFile) }}
+
+                                            </div>
+                                            <div class="form-group input-field">
+                                                <div class="checkbox-info">
+                                                    <input type="checkbox" class="filled-in" id="checkbox-signup">
+                                                    <label class="custom-label" for="checkbox-signup">J'accepte les termes et les conditions</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-0 text-center">
+												{{ form_widget(form.save, { 'label': 'Créer mon compte' }) }}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="loader" class="loader-overlay" style="display:block">&nbsp;</div>
+                                {{ form_end(form) }}
+
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-6 text-center">
+                                <p class="text-muted"><a href="{{path('app_login')}}" class="text-muted ml-1">J'ai déjà un compte</a></p>
+                            </div> <!-- end col -->
+							<div class="col-6 text-center">
+                                <p class="text-muted"><a href="{{path('app_forgotten_password')}}" class="text-muted ml-1">Mot de passe oublié</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}
+{% block javascripts %}
+{{ encore_entry_script_tags('app') }}
+<script src="{{ asset('assets/js/select2.min.js') }}"></script>
+<script>
+		$(document).ready(function(){
+			$('#user_id_region').css('display', 'none');
+			$('#user_id_commune').css('display', 'none');
+
+            $(".mul-select").select2({
+                    placeholder: "Choisir privilege", //placeholder
+                    tags: true,
+                    tokenSeparators: ['/',',',';'," "]
+                });
+
+            $('#user_imageFile_file').on('change',function(e){
+                //get the file name
+
+                let filename = $(this)[0].value;
+                const idx = filename.lastIndexOf("\\");
+                filename = filename.substr(idx+1);
+
+                $('label[for=\'user_imageFile_file\']').html(filename);
+            });
+        });
+		function getStateForm(niveau) {
+
+
+			switch (niveau) {
+			case 'Ministeriel':
+                $('#user_id_region').val('');
+				$('#user_id_commune').val('');
+				$('#user_id_region').css('display', 'none');
+				$('#user_id_commune').css('display', 'none');
+				break;
+			case 'Regionale':
+				$('#user_id_region').css('display', 'block');
+				$('#user_id_commune').css('display', 'none');
+				break;
+			case 'Technique':
+				$('#user_commune').val('');
+				$('#user_id_region').css('display', 'block');
+				$('#user_id_commune').css('display', 'none');
+				break;
+			case 'Communale':
+				$('#user_id_region').css('display', 'block');
+				$('#user_id_commune').css('display', 'block');
+				break;
+			default:
+				$('#user_id_region').css('display', 'none');
+				$('#user_id_commune').css('display', 'none');
+			}
+
+            $("#loader").show();
+            $.ajax({
+                url : '/register/from-ajax-privilege',
+                type: 'post',
+                data :  {niveau: niveau},
+                success: function(response) {
+                // Replace current position field ...
+
+               $("#user_privileges").empty();
+
+                var lastKey = Object.keys(response)[Object.keys(response).length-1];
+
+                //$("#user_commune").append('<option value="">Choisir Commune</option>');
+
+                $.each(response, function (key, privilege) {
+                    //alert(privilege);
+                    $("#user_privileges").append('<option value="' + key + '">' + privilege + '</option>').trigger('change');
+
+                });
+                $("#loader").hide();
+                // Position field now displays the appropriate positions.
+                }
+        });
+		}
+
+		function getCommunes(idRegion) {
+			$.ajax({
+				url : '/register/from-ajax',
+				type: 'post',
+				data :  {idRegion: idRegion},
+				success: function(html) {
+				// Replace current position field ...
+				$('.agileits-top').replaceWith(
+					// ... with the returned one from the AJAX response.
+					//alert (elt);
+					html
+				);
+				// Position field now displays the appropriate positions.
+				}
+			});
+		}
+
+		function getCommunes2(idRegion) {
+			if ($('#user_niveau').val() == 'Communale') {
+                $("#loader").show();
+				$.ajax({
+					url : '/register/from-ajax2',
+					type: 'post',
+					data :  {idRegion: idRegion},
+					success: function(response) {
+					// Replace current position field ...
+					$("#user_id_commune").empty();
+
+					var lastKey = Object.keys(response)[Object.keys(response).length-1];
+
+					$("#user_id_commune").append('<option value="">Choisir Commune</option>');
+
+					$.each(response, function (key, commune) {
+						$("#user_id_commune").append('<option value="' + key + '">' + commune + '</option>').trigger('change');
+
+					});
+                    $("#loader").hide();
+					// Position field now displays the appropriate positions.
+					}
+				});
+			}
+		}
+
+</script>
+{% endblock %}
+
+
+

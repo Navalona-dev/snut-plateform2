@@ -1,0 +1,445 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Superviseur central - historique d'admission réel{% endblock %}
+
+{% block body %}
+    <div class="container-supervisor">
+        <div class="centerContentDiv">
+            <button type="button" class="btn btn-success" onclick="window.location='{{ path('app_sp_rmanut_region', {'regionId': district.regionId}) }}'">Retour</button>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="titleTblRightBold"><h6>Consultation District</h6></td>
+                        <td><h6 class="text-warning">{{ district.districtNom }}</h6></td>
+                        <td class="titleTblRightBold">Nom du responsable</td>
+                        <td>{{ district.nomUser }}</td>
+                        <td class="titleTblRightBold">Prénoms du responsable</td>
+                        <td>{{ district.prenomUser }}</td>
+                        <td class="titleTblRightBold">Email du responsable</td>
+                        <td>{{ district.email }}</td>
+                        <td class="titleTblRightBold">Téléphone du responsable</td>
+                        <td>{{ district.telephoneUser }}</td> 
+                    </tr>  
+                    <tr>
+                        <td class="titleTblRightBold" ><h6>Télécharger le RMA Nut envoyé</h6></td>
+                        <td colspan="9"><a href="{{ asset('uploads/RMANut/' ~ district.newFileName) }}" target="_blank" style="color: #73a839; font-weight: bold;">{{ district.newFileName }}</a></td>
+                    </tr> 
+                </table>
+            </div>
+        </div>
+
+        <form method="post" action="{{ path('export_excel_historic_crenas_crenis') }}">
+            <div class="row margin-left-right-10" id="divBtnExport">
+                <div class="col-lg-12 textTblCenter">
+                    <button class="btn btn-success" type="submit">Exporter en format Excel</button>
+                    <input type="hidden" name="hidDistrictName" value="{{district.districtNom}}"/>
+                </div>
+            </div>
+            <br>
+            <div class="row margin-left-right-10">
+                <!-- DEBUT : INFORMATION CONCERNANT RMA NUT POUR CRENAS -->             
+                <div class="col-lg-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered ">
+                            <tr class="table-info">
+                                <td class="titleTblCenterBoldBlue" colspan="4">CRENAS</td>
+                            </tr>
+                            <tr class="table-success">
+                                {% set currentYear = 'now'|date('Y') %}
+                                {% set lastYear = currentYear - 1 %}
+                                <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ lastYear }}</td>
+                                <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ currentYear }} </td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Janvier</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois1LastCrenas" id="mois1LastCrenas"></td>
+                                <td class="titleTblCenterBold">Janvier</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois1NowCrenas" id="mois1NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Février</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois2LastCrenas" id="mois2LastCrenas"></td>
+                                <td class="titleTblCenterBold">Février</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois2NowCrenas" id="mois2NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Mars</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois3LastCrenas" id="mois3LastCrenas"></td>
+                                <td class="titleTblCenterBold">Mars</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois3NowCrenas" id="mois3NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Avril</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois4LastCrenas" id="mois4LastCrenas"></td>
+                                <td class="titleTblCenterBold">Avril</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois4NowCrenas" id="mois4NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Mai</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois5LastCrenas" id="mois5LastCrenas"></td>
+                                <td class="titleTblCenterBold">Mai</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois5NowCrenas" id="mois5NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Juin</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois6LastCrenas" id="mois6LastCrenas"></td>
+                                <td class="titleTblCenterBold">Juin</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois6NowCrenas" id="mois6NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Juillet</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois7LastCrenas" id="mois7LastCrenas"></td>
+                                <td class="titleTblCenterBold">Juillet</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois7NowCrenas" id="mois7NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Août</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois8LastCrenas" id="mois8LastCrenas"></td>
+                                <td class="titleTblCenterBold">Août</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois8NowCrenas" id="mois8NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Septembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois9LastCrenas" id="mois9LastCrenas"></td>
+                                <td class="titleTblCenterBold">Septembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois9NowCrenas" id="mois9NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Octobre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois10LastCrenas" id="mois10LastCrenas"></td>
+                                <td class="titleTblCenterBold">Octobre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois10NowCrenas" id="mois10NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Novembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois11LastCrenas" id="mois11LastCrenas"></td>
+                                <td class="titleTblCenterBold">Novembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois11NowCrenas" id="mois11NowCrenas"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Décembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois12LastCrenas" id="mois12LastCrenas"></td>
+                                <td class="titleTblCenterBold">Décembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois12NowCrenas" id="mois12NowCrenas"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered ">
+                            <tr class="table-info">
+                                {% set currentYear = 'now'|date('Y') %}
+                                {% set nextYear = currentYear + 1 %}
+                                <td class="titleTblCenterBoldBlue" colspan="2">
+                                    Bon de commande CRENAS <br/>Projections du nombre d'admissions <br/> année {{ nextYear }}
+                                </td>
+                            </tr>
+                            {% if valueDataMoisProjection is not empty %}
+                                {% set increment = 0 %}
+                                {% set numProjectionProjete = 1 %}
+                                {% for mois in lstMoisProjectionAnneePrevisionnelle %}  
+                                    <tr>
+                                    {% set moisId = "moisProjection_" ~ mois|replace({' ': '_'}) %}
+                                        <td class="titleTblCenterBold"> {{ mois|replace({' ': '_'}) }} </td>                                        
+                                        <td class="textTblCenter"> <input type="text" class="bonCommandeValueCrenas inputTblCenterWidth40" value="{{ lstValueMoisProjectionAnneePrevisionnelle[arrDataCrenasUser["id"]][increment] | default('') }}" name="moisProjectionAnneePrevisionnelle{{ numProjectionProjete }}" id="{{ moisId }}"> </td>
+                                        <input type="hidden" name="nameMoisProjectionAnneePrevisionnel{{numProjectionProjete}}" value="{{ mois|replace({' ': '_'}) }}"
+                                    </tr>
+                                    {% set numProjectionProjete = numProjectionProjete + 1 %}
+                                    {% set increment = increment + 1 %}
+                                {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="2">
+                                    {# Bon de commande CRENAS non disponible pour ce district  #}
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </table> 
+                    </div>
+                </div>
+                <!-- FIN : INFORMATION CONCERNANT RMA NUT POUR CRENAS -->
+
+                <!-- DEBUT : INFORMATION CONCERNANT RMA NUT POUR CRENI -->
+                <div class="col-lg-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered ">
+                            <tr class="table-info">
+                                <td class="titleTblCenterBoldBlue" colspan="4">CRENI</td>
+                            </tr>
+                            <tr class="table-success">
+                                {% set currentYear = 'now'|date('Y') %}
+                                {% set lastYear = currentYear - 1 %}
+                                <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ lastYear }}</td>
+                                <td class="titleTblCenterBoldBlue" colspan="2">Admis Réel {{ currentYear }} </td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Janvier</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois1LastCreni" id="mois1LastCreni"></td>
+                                <td class="titleTblCenterBold">Janvier</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois1NowCreni" id="mois1NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Février</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois2LastCreni" id="mois2LastCreni"></td>
+                                <td class="titleTblCenterBold">Février</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois2NowCreni" id="mois2NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Mars</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois3LastCreni" id="mois3LastCreni"></td>
+                                <td class="titleTblCenterBold">Mars</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois3NowCreni" id="mois3NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Avril</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois4LastCreni" id="mois4LastCreni"></td>
+                                <td class="titleTblCenterBold">Avril</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois4NowCreni" id="mois4NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Mai</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois5LastCreni" id="mois5LastCreni"></td>
+                                <td class="titleTblCenterBold">Mai</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois5NowCreni" id="mois5NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Juin</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois6LastCreni" id="mois6LastCreni"></td>
+                                <td class="titleTblCenterBold">Juin</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois6NowCreni" id="mois6NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Juillet</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois7LastCreni" id="mois7LastCreni"></td>
+                                <td class="titleTblCenterBold">Juillet</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois7NowCreni" id="mois7NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Août</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois8LastCreni" id="mois8LastCreni"></td>
+                                <td class="titleTblCenterBold">Août</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois8NowCreni" id="mois8NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Septembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois9LastCreni" id="mois9LastCreni"></td>
+                                <td class="titleTblCenterBold">Septembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois9NowCreni" id="mois9NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Octobre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois10LastCreni" id="mois10LastCreni"></td>
+                                <td class="titleTblCenterBold">Octobre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois10NowCreni" id="mois10NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Novembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois11LastCreni" id="mois11LastCreni"></td>
+                                <td class="titleTblCenterBold">Novembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois11NowCreni" id="mois11NowCreni"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="titleTblCenterBold">Décembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois12LastCreni" id="mois12LastCreni"></td>
+                                <td class="titleTblCenterBold">Décembre</td>
+                                <td class="textTblCenter"><input type="text" value="" class="inputTblCenterWidth40"  name="mois12NowCreni" id="mois12NowCreni"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered ">
+                            <tr class="table-info">
+                                {% set currentYear = 'now'|date('Y') %}
+                                {% set nextYear = currentYear + 1 %}
+                                <td class="titleTblCenterBoldBlue" colspan="2">
+                                    Bon de commande CRENI <br/>Projections du nombre d'admissions <br/> année {{ nextYear }}
+                                </td>
+                            </tr>
+                            <tr>
+                                {% if dataCreniMoisProjetionAdmission.id is defined %} 
+                                    <tr>
+                                        <td class="titleTblCenterBold">{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}</td> 
+                                        <td class="textTblCenter">
+                                            <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois01ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni1" id="moisProjection_{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}"> 
+                                            <input type="hidden" value="{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni1">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblCenterBold">{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}</td> 
+                                        <td class="textTblCenter">
+                                            <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois02ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni2" id="moisProjection_{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}">
+                                            <input type="hidden" value="{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblCenterBold">{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}</td> 
+                                        <td class="textTblCenter">
+                                            <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois03ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni3" id="moisProjection_{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}"> 
+                                            <input type="hidden" value="{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni3">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblCenterBold">{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}</td> 
+                                        <td class="textTblCenter">
+                                            <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois04ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni4" id="moisProjection_{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}"> 
+                                            <input type="hidden" value="{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni4">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblCenterBold">{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}</td> 
+                                        <td class="textTblCenter">
+                                            <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois05ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni5" id="moisProjection_{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}"> 
+                                            <input type="hidden" value="{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni5">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTblCenterBold">{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}</td> 
+                                        <td class="textTblCenter">
+                                            <input type="text" class="bonCommandeValueCreni inputTblCenterWidth40" value="{{ dataCreniMoisProjetionAdmission.DataMois06ProjectionAnneePrevisionnelle | default('') }}" name="moisProjectionAnneePrevisionnelleCreni6" id="moisProjection_{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}"> 
+                                            <input type="hidden" value="{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}" name="nameMoisProjectionAnneePrevisionnelCreni6">
+                                        </td>
+                                    </tr> 
+                                {% else %}
+                                    <td colspan="2">
+                                        {# Bon de commande CRENI non disponible pour ce district  #}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        </table> 
+                    </div>                    
+                </div>
+                <!-- FIN : INFORMATION CONCERNANT RMA NUT POUR CRENI -->
+
+            </div>
+        </form>
+    
+    </div>
+    <script src="{{ asset('js/xlsx.full.min.js') }}"></script> 
+    <script src="{{ asset('js/Chart.js') }}"></script>
+    <script>  
+        window.onload = function() {
+            document.getElementById('divBtnExport').style.display = 'none';
+            const filePath = "{{ asset('uploads/RMANut/' ~ district.newFileName) }}"; 
+            const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+
+            const getValueFromWorksheet = (worksheet, column, row) => {
+                const cell = worksheet && worksheet[column + row];
+                return cell && cell.v !== undefined ? cell.v : 0;
+            };
+
+            // Utilisez fetch pour récupérer le contenu du fichier
+            fetch(filePath)
+                .then(response => response.arrayBuffer())
+                .then(buffer => {
+
+                    const data = new Uint8Array(buffer);
+                    const workbook = XLSX.read(data, { type: 'array' }); 
+
+                    const labelsCrenas = [];
+                    const valuesLastCrenas = [];
+                    const valuesNowCrenas = [];
+                    const valuesBonCommandesCrenas = [];
+
+                    const labelsCreni = [];
+                    const valuesLastCreni = [];
+                    const valuesNowCreni = [];
+                    const valuesBonCommandesCreni = [];
+
+                    const processWorksheet = (worksheet, startRow, endRow, startCol, endCol, lastValues, nowValues, bonCommandesValues) => {
+                        let j = 1;
+                        for (let i = startRow; i <= endRow; i++) {
+                            const lastValue = getValueFromWorksheet(worksheet, startCol, i);
+                            const nowValue = getValueFromWorksheet(worksheet, endCol, i);
+
+                            if (months[j-1] === "Janvier") {
+                                var valueBonCommandesCrenas = "";
+                                var valueBonCommandesCreni = "";
+                            } else {
+                                var valueBonCommandesCrenas = 0;
+                                var valueBonCommandesCreni = 0;
+                            }
+
+                            if (startRow === 28 && endRow === 39) {
+                                $("#mois"+ j +"LastCrenas").val(lastValue);
+                                $("#mois"+ j +"NowCrenas").val(nowValue);
+
+                                $(".bonCommandeValueCrenas").each(function(){ 
+                                    let idValue = $(this).attr("id");
+                                    let splitted = idValue.split('_'); 
+                                    let mois = splitted[1]; 
+                                    if (mois == months[j-1]) { 
+                                        valueBonCommandesCrenas = $(this).val(); 
+                                        return false;
+                                    }
+                                });
+
+                                labelsCrenas.push(months[j-1]);
+                                valuesLastCrenas.push(lastValue);
+                                valuesNowCrenas.push(nowValue);
+                                valuesBonCommandesCrenas.push(valueBonCommandesCrenas);
+                            }
+                                                     
+                            if (startRow === 45 && endRow === 56) {
+                                $("#mois"+ j +"LastCreni").val(lastValue);
+                                $("#mois"+ j +"NowCreni").val(nowValue);
+
+                                $(".bonCommandeValueCreni").each(function(){ 
+                                    let idValue = $(this).attr("id");
+                                    let splitted = idValue.split('_'); 
+                                    let mois = splitted[1]; 
+                                    if (mois == months[j-1]) { 
+                                        valueBonCommandesCreni = $(this).val(); 
+                                        return false;
+                                    }
+                                });
+
+                                labelsCreni.push(months[j-1]);
+                                valuesLastCreni.push(lastValue);
+                                valuesNowCreni.push(nowValue);
+                                valuesBonCommandesCreni.push(valueBonCommandesCreni);
+                            }
+
+                            j++;
+                        }
+                    }; 
+
+                    // Process Crenas
+                    const worksheetCrenas = workbook.Sheets[workbook.SheetNames[0]];
+                    processWorksheet(worksheetCrenas, 28, 39, 'N', 'D', valuesLastCrenas, valuesNowCrenas, valuesBonCommandesCrenas);
+
+                    // Process Creni
+                    const worksheetCreni = workbook.Sheets[workbook.SheetNames[10]];
+                    processWorksheet(worksheetCreni, 45, 56, 'L', 'C', valuesLastCreni, valuesNowCreni, valuesBonCommandesCreni);
+
+                    // Créer le graphique avec Chart.js
+                    const currentYear = new Date().getFullYear(); // Récupérer l'année actuelle
+                    const lastYear = currentYear - 1; // Calculer l'année précédente
+                    const nextYear = currentYear + 1; 
+
+                    const valuesBonCommandesCrenasNotEmpty = valuesBonCommandesCrenas.filter(function(value) { return value !== 0; });
+                    console.log(valuesBonCommandesCrenasNotEmpty);  
+                    const valuesBonCommandesCreniNotEmpty = valuesBonCommandesCreni.filter(function(value) { return value !== 0; });
+
+                   // Vérifiez si les tableaux ne sont pas vides
+                    if (valuesBonCommandesCrenasNotEmpty.length > 0 || valuesBonCommandesCreniNotEmpty.length > 0) {
+                        // Affichez le bouton
+                        document.getElementById('divBtnExport').style.display = 'block';
+                    } else {
+                        // Cachez le bouton s'il n'y a pas de données
+                        document.getElementById('divBtnExport').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    // En cas d'erreur, afficher l'alerte
+                    alert("Erreur lors du chargement du fichier : " + error);
+                    // Masquer l'image de chargement
+                    loadingImage.style.display = 'none';
+                });
+        }; 
+    </script>
+{% endblock %}

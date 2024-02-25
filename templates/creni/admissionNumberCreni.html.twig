@@ -1,0 +1,103 @@
+<table class="table table-bordered">
+    <tr>
+        <td class="titleTblCenterBoldGreen" colspan="7">Nombre d'admissions CRENI enregistré <br/>le semestre précédent</td>
+        <td class="titleTblCenterBoldGreen" colspan="7">Nombre d'admissions qui avait été projeté<br/>le semestre précédent</td>
+        <td class="titleTblCenterBoldGreen" rowspan="2">Résultat</td>
+        <td class="titleTblCenterBoldGreen" colspan="7">Projections du nombre d'admissions <br/>pour le prochain semestre</td>
+        <td class="titleTblCenterBoldGreen" rowspan="2">Résultat</td>
+    </tr>
+    <tr>  
+        <td class="textTblCenter">{{ dataMoisProjection.Mois01AdmissionCreniPrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois02AdmissionCreniPrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois03AdmissionCreniPrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois04AdmissionCreniPrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois05AdmissionCreniPrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois06AdmissionCreniPrecedent }}</td>
+        <td class="textTblCenterBoldPink">Total</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois01AdmissionProjeteAnneePrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois02AdmissionProjeteAnneePrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois03AdmissionProjeteAnneePrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois04AdmissionProjeteAnneePrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois05AdmissionProjeteAnneePrecedent }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois06AdmissionProjeteAnneePrecedent }}</td>
+        <td class="textTblCenterBoldPink">Total</td> 
+        <td class="textTblCenter">{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}</td>
+        <td class="textTblCenter">{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}</td>
+        <td class="textTblCenterBoldPink">Total</td> 
+    </tr>
+    <tr>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionCreniPrecedent inputTblCenterWidth50" name="DataMois01AdmissionCreniPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois01AdmissionCreniPrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionCreniPrecedent inputTblCenterWidth50" name="DataMois02AdmissionCreniPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois02AdmissionCreniPrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionCreniPrecedent inputTblCenterWidth50" name="DataMois03AdmissionCreniPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois03AdmissionCreniPrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionCreniPrecedent inputTblCenterWidth50" name="DataMois04AdmissionCreniPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois04AdmissionCreniPrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionCreniPrecedent inputTblCenterWidth50" name="DataMois05AdmissionCreniPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois05AdmissionCreniPrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionCreniPrecedent inputTblCenterWidth50" name="DataMois06AdmissionCreniPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois06AdmissionCreniPrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" id="totalAdmissionCreniSemestrePrecedent" name="totalAdmissionCreniSemestrePrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.totalAdmissionCreniSemestrePrecedent }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionProjeteAnneePrecedent inputTblCenterWidth50" name="DataMois01AdmissionProjeteAnneePrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois01AdmissionProjeteAnneePrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionProjeteAnneePrecedent inputTblCenterWidth50" name="DataMois02AdmissionProjeteAnneePrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois02AdmissionProjeteAnneePrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionProjeteAnneePrecedent inputTblCenterWidth50" name="DataMois03AdmissionProjeteAnneePrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois03AdmissionProjeteAnneePrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionProjeteAnneePrecedent inputTblCenterWidth50" name="DataMois04AdmissionProjeteAnneePrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois04AdmissionProjeteAnneePrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionProjeteAnneePrecedent inputTblCenterWidth50" name="DataMois05AdmissionProjeteAnneePrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois05AdmissionProjeteAnneePrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisAdmissionProjeteAnneePrecedent inputTblCenterWidth50" name="DataMois06AdmissionProjeteAnneePrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois06AdmissionProjeteAnneePrecedent }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" id="totalAdmissionCreniProjetePrecedent" name="totalAdmissionCreniProjetePrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.totalAdmissionCreniProjetePrecedent }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
+        </td>
+        <td class="textTblCenter">
+            <input type="text" id="ResultatDifferenceAdmissionPrecedent" name="ResultatDifferenceAdmissionPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.ResultatDifferenceAdmissionPrecedent }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisProjectionAnneePrevisionnelle inputTblCenterWidth50" name="DataMois01ProjectionAnneePrevisionnelle"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois01ProjectionAnneePrevisionnelle }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisProjectionAnneePrevisionnelle inputTblCenterWidth50" name="DataMois02ProjectionAnneePrevisionnelle"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois02ProjectionAnneePrevisionnelle }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisProjectionAnneePrevisionnelle inputTblCenterWidth50" name="DataMois03ProjectionAnneePrevisionnelle"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois03ProjectionAnneePrevisionnelle }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisProjectionAnneePrevisionnelle inputTblCenterWidth50" name="DataMois04ProjectionAnneePrevisionnelle"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois04ProjectionAnneePrevisionnelle }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisProjectionAnneePrevisionnelle inputTblCenterWidth50" name="DataMois05ProjectionAnneePrevisionnelle"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois05ProjectionAnneePrevisionnelle }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" class="DataMoisProjectionAnneePrevisionnelle inputTblCenterWidth50" name="DataMois06ProjectionAnneePrevisionnelle"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois06ProjectionAnneePrevisionnelle }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            <input type="text" id="totalAdmissionCreniProjeterProchain" name="totalAdmissionCreniProjeterProchain"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.totalAdmissionCreniProjeterProchain }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
+        </td>
+        <td class="textTblCenter">
+            <input type="text" id="ResultatDifferenceAdmissionProchainPrecedent" name="ResultatDifferenceAdmissionProchainPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.ResultatDifferenceAdmissionProchainPrecedent }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
+        </td>
+    </tr>
+</table>

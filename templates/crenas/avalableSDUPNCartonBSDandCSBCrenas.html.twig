@@ -1,0 +1,146 @@
+<table class="table table-bordered">
+    <tr class="table-success">
+        <td colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  PN à l’inventaire en CARTON (SDU total BSD) <br/><span style="color:#73a839;">(SDU PN en Carton au niveau BSD)</span></td>
+    </tr>
+    <tr class="table-success">
+        <td class="titleTblCenterBold" colspan="2">Lot A</td>
+        <td class="titleTblCenterBold" colspan="2">Lot B</td>
+        <td class="titleTblCenterBold" colspan="2">Lot C</td>
+        <td class="titleTblCenterBold" colspan="2">Lot D</td>
+        <td class="titleTblCenterBold" ></td>
+    </tr>
+    <tr class="table-active">
+        <td class="textTblCenterSmall">Quantité</td>
+        <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+        <td class="textTblCenterSmall">Quantité</td>
+        <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+        <td class="textTblCenterSmall">Quantité</td>
+        <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+        <td class="textTblCenterSmall">Quantité</td>
+        <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+        <td class="textTblCenterBoldPink">Total</td>
+    </tr>
+    <tr>
+        <td class="textTblCenter">
+            <input type="text" name="quantite01PnSDUCartonBSD" class="inputTblCenterWidth50 quantitePnSDUCartonBSD" id="quantite01PnSDUCartonBSD" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.quantite01PnSDUCartonBSD }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter"> 
+            {% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %}
+                {% set dateExpiration = dataCrenas.dateExpiration01PnSDUCartonBSD|date('Y-m-d') %}
+                <input type="date" name="dateExpiration01PnSDUCartonBSD" class="inputTblCenterWidth150" id="dateExpiration01PnSDUCartonBSD" value="{{ dateExpiration }}" required="required">
+            {% else %}
+                <input type="date" name="dateExpiration01PnSDUCartonBSD" class="inputTblCenterWidth150" id="dateExpiration01PnSDUCartonBSD" value="" required="required">
+            {% endif %} 
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="quantite02PnSDUCartonBSD" class="inputTblCenterWidth50 quantitePnSDUCartonBSD" id="quantite02PnSDUCartonBSD" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.quantite02PnSDUCartonBSD }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            {% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %}
+                {% set dateExpiration = dataCrenas.dateExpiration02PnSDUCartonBSD|date('Y-m-d') %}
+                <input type="date" name="dateExpiration02PnSDUCartonBSD" class="inputTblCenterWidth150" id="dateExpiration02PnSDUCartonBSD" value="{{ dateExpiration }}" required="required">
+            {% else %}
+                <input type="date" name="dateExpiration02PnSDUCartonBSD" class="inputTblCenterWidth150" id="dateExpiration02PnSDUCartonBSD" value="" required="required">
+            {% endif %} 
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="quantite03PnSDUCartonBSD" class="inputTblCenterWidth50 quantitePnSDUCartonBSD" id="quantite03PnSDUCartonBSD" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.quantite03PnSDUCartonBSD }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            {% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %}
+                {% set dateExpiration = dataCrenas.dateExpiration03PnSDUCartonBSD|date('Y-m-d') %}
+                <input type="date" name="dateExpiration03PnSDUCartonBSD" class="inputTblCenterWidth150" id="dateExpiration03PnSDUCartonBSD" value="{{ dateExpiration }}" required="required">
+            {% else %}
+                <input type="date" name="dateExpiration03PnSDUCartonBSD" class="inputTblCenterWidth150" id="dateExpiration03PnSDUCartonBSD" value="" required="required">
+            {% endif %} 
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="quantite04PnSDUCartonBSD" class="inputTblCenterWidth50 quantitePnSDUCartonBSD" id="quantite04PnSDUCartonBSD" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.quantite04PnSDUCartonBSD }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            {% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %}
+                {% set dateExpiration = dataCrenas.dateExpiration04PnSDUCartonBSD|date('Y-m-d') %}
+                <input type="date" name="dateExpiration04PnSDUCartonBSD" class="inputTblCenterWidth150" id="dateExpiration04PnSDUCartonBSD" value="{{ dateExpiration }}" required="required">
+            {% else %}
+                <input type="date" name="dateExpiration04PnSDUCartonBSD" class="inputTblCenterWidth150" id="dateExpiration04PnSDUCartonBSD" value="" required="required">
+            {% endif %}
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="totalPnSDUCartonBSD" class="inputTblCenterWidth50 readonly-field" readonly="readonly" id="totalPnSDUCartonBSD" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.totalPnSDUCartonBSD }} {% endif %}" required="required">
+        </td>
+    </tr> 
+    <tr class="table-success">
+        <td colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  PN à l’inventaire en CARTON (SDU total CSB) <br/><span style="color:#73a839;">(SDU PN en Carton au niveau CSB)</span></td>
+    </tr>
+    <tr class="table-success">
+        <td class="titleTblCenterBold" colspan="2">Lot A</td>
+        <td class="titleTblCenterBold" colspan="2">Lot B</td>
+        <td class="titleTblCenterBold" colspan="2">Lot C</td>
+        <td class="titleTblCenterBold" colspan="2">Lot D</td>
+        <td class="titleTblCenterBold" ></td>
+    </tr>
+    <tr class="table-active"> 
+        <td class="textTblCenterSmall">Quantité</td>
+        <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+        <td class="textTblCenterSmall">Quantité</td>
+        <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+        <td class="textTblCenterSmall">Quantité</td>
+        <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+        <td class="textTblCenterSmall">Quantité</td>
+        <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+        <td class="textTblCenterBoldPink">Total</td>  
+    </tr>
+    <tr> 
+        <td class="textTblCenter">
+            <input type="text" name="quantite01PnSDUCartonCSB" class="inputTblCenterWidth50 quantitePnSDUCartonCSB" id="quantite01PnSDUCartonCSB" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.quantite01PnSDUCartonCSB }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            {% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %}
+                {% set dateExpiration = dataCrenas.dateExpiration01PnSDUCartonCSB|date('Y-m-d') %}
+                <input type="date" name="dateExpiration01PnSDUCartonCSB" class="inputTblCenterWidth150" id="dateExpiration01PnSDUCartonCSB" value="{{ dateExpiration }}" required="required">
+            {% else %}
+                <input type="date" name="dateExpiration01PnSDUCartonCSB" class="inputTblCenterWidth150" id="dateExpiration01PnSDUCartonCSB" value="" required="required">
+            {% endif %}
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="quantite02PnSDUCartonCSB" class="inputTblCenterWidth50 quantitePnSDUCartonCSB" id="quantite02PnSDUCartonCSB" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.quantite02PnSDUCartonCSB }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            {% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %}
+                {% set dateExpiration = dataCrenas.dateExpiration02PnSDUCartonCSB|date('Y-m-d') %}
+                <input type="date" name="dateExpiration02PnSDUCartonCSB" class="inputTblCenterWidth150" id="dateExpiration02PnSDUCartonCSB" value="{{ dateExpiration }}" required="required">
+            {% else %}
+                <input type="date" name="dateExpiration02PnSDUCartonCSB" class="inputTblCenterWidth150" id="dateExpiration02PnSDUCartonCSB" value="" required="required">
+            {% endif %}
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="quantite03PnSDUCartonCSB" class="inputTblCenterWidth50 quantitePnSDUCartonCSB" id="quantite03PnSDUCartonCSB" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.quantite03PnSDUCartonCSB }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            {% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %}
+                {% set dateExpiration = dataCrenas.dateExpiration03PnSDUCartonCSB|date('Y-m-d') %}
+                <input type="date" name="dateExpiration03PnSDUCartonCSB" class="inputTblCenterWidth150" id="dateExpiration03PnSDUCartonCSB" value="{{ dateExpiration }}" required="required">
+            {% else %}
+                <input type="date" name="dateExpiration03PnSDUCartonCSB" class="inputTblCenterWidth150" id="dateExpiration03PnSDUCartonCSB" value="" required="required">
+            {% endif %} 
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="quantite04PnSDUCartonCSB" class="inputTblCenterWidth50 quantitePnSDUCartonCSB" id="quantite04PnSDUCartonCSB" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.quantite04PnSDUCartonCSB }} {% endif %}" required="required">
+        </td>
+        <td class="textTblCenter">
+            {% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %}
+                {% set dateExpiration = dataCrenas.dateExpiration04PnSDUCartonCSB|date('Y-m-d') %}
+                <input type="date" name="dateExpiration04PnSDUCartonCSB" class="inputTblCenterWidth150" id="dateExpiration04PnSDUCartonCSB" value="{{ dateExpiration }}" required="required">
+            {% else %}
+                <input type="date" name="dateExpiration04PnSDUCartonCSB" class="inputTblCenterWidth150" id="dateExpiration04PnSDUCartonCSB" value="" required="required">
+            {% endif %}
+        </td>
+        <td class="textTblCenter">
+            <input type="text" name="totalPnSDUCartonCSB" class="inputTblCenterWidth50 readonly-field" readonly="readonly" id="totalPnSDUCartonCSB" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.totalPnSDUCartonCSB }} {% endif %}" required="required">
+        </td>
+    </tr>
+    <tr class="table-success">
+        <td colspan="8" class="textTblRightBoldPink">TOTAL SDU PN en CARTON SDSP</td>
+        <td class="textTblCenter"><input type="text" name="totalPnSDUCartonSDSP" class="inputTblCenterWidth50 readonly-field" readonly="readonly" id="totalPnSDUCartonSDSP" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.totalPnSDUCartonSDSP }} {% endif %}" required="required"></td>
+    </tr>
+</table>

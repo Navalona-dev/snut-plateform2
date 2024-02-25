@@ -1,0 +1,417 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+	RETRO INFORMATIONS
+{% endblock %}
+
+{% block stylesheets %}
+    <link  rel="stylesheet" href="{{ asset('css/select2.min.css')}}"/>
+{% endblock %}
+    
+{% block body %} 
+	<div class="container">
+		<div class="row">
+            <p></p>
+            <p id="flashMessage"></p>
+			<h2>
+				RETRO INFORMATION
+			</h2>
+            <p></p>
+		</div>
+		<div class="container">
+            <form method="post" action="{{ path('app_dashboard1_retroinfo', {'role': 'ROLE_AGENT_DISTRICT'}) }}" enctype="multipart/form-data">
+                <div class="card card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            Adresser à
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group" title="...">
+                                <input type="checkbox" name="chkAllCentral" id="chkAllCentral">&nbsp; A tous les CGIS NUT
+                                <br>
+                                <input type="checkbox" name="chkAllRnr" id="chkAllRnr">
+                                &nbsp; A tous les RNR
+                                <br>
+                                <input type="checkbox" name="chkAllRnd" id="chkAllRnd">
+                                &nbsp; A tous les RND
+
+                            </div>
+                            <p></p>                         									
+                            <p>OU</p>
+                            <label for="selectCentral">Selective CGIS NUT</label>
+                            <select name="selectCentral" id="selectCentral" class="form-control">
+                                <option value="">Veuillez sélectionner.</option>
+                                {% for centralSupervisor in allCentralSupervisor %}
+                                    {% if centralSupervisor.idUser != app.user.id %}
+                                        <option value="{{ centralSupervisor.idUser }}">
+                                            {{ centralSupervisor.nomUser|default('') ~ ' ' ~ centralSupervisor.prenomsUser|default('') }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <p></p>
+                            <p>OU</p>
+                            <label for="selectRnr">
+                                Selective RNR
+                            </label>
+                            <select name="selectRnr" id="selectRnr" class="form-control">
+                                <option value="">
+                                    Veuillez sélectionner.
+                                </option>
+                                {% for regionalSupervisor in allRegionalSupervisors %}
+                                    {% if regionalSupervisor.idUser != app.user.id %}
+                                        <option value="{{ regionalSupervisor.idUser }}">
+                                            {{ regionalSupervisor.nomUser|default('') ~ ' ' ~ regionalSupervisor.prenomsUser|default('') }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <p></p>                           
+                            <p>
+                                OU
+                            </p>
+                            <label for="selectRnd">
+                                Selective RND
+                            </label>
+                            <select name="selectRnd" id="selectRnd" class="form-control">
+                                <option value="">
+                                    Veuillez sélectionner.
+                                </option>
+                                {% for districtSupervisor in allDistrictAgents %}
+                                    {% if districtSupervisor.idUser != app.user.id %}
+                                        <option value="{{ districtSupervisor.idUser }}">
+                                            {{ districtSupervisor.nomUser|default('') ~ ' ' ~ districtSupervisor.prenomsUser|default('') }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="txtTextMessage">
+                                Message
+                            </label>
+                            <textarea name="txtTextMessage" id="txtTextMessage" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="file" name="piecesJointeMessage" id="piecesJointeMessage" class="form-control">
+                        <br>
+                        <button id="sendMessage" class="btn btn-primary" type="submit">
+                            Envoyer
+
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <br>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="btn btn-warning d-flex justify-content-center" data-toggle="collapse" id="collapseSentMessageBtn" href="#collapseSentMessage" role="button" aria-expanded="false" aria-controls="collapseSentMessage">
+                        Messages envoyés
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn-warning d-flex justify-content-center" data-toggle="collapse" id="collapseMessageReceivedBtn" href="#collapseMessageReceived" role="button" aria-expanded="false" aria-controls="collapseMessageReceived">
+                        Messages reçus
+
+                        {% if unreadMessageCount > 0 %}
+                            (
+                            {{ unreadMessageCount }}
+                            {% if unreadMessageCount == 1 %}
+                                non lue
+                            {% else %}
+                                non lues
+                            {% endif %}
+                            )
+
+                        {% endif %}
+                    </a>
+                </div> 
+            </div>
+
+            <div class="collapse" id="collapseSentMessage">
+                <div class="card card-body">
+                    <div class="container section-title" data-aos="fade-up">
+                        <h4>   
+                            ENVOYES
+                        </h4>
+                    </div>
+                    <div class="table-responsive table-wrapper">
+                        <div class="row margin-left-right-20 margin-top-40">
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-fixed-header" id="tableDashboardSentMessage">
+                                    <thead>
+                                        <tr class="table-success">
+                                            <th class="textTblCenterBold">
+                                                Date
+                                            </th>
+                                            <th>
+                                                Destinataire
+                                            </th>
+                                            <th>
+                                                Message
+                                            </th>
+                                            <th>
+                                                Pieces jointes
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for message in sentMessages %}
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ message.date|date('d/m/Y') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ message.nomRecipient }}
+                                                    <input type="hidden" name="hidIdMessage" value="{{ message.id }}">
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ message.textMessage }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {% if message.pieceJointes|length > 0 %}
+                                                        {% for pieceJointe in message.pieceJointes %}
+                                                            <a href="{{ asset('uploads/retroinfo/' ~ pieceJointe.fileName) }}" target="_blank" style="color: #73a839; font-weight: bold;">
+                                                                <span style="font-size: 12px;">
+                                                                    {{ pieceJointe.fileName }}
+                                                                </span>
+                                                            </a>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {# <a data-toggle="modal" href="#btnDeleteAfficheModal_{{ message.id }}" class="btn btn-xs btn-danger">
+                                                        <i class="glyphicon glyphicon-trash"></i>
+                                                        Supprimer
+                                                    </a> #}
+                                                    <div class="modal fade" id="btnDeleteAfficheModal_{{ message.id }}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title">
+                                                                        Confirmation
+                                                                    </h4>
+                                                                    <button type="button" class="close" data-dismiss="modal">
+                                                                        x
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    {# <a href="{{ path('message_delete', {'id': message.id, 'option': 'for_me'}) }}" class="btn btn-outline-danger">Supprimer pour moi</a> #}
+                                                                    {# <p></p> #}
+                                                                        <a href="{{ path('app_dashboard1_retroinfo_delete_message', {'id': message.id, 'option': 'for_all', 'role' : 'ROLE_AGENT_DISTRICT'}) }}" class="btn btn-outline-danger"> Supprimer
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapse" id="collapseMessageReceived">
+                <div class="card card-body">
+                    <div class="container section-title" data-aos="fade-up" id="titreRecu">
+                        <h4>
+                            RECUS
+                        </h4>
+                    </div>
+                    <div class="table-responsive table-wrapper">
+                        <div class="row margin-left-right-20 margin-top-40">
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-fixed-header" id="tableDashboardReceivedMessage">
+                                    <thead>
+                                        <tr class="table-success">
+                                            <th class="textTblCenterBold">
+                                                Date
+                                            </th>
+                                            <th class="textTblCenterBold">
+                                                Expéditeur
+                                            </th>
+                                            <th class="textTblCenterBold">
+                                                Message
+                                            </th>
+                                            <th class="textTblCenterBold">
+                                                Pieces jointes
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for message in receivedMessages %}
+                                            {% if not message.isDeletedPerRecipient %}
+                                                <tr {% if not message.isRead %} style="background: darkgray;" {% endif %}>
+                                                    <td class="text-center">
+                                                        {{ message.date|date('d/m/Y') }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ message.nomSender }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {% if not message.isRead %}
+                                                            <a href="{{ path('app_dashboard1_retroinfo_update_message', {'id': message.id, 'isread': true, 'role':'ROLE_AGENT_DISTRICT'}) }}">
+                                                            {% endif %}
+                                                            {% if not message.isRead %}
+                                                                (Non lu)
+
+                                                            {% endif %}
+                                                            {{ message.textMessage }}
+                                                            {% if not message.isRead %}
+                                                            </a>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">
+                                                    {% if message.pieceJointes|length > 0 %}
+                                                        {% for pieceJointe in message.pieceJointes %}
+                                                            <a href="{{ asset('uploads/retroinfo/' ~ pieceJointe.fileName) }}" target="_blank" style="color: #73a839; font-weight: bold;">
+                                                                <span style="font-size: 12px;">
+                                                                    {{ pieceJointe.fileName }}
+                                                                </span>
+                                                            </a>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {# <a data-toggle="modal" href="#deleteReceived_{{ message.id }}" class="btn btn-xs btn-danger">
+                                                            <i class="glyphicon glyphicon-trash"></i>
+                                                            Supprimer
+                                                        </a> #}
+                                                        <div class="modal fade" id="deleteReceived_{{ message.id }}">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h4 class="modal-title">
+                                                                            Confirmation
+                                                                        </h4>
+                                                                        <button type="button" class="close" data-dismiss="modal">
+                                                                            x
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <a href="{{ path('app_dashboard1_retroinfo_delete_message', {'id': message.id, 'option': 'for_me', 'role' : 'ROLE_AGENT_DISTRICT'}) }}" class="btn btn-outline-danger">
+                                                                            Supprimer
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+	    </div>
+    </div>
+    <script src="{{ asset('js/jquery.min.js') }}"></script> 
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ asset('js/sb-admin-2.min.js') }}"></script> 
+    <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>    
+    <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('js/jszip.min.js') }}"></script>
+    <script src="{{ asset('js/dashboard.js') }}"></script>  
+    <script src="{{ asset('js/select2.min.js') }}"></script>    
+    <script>
+        $(document).ready(function() {
+            $('#selectCentral, #selectRnr, #selectRnd').select2();
+            // Obtenir l'URL actuelle
+            var currentUrl = window.location.href;
+
+            // Extraire la partie de base de l'URL
+            var baseUrl = currentUrl.split("/").slice(0, 3).join("/");
+
+            // Vérifier si l'URL contient les mots clés spécifiques
+            if (currentUrl.includes('deletemessage') || currentUrl.includes('sendmessage') || currentUrl.includes('updatemessage')) {
+                // Construire la nouvelle URL en ajoutant "/retro_information" à la partie de base de l'URL
+                var newUrl = baseUrl + '/retro_information';
+                setTimeout(function() {
+                    // Rediriger vers la nouvelle URL
+                    window.location.href = newUrl;
+                }, 1000); // 1000 millisecondes (1 secondes)
+                }
+            });
+    </script>
+
+    {% if isMessageDeleted|default(null) %}
+		<script>
+			window.onload = function() {
+				// Supprimer les paramètres de l'URL sans ajouter une nouvelle entrée dans l'historique
+				history.replaceState({}, document.title, window.location.pathname);
+				window.location.hash = 'retroinfo';
+				$('#collapseSentMessage').collapse('show');
+				// Ajouter un message flash
+				var flashMessage = document.createElement('div');
+				flashMessage.classList.add('alert', 'alert-success');
+				flashMessage.innerHTML = 'Le message a été supprimé avec succès.';
+				var titreRecuElement = document.getElementById('flashMessage');
+            	titreRecuElement.appendChild(flashMessage);
+				// Supprimer le message après 10 secondes (5000 millisecondes)
+				setTimeout(function() {
+					flashMessage.remove();
+				}, 5000);
+				// $('.alert').alert();
+			};
+		</script>
+	{% endif %}
+    {% if isMessageSent|default(null) %}
+    <script>
+        window.onload = function() {
+            // Supprimer les paramètres de l'URL sans ajouter une nouvelle entrée dans l'historique
+            history.replaceState({}, document.title, window.location.pathname);
+            window.location.hash = 'retroinfo';
+            $('#collapseSentMessage').collapse('show');
+            // Ajouter un message flash
+            var flashMessage = document.createElement('div');
+            flashMessage.classList.add('alert', 'alert-success');
+            flashMessage.innerHTML = 'Le message a été envoyé avec succès';
+            var titreRecuElement = document.getElementById('flashMessage');
+            titreRecuElement.appendChild(flashMessage);
+            // Supprimer le message après 10 secondes (5000 millisecondes)
+            setTimeout(function() {
+                flashMessage.remove();
+            }, 5000);
+            // $('.alert').alert();
+        };
+    </script>
+    {% endif %}
+
+    {% if app.request.query.get('deletebydistrict') == true %}
+		<script>
+			window.onload = function() {
+				// Supprimer les paramètres de l'URL sans ajouter une nouvelle entrée dans l'historique
+				history.replaceState({}, document.title, window.location.pathname);
+				$('#collapseSentMessage').collapse('show');
+				// Ajouter un message flash
+				var flashMessage = document.createElement('div');
+				flashMessage.classList.add('alert', 'alert-success');
+				flashMessage.innerHTML = 'Le message a été supprimé avec succès.';
+				var titreRecuElement = document.getElementById('flashMessage');
+            	titreRecuElement.appendChild(flashMessage);
+				// Supprimer le message après 10 secondes (5000 millisecondes)
+				setTimeout(function() {
+					flashMessage.remove();
+				}, 5000);
+				// $('.alert').alert();
+			};
+		</script>
+	{% endif %}
+{% endblock %}

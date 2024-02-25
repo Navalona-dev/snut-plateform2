@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DataCrenas{% endblock %}
+
+{% block body %}
+    <h1>DataCrenas</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ data_crena.id }}</td>
+            </tr>
+            <tr>
+                <th>BesoinAPTE</th>
+                <td>{{ data_crena.besoinAPTE }}</td>
+            </tr>
+            <tr>
+                <th>BesoinAMOX</th>
+                <td>{{ data_crena.besoinAMOX }}</td>
+            </tr>
+            <tr>
+                <th>BesoinFichePatient</th>
+                <td>{{ data_crena.besoinFichePatient }}</td>
+            </tr>
+            <tr>
+                <th>BesoinRegistre</th>
+                <td>{{ data_crena.besoinRegistre }}</td>
+            </tr>
+            <tr>
+                <th>Quantite01AmoxSDUCartonBSD</th>
+                <td>{{ data_crena.quantite01AmoxSDUCartonBSD }}</td>
+            </tr>
+            <tr>
+                <th>DateExpiration01AmoxSDUCartonBSD</th>
+                <td>{{ data_crena.dateExpiration01AmoxSDUCartonBSD }}</td>
+            </tr>
+            <tr>
+                <th>Quantite02AmoxSDUCartonBSD</th>
+                <td>{{ data_crena.quantite02AmoxSDUCartonBSD }}</td>
+            </tr>
+            <tr>
+                <th>DateExpiration02AmoxSDUCartonBSD</th>
+                <td>{{ data_crena.dateExpiration02AmoxSDUCartonBSD }}</td>
+            </tr>
+            <tr>
+                <th>Quantite03AmoxSDUCartonBSD</th>
+                <td>{{ data_crena.quantite03AmoxSDUCartonBSD }}</td>
+            </tr>
+            <tr>
+                <th>DateExpiration03AmoxSDUCartonBSD</th>
+                <td>{{ data_crena.dateExpiration03AmoxSDUCartonBSD }}</td>
+            </tr>
+            <tr>
+                <th>Quantite04AmoxSDUCartonBSD</th>
+                <td>{{ data_crena.quantite04AmoxSDUCartonBSD }}</td>
+            </tr>
+            <tr>
+                <th>DateExpiration04AmoxSDUCartonBSD</th>
+                <td>{{ data_crena.dateExpiration04AmoxSDUCartonBSD }}</td>
+            </tr>
+            <tr>
+                <th>TotalAmoxSDUCartonBSD</th>
+                <td>{{ data_crena.totalAmoxSDUCartonBSD }}</td>
+            </tr>
+            <tr>
+                <th>Quantite01AmoxSDUCartonCSB</th>
+                <td>{{ data_crena.quantite01AmoxSDUCartonCSB }}</td>
+            </tr>
+            <tr>
+                <th>DateExpiration01AmoxSDUCartonCSB</th>
+                <td>{{ data_crena.dateExpiration01AmoxSDUCartonCSB }}</td>
+            </tr>
+            <tr>
+                <th>Quantite02AmoxSDUCartonCSB</th>
+                <td>{{ data_crena.quantite02AmoxSDUCartonCSB }}</td>
+            </tr>
+            <tr>
+                <th>DateExpiration02AmoxSDUCartonCSB</th>
+                <td>{{ data_crena.dateExpiration02AmoxSDUCartonCSB }}</td>
+            </tr>
+            <tr>
+                <th>Quantite03AmoxSDUCartonCSB</th>
+                <td>{{ data_crena.quantite03AmoxSDUCartonCSB }}</td>
+            </tr>
+            <tr>
+                <th>DateExpiration03AmoxSDUCartonCSB</th>
+                <td>{{ data_crena.dateExpiration03AmoxSDUCartonCSB }}</td>
+            </tr>
+            <tr>
+                <th>Quantite04AmoxSDUCartonCSB</th>
+                <td>{{ data_crena.quantite04AmoxSDUCartonCSB }}</td>
+            </tr>
+            <tr>
+                <th>DateExpiration04AmoxSDUCartonCSB</th>
+                <td>{{ data_crena.dateExpiration04AmoxSDUCartonCSB }}</td>
+            </tr>
+            <tr>
+                <th>TotalAmoxSDUCartonCSB</th>
+                <td>{{ data_crena.totalAmoxSDUCartonCSB }}</td>
+            </tr>
+            <tr>
+                <th>TotalAmoxSDUCartonSDSP</th>
+                <td>{{ data_crena.totalAmoxSDUCartonSDSP }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_data_crenas_index') }}">back to list</a>
+
+    <a href="{{ path('app_data_crenas_edit', {'id': data_crena.id}) }}">edit</a>
+
+    {{ include('data_crenas/_delete_form.html.twig') }}
+{% endblock %}

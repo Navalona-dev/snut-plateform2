@@ -1,0 +1,50 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Province{% endblock %}
+
+{% block body %}
+    <h1>Province</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ province.id }}</td>
+            </tr>
+            <tr>
+                <th>NomFR</th>
+                <td>{{ province.NomFR }}</td>
+            </tr>
+            <tr>
+                <th>NomMG</th>
+                <td>{{ province.NomMG }}</td>
+            </tr>
+            <tr>
+                <th>ChefLieu</th>
+                <td>{{ province.ChefLieu }}</td>
+            </tr>
+            <tr>
+                <th>CodeISO</th>
+                <td>{{ province.CodeISO }}</td>
+            </tr>
+            <tr>
+                <th>CodeFIPS</th>
+                <td>{{ province.CodeFIPS }}</td>
+            </tr>
+            <tr>
+                <th>Superficie</th>
+                <td>{{ province.Superficie }}</td>
+            </tr>
+            <tr>
+                <th>Population</th>
+                <td>{{ province.Population }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_province_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_province_edit', {'id': province.id}) }}">edit</a>
+
+    {{ include('admin/province/_delete_form.html.twig') }}
+{% endblock %}

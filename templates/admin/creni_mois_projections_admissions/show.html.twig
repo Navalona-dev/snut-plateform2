@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CreniMoisProjectionsAdmissions{% endblock %}
+
+{% block body %}
+    <h1>CreniMoisProjectionsAdmissions</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ creni_mois_projections_admission.id }}</td>
+            </tr>
+            <tr>
+                <th>Mois01AdmissionCreniPrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois01AdmissionCreniPrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois02AdmissionCreniPrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois02AdmissionCreniPrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois03AdmissionCreniPrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois03AdmissionCreniPrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois04AdmissionCreniPrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois04AdmissionCreniPrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois05AdmissionCreniPrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois05AdmissionCreniPrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois06AdmissionCreniPrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois06AdmissionCreniPrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois01AdmissionProjeteAnneePrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois01AdmissionProjeteAnneePrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois02AdmissionProjeteAnneePrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois02AdmissionProjeteAnneePrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois03AdmissionProjeteAnneePrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois03AdmissionProjeteAnneePrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois04AdmissionProjeteAnneePrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois04AdmissionProjeteAnneePrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois05AdmissionProjeteAnneePrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois05AdmissionProjeteAnneePrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois06AdmissionProjeteAnneePrecedent</th>
+                <td>{{ creni_mois_projections_admission.Mois06AdmissionProjeteAnneePrecedent }}</td>
+            </tr>
+            <tr>
+                <th>Mois01ProjectionAnneePrevisionnelle</th>
+                <td>{{ creni_mois_projections_admission.Mois01ProjectionAnneePrevisionnelle }}</td>
+            </tr>
+            <tr>
+                <th>Mois02ProjectionAnneePrevisionnelle</th>
+                <td>{{ creni_mois_projections_admission.Mois02ProjectionAnneePrevisionnelle }}</td>
+            </tr>
+            <tr>
+                <th>Mois03ProjectionAnneePrevisionnelle</th>
+                <td>{{ creni_mois_projections_admission.Mois03ProjectionAnneePrevisionnelle }}</td>
+            </tr>
+            <tr>
+                <th>Mois04ProjectionAnneePrevisionnelle</th>
+                <td>{{ creni_mois_projections_admission.Mois04ProjectionAnneePrevisionnelle }}</td>
+            </tr>
+            <tr>
+                <th>Mois05ProjectionAnneePrevisionnelle</th>
+                <td>{{ creni_mois_projections_admission.Mois05ProjectionAnneePrevisionnelle }}</td>
+            </tr>
+            <tr>
+                <th>Mois06ProjectionAnneePrevisionnelle</th>
+                <td>{{ creni_mois_projections_admission.Mois06ProjectionAnneePrevisionnelle }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin2_admin_creni_mois_projections_admissions_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin2_admin_creni_mois_projections_admissions_edit', {'id': creni_mois_projections_admission.id}) }}">edit</a>
+
+    {{ include('admin2/admin_creni_mois_projections_admissions/_delete_form.html.twig') }}
+{% endblock %}

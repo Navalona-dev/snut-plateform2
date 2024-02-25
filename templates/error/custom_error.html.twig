@@ -1,0 +1,17 @@
+{% extends 'supervisorBase.html.twig' %}
+
+{% block title %}Superviseur central - Erreur{% endblock %}
+
+{% block body %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <div class="card mb-4 py-3 border-bottom-danger">
+            <div class="card-body">
+                <h4 style="color: #e74a3b;">{{ errorTitle }}</h4>
+                <p>{{ errorMessage|raw }}</p>
+                {{ exception }}
+            </div>
+        </div>  
+        
+    </div>
+{% endblock %}

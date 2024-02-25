@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CentreRecuperation{% endblock %}
+
+{% block body %}
+    <h1>CentreRecuperation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ centre_recuperation.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ centre_recuperation.Nom }}</td>
+            </tr>
+            <tr>
+                <th>Sigle</th>
+                <td>{{ centre_recuperation.Sigle }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_admin_centre_recuperation_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_admin_centre_recuperation_edit', {'id': centre_recuperation.id}) }}">edit</a>
+
+    {{ include('admin/admin_centre_recuperation/_delete_form.html.twig') }}
+{% endblock %}

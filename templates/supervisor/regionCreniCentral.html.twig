@@ -1,0 +1,422 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Superviseur central - région CRENI{% endblock %}
+
+{% block body %}
+    <div class="container-supervisor">
+        <div class="centerContentDiv">
+            <button type="button" class="btn btn-success" onclick="window.location='{{ path('app_accueil') }}'">Retour</button>
+        </div>
+        <div class="row"> 
+            <div class="col-lg-12">
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="titleTblRightBold"><h4>Information bon de commande CRENI </h4></td>
+                        <td><h4 class="text-warning">{{ dataRegion.Nom }}</h4></td>
+                        <td class="titleTblRightBold">Nom</td>
+                        <td>{{ dataUser.nomUser }}</td>
+                        <td class="titleTblRightBold">Prénoms</td>
+                        <td>{{ dataUser.prenomsUser }}</td>
+                        <td class="titleTblRightBold">Email</td>
+                        <td>{{ dataUser.emailUser }}</td>
+                        <td class="titleTblRightBold">Téléphone</td>
+                        <td>{{ dataUser.telephone }}</td> 
+                    </tr>  
+                </table>
+            </div>  
+        </div>
+
+        <div class="row divWithScroll  margin-left-right-20 table-wrapper">
+            <table class="table table-bordered table-fixed-header" id="tableCreni">
+                <thead>
+                    <tr class="table-dark">
+                        <th colspan="16" class="textTblCenterBold  fixeTd">
+                            Liste des données CRENI pour la région {{ dataRegion.Nom }}
+                        </th>
+                    </tr>
+                    <!-- En-tête du tableau --> 
+                    <tr>
+                        <th class="textTblCenterBold fixeTd" rowspan="2">District (Responsables)</th> 
+
+                        <th class="titleTblCenterBoldGreen" colspan="7">Nombre d'admissions CRENI enregistré <br/>le semestre précédent</th>
+                        <th class="titleTblCenterBoldGreen" colspan="7">Nombre d'admissions qui avait été projeté<br/>le semestre précédent</th>
+                        <th class="titleTblCenterBoldGreen" rowspan="2">Résultat</th>
+                        <th class="titleTblCenterBoldGreen" colspan="7">Projections du nombre d'admissions <br/>pour le prochain semestre</th>
+                        <th class="titleTblCenterBoldGreen" rowspan="2">Résultat</th>
+
+                        <th class="titleTblCenterBold table-primary" rowspan="2">F75<br/>Boites</th>
+                        <th class="titleTblCenterBold table-primary" rowspan="2">F100<br/>Boites</th>
+                        <th class="titleTblCenterBold table-primary" rowspan="2">ReSoMal<br/>sachet</th>
+                        <th class="titleTblCenterBold table-primary" rowspan="2">PN<br/>sachet</th>
+                        <th class="titleTblCenterBold table-primary" rowspan="2">Fiche de suivi CRENI<br/>unité</th>
+                        <th class="titleTblCenterBold table-primary" rowspan="2">Fiche de suivi intensif<br/>unité</th>
+                        <th class="titleTblCenterBold table-primary" rowspan="2">Kit médicaments CRENI 10 patients<br/>kit</th>
+                        <th class="titleTblCenterBold table-info" rowspan="2">Registre CRENI<br/>Unité</th>
+                        <th class="titleTblCenterBold table-info" rowspan="2">Carnet de rapports mensuels CRENI<br/>Unité</th>
+
+                        <th colspan="19" class="titleTblCenterBoldBlue table-success">KIT CRENI</th>
+
+                        <th colspan="25" class="titleTblCenterBoldBlue table-warning">Stocks Disponibles et Utilisables (SDU) par produits </th>
+
+                    </tr>
+                    <tr>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois01AdmissionCreniPrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois02AdmissionCreniPrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois03AdmissionCreniPrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois04AdmissionCreniPrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois05AdmissionCreniPrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois06AdmissionCreniPrecedent }}</th>
+                        <th class="textTblCenterBoldPink">Total</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois01AdmissionProjeteAnneePrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois02AdmissionProjeteAnneePrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois03AdmissionProjeteAnneePrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois04AdmissionProjeteAnneePrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois05AdmissionProjeteAnneePrecedent }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois06AdmissionProjeteAnneePrecedent }}</th>
+                        <th class="textTblCenterBoldPink">Total</th> 
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois01ProjectionAnneePrevisionnelle }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois02ProjectionAnneePrevisionnelle }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois03ProjectionAnneePrevisionnelle }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois04ProjectionAnneePrevisionnelle }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois05ProjectionAnneePrevisionnelle }}</th>
+                        <th class="textTblCenter">{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}</th>
+                        <th class="textTblCenterBoldPink">Total</th> 
+
+                        <th class="textTblCenterMoyen table-success">Amoxici.pdr/oral <br/>sus 125mg/5ml/BOT-100ml </th>
+                        <th class="textTblCenterMoyen table-success">Nystatin oral <br/>sus 100,000IU/ml/BOT-30ml </th> 
+                        <th class="textTblCenterMoyen table-success">Fluconazole 50mg <br/>caps/PAC-7 (non pas injection) </th>
+                        <th class="textTblCenterMoyen table-success">Ciprofloxacin 250mg <br/>tab/PAC-10 </th> 
+                        <th class="textTblCenterMoyen table-success">Ampicillinpdr/inj 500mg <br/>vial/BOX-100 </th>
+                        <th class="textTblCenterMoyen table-success">Gentamicininj <br/>40mg/ml 2ml amp/BOX-50 </th> 
+                        <th class="textTblCenterMoyen table-success">Sod.lactat.comp.inj <br/>500ml w/g.set/BOX-20 </th>
+                        <th class="textTblCenterMoyen table-success">Glucose inj 5% 500ml  <br/>w/giv.set/BOX-20 </th>
+                        <th class="textTblCenterMoyen table-success">Glucose hyperton.inj  <br/>50% 50mL vl/BOX-25 </th> 
+                        <th class="textTblCenterMoyen table-success">Furosemideinj 10mg/ml <br/>2ml amp/BOX-10 </th> 
+                        <th class="textTblCenterMoyen table-success">Chlorhexidine <br/>conc. sol. 5%/BOT-100ml</th> 
+                        <th class="textTblCenterMoyen table-success">Miconazole <br/>nitrate cream 2%/TBE-30g</th> 
+                        <th class="textTblCenterMoyen table-success">Tetracyclineeyeointment <br/>1%/TBE-5g</th> 
+                        <th class="textTblCenterMoyen table-success">Tube,feeding,CH08, <br/>L40cm,ster,disp</th> 
+                        <th class="textTblCenterMoyen table-success">Tube,feeding,CH05, <br/>L40cm,ster,disp</th> 
+                        <th class="textTblCenterMoyen table-success">Syringe,disp,2ml, <br/>w/ndl,21G/BOX-100</th> 
+                        <th class="textTblCenterMoyen table-success">Syringe,disp,10ml, <br/>ster/BOX-100</th> 
+                        <th class="textTblCenterMoyen table-success">Syringe,disp,20ml, <br/>ster/BOX-100</th> 
+                        <th class="textTblCenterMoyen table-success">Syringe,feeding, <br/>50ml,luer tip,ster</th>
+
+                        <th class="textTblCenterMoyen table-warning">F75 <br> Boites </th>
+                        <th class="textTblCenterMoyen table-warning">F100 <br> Boites</th> 
+                        <th class="textTblCenterMoyen table-warning">ReSoMal <br> sachet</th>
+                        <th class="textTblCenterMoyen table-warning">PN <br> sachet</th> 
+                        <th class="textTblCenterMoyen table-warning">Fiche de suivi <br/>CRENI Unité</th>
+                        <th class="textTblCenterMoyen table-warning">Fiche de suivi <br/>intensif Unité</th> 
+                        <th class="textTblCenterMoyen table-warning">Amoxici.pdr/oral <br/>sus 125mg/5ml/BOT-100ml  </th>
+                        <th class="textTblCenterMoyen table-warning">Nystatin oral <br/>sus 100,000IU/ml/BOT-30ml </th>
+                        <th class="textTblCenterMoyen table-warning">Fluconazole 50mg <br/>caps/PAC-7 (non pas injection) </th> 
+                        <th class="textTblCenterMoyen table-warning">Ciprofloxacin 250mg <br/>tab/PAC-10 </th> 
+                        <th class="textTblCenterMoyen table-warning">Ampicillinpdr/inj 500mg <br/>vial/BOX-100  </th> 
+                        <th class="textTblCenterMoyen table-warning">Gentamicininj 40mg/ml 2ml <br/>amp/BOX-50   </th> 
+                        <th class="textTblCenterMoyen table-warning">Sod.lactat.comp.inj 500ml <br/>w/g.set/BOX-20   </th> 
+                        <th class="textTblCenterMoyen table-warning">Glucose inj 5% 500ml <br/>w/giv.set/BOX-20 </th>
+                        <th class="textTblCenterMoyen table-warning">Glucose hyperton.inj <br/>50% 50mL vl/BOX-25</th> 
+                        <th class="textTblCenterMoyen table-warning">Furosemideinj 10mg/ml <br/>2ml amp/BOX-10 </th>
+                        <th class="textTblCenterMoyen table-warning">Chlorhexidine conc. sol.<br/> 5%/BOT-100ml </th> 
+                        <th class="textTblCenterMoyen table-warning">Miconazole nitrate <br/>cream 2%/TBE-30g </th>
+                        <th class="textTblCenterMoyen table-warning">Tetracyclineeyeointment<br/>1%/TBE-5g </th> 
+                        <th class="textTblCenterMoyen table-warning">Tube,feeding,CH08,<br/>L40cm,ster,disp </th> 
+                        <th class="textTblCenterMoyen table-warning">Tube,feeding,CH05,<br/>L40cm,ster,disp </th> 
+                        <th class="textTblCenterMoyen table-warning">Syringe,disp,2ml,<br/>w/ndl,21G/BOX-100  </th> 
+                        <th class="textTblCenterMoyen table-warning">Syringe,disp,10ml,<br/>ster/BOX-100 </th> 
+                        <th class="textTblCenterMoyen table-warning">Syringe,disp,20ml,<br/>ster/BOX-100  </th> 
+                        <th class="textTblCenterMoyen table-warning">Syringe,feeding,50ml,<br/>luer tip,ster  </th>
+                        
+                    </tr>
+                    <!-- Fin en-tête du tableau --> 
+                </thead>
+                <tbody>
+                    {% for dataCreni in lstDataCreniRegion %} 
+                        {% set valueDataCreniMoisProjetionAdmission = dataCreniMoisProjetionAdmission[dataCreni.id] %}
+                        <tr>
+                            <td class="fixeTd titleTblLeftrBoldBlue">{{ dataCreni.nomDistrict }} <br/>({{ dataCreni.nomUser }} {{ dataCreni.prenomUser }}) </td> 
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois01AdmissionCreniPrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois02AdmissionCreniPrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois03AdmissionCreniPrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois04AdmissionCreniPrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois05AdmissionCreniPrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois06AdmissionCreniPrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.totalAdmissionCreniSemestrePrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois01AdmissionProjeteAnneePrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois02AdmissionProjeteAnneePrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois03AdmissionProjeteAnneePrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois04AdmissionProjeteAnneePrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois05AdmissionProjeteAnneePrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois06AdmissionProjeteAnneePrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.totalAdmissionCreniProjetePrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.ResultatDifferenceAdmissionPrecedent }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois01ProjectionAnneePrevisionnelle }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois02ProjectionAnneePrevisionnelle }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois03ProjectionAnneePrevisionnelle }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois04ProjectionAnneePrevisionnelle }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois05ProjectionAnneePrevisionnelle }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ valueDataCreniMoisProjetionAdmission.DataMois06ProjectionAnneePrevisionnelle }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.totalAdmissionCreniProjeterProchain }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.ResultatDifferenceAdmissionProchainPrecedent }}
+                            </td>
+
+                            <td class="textTblCenter">
+                                {{ dataCreni.f75Boites }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.f100Boites }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.ReSoMalSachet }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.pnSachet }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.ficheSuiviCreni }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.ficheSuiviIntensif }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitMedicamentsCreni10Patients }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.registreCreni }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.carnetRapportMensuelCreni }}
+                            </td>
+
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniAmoxici }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniNystatin }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniFluconazole }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniCiprofloxacin }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniAmpicillinpdr }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniGentamicininj }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniSod }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniGlucoseInj }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniGlucoseHypertonInj }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniFurosemideinj }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniChlorhexidine }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniMiconazole }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniTetracyclineeyeointment }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniTubeFeeding }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniTubeFeedingCH05 }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniSyringeDisp2ml }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniSyringeDisp10ml }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniSyringeDisp20ml }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.kitCreniSyringeDisp50ml }}
+                            </td>
+
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduF75Boites }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduF100Boites }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduReSoMal }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduPnSachet }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduFicheSuiviCreni }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduFicheSuiviIntensif }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduAmoxiciPdr }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduNystatinOral }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduFluconazole50mg }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduCiprofloxacin250mg }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduAmpicillinpdrInj500mg }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduGentamicininj40mg }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduSodLactatInj500ml }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduGlucoseInj500ml }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduGlucoseHyperton50ml }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduFurosemideinj10mg }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduChlorhexidineConSol }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduMiconazoleNitrate }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduTetracyclineeyeointment }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduTubeFeedingCH08 }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduTubeFeedingCH05 }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduSyringeDisp2ml }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduSyringeDisp10ml }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduSyringeDisp20ml }}
+                            </td>
+                            <td class="textTblCenter">
+                                {{ dataCreni.sduSyringeFeeding50ml }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="centerContentDiv">
+            <button type="button" class="btn btn-success" onclick="window.location='{{ path('app_creni_region_export_excel', {'regionId': dataRegion.id }) }}'">Exporter en format Excel</button>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function() {
+        $('#tableCreni').DataTable({ 
+            dom: 'Blfrtip', 
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tout"]],
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: 'Export Excel',
+                    exportOptions: {
+                        columns: ':visible', 
+                    }
+                }
+            ],
+            "language": {
+                "decimal": ",",
+                "thousands": ".",
+                "sEmptyTable": "Aucune donnée disponible dans le tableau",
+                "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrée",
+                "sInfoFiltered": "(filtré à partir de _MAX_ entrées au total)",
+                "sInfoPostFix": "",
+                "sInfoThousands": " ",
+                "sLengthMenu": "Afficher _MENU_ entrées",
+                "sLoadingRecords": "Chargement...",
+                "sProcessing": "Traitement...",
+                "sSearch": "Rechercher :",
+                "sZeroRecords": "Aucun enregistrement correspondant trouvé",
+                "oPaginate": {
+                    "sFirst": "Premier",
+                    "sLast": "Dernier",
+                    "sNext": "Suivant",
+                    "sPrevious": "Précédent"
+                },
+                "oAria": {
+                    "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                    "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+                }
+            }
+        }); 
+    });
+    </script>  
+{% endblock %}

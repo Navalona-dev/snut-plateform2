@@ -1,0 +1,170 @@
+/* ICONE LISTE PARAGRAPHE */
+
+ul.list-3 {
+  width: 100%;
+  padding-left: 0px;
+}
+.list-3 li {
+  display: inline-block;
+  margin-bottom: 3px;
+}
+.list-3 .icon {
+  border: 1px solid #06d0d8;
+  color: #06d0d8;
+  float: left;
+  font-size: 18px;
+  height: 20px;
+  line-height: 15px;
+  margin: 3px 0 0;
+  padding: 0;
+  text-align: center;
+  width: 20px;
+}
+.list-3.icon-circle .icon {
+  border-radius: 100%;
+}
+.list-3 .text {
+  display: block;
+  margin: 0;
+  padding: 0 0 0 28px;
+}
+
+.list-3.icon-green .icon {
+  border: 1px solid #1fcf6d;
+  background-color: #1fcf6d;
+  color: #fff;
+}
+.list-3.icon-red .icon {
+  border: 1px solid #fc4242;
+  background-color: #fc4242;
+  color: #fff;
+}
+
+/* =========== process steps TIMELINE ETAPE 1 - 2 - 3 - 4============= */
+
+ul.process-steps {
+  width: 100%;
+  padding-left: 0px;
+}
+.process-steps li {
+  width: 25%;
+  position: relative;
+  float: left;
+  overflow: hidden;
+  text-align: center;
+}
+.process-steps li::before,
+.process-steps li::after {
+  position: absolute;
+  width: 50%;
+  content: "";
+  left: 0;
+  margin-left: -36px;
+  top: 35px;
+  border-top: 2px solid #4e4e4e;
+}
+.process-steps li::after {
+  left: auto;
+  right: 0;
+  margin: 0 -36px 0 0;
+}
+.process-steps li a .icon {
+  width: 70px;
+  height: 70px;
+  color: #101010;
+  font-size: 22px;
+  border-radius: 50%;
+  line-height: 66px;
+  text-align: center;
+  display: inline-block;
+  border: 1px solid #e4e4e4;
+  background-color: #fff;
+}
+.process-steps li a .digit {
+  width: 70px;
+  height: 70px;
+  color: #101010;
+  font-size: 28px;
+  border-radius: 50%;
+  display: inline-block;
+  font-weight: 500;
+  line-height: 66px;
+  text-align: center;
+  border: 1px solid #e4e4e4;
+  background-color: #fff;
+}
+.process-steps li:first-child::before,
+.process-steps li:last-child::after {
+  opacity: 0;
+}
+.process-steps.steps-3 li {
+  width: 33.333%;
+}
+.process-steps.steps-4 li {
+  width: 25%;
+}
+.process-steps.steps-5 li {
+  width: 20%;
+}
+.process-steps li a .icon.active-blue {
+  color: #fff;
+  border: 1px solid #4eb0fc;
+  background-color: #4eb0fc;
+}
+.process-steps.dark li a .icon {
+  color: #fff;
+  border: 1px solid #101010;
+  background-color: #101010;
+}
+.process-steps li a .icon.active-red {
+  color: #fff;
+  border: 1px solid #fc4242;
+  background-color: #fc4242;
+}
+.process-steps li a .digit.active-green {
+  color: #fff;
+  border: 1px solid #3fc35f;
+  background-color: #3fc35f;
+}
+
+.custom-file-label::after {
+  content: "Parcourir...";
+}
+
+.nav-tabs .nav-link2 {
+  font-family: "oswald", sans-serif;
+  color: #313a46;
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: rgb(252, 249, 249);
+}
+
+.list-evaluate {
+  list-style: none;
+}
+
+#accordionExample11 .card-header h5 button.collapsed::before {
+  content: "\f067";
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+
+#accordionExample11 .card-header h5 button::before {
+  content: "\f068";
+  font-family: "Font Awesome 5 Free" !important;
+  font-weight: 600;
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  -webkit-transition: -webkit-transform 0.25s;
+  transition: -webkit-transform 0.25s;
+  transition: transform 0.25s;
+  transition: transform 0.25s, -webkit-transform 0.25s;
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  color: #fffbfb;
+}
+
+.obs p {
+  display: inline-block;
+}

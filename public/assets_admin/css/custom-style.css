@@ -1,0 +1,72 @@
+/* Base */
+
+table .btn i {
+
+    font-size: 1rem;
+}
+
+
+.card .card-header-green .card-icon {
+
+    background: #a9cd2e;
+    font-size: 30px;
+}
+
+.card .card-header.card-header-text .la {
+
+    font-size: 30px;
+}
+
+
+.card-assignation .card-footer {
+    max-width: 600px;
+}
+
+.card-assignation h4 {
+    font-weight: 600;
+}
+
+
+.form-check-select,
+.single-select,
+.form_control {
+    border: 0px;
+    border-bottom: 1px solid #d2d2d2;
+    background: url(../img/custom-select.png) right .75rem center no-repeat #fff !important;
+    background-size: 12px !important;
+}
+
+
+.material-datatables {
+    position: relative;
+}
+
+.material-datatables .loader-overlay {
+    background: rgba(255, 255, 255, 0.4) url("../img/spinner.gif") no-repeat center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 9;
+}
+
+.table-responsive {
+    position: relative;
+}
+
+.table-responsive .loader-overlay {
+    background: rgba(255, 255, 255, 0.4) url("../img/spinner.gif") no-repeat center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 9;
+}

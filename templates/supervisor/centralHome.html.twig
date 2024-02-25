@@ -1,0 +1,203 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Superviseur central- accueil{% endblock %}
+
+{% block body %}
+    <div class="container-supervisor">
+        <div class="row"> 
+            <h5><a href="{{ path('app_accueil') }}" style="text-decoration: none">&nbsp Tableau de Bord</a></h5>
+            <div class="col-lg-12">
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="titleTblRightBold">Nom</td>
+                        <td>{{ dataUser.nomUser }}</td>
+                        <td class="titleTblRightBold">Prénoms</td>
+                        <td>{{ dataUser.prenomsUser }}</td>
+                        <td class="titleTblRightBold">Email</td>
+                        <td>{{ dataUser.emailUser }}</td>
+                        <td class="titleTblRightBold">Téléphone</td>
+                        <td>{{ dataUser.telephone }}</td> 
+                    </tr>  
+                </table>
+            </div>  
+        </div> 
+    
+        <div class="row">
+            <div class="col-lg-4" style="text-align: center;">
+                <a class="btn btn-warning" id="showRegionRMANut">Visualiser les RMA Nut par région</a> 
+            </div>
+            <div class="col-lg-4" style="text-align: center;">
+                <a class="btn btn-warning" id="showBonCommandeCRENAS">Visualiser les bon de commande CRENAS par groupe</a> 
+            </div>
+            <div class="col-lg-4" style="text-align: center;">
+                <a class="btn btn-warning" id="showBonCommandeCRENI">Visualiser les bon de commande CRENI par région</a> 
+            </div>
+        </div>
+        
+        <div id="regionRMANut" class="row margin-left-right-20 margin-top-40" >
+            <div class="col-lg-3">&nbsp;</div>
+            <div class="col-lg-6">
+                <table class="table table-bordered table-fixed-header">
+                    <thead>
+                        <tr class="table-success">
+                            <th colspan="7" class="textTblCenterBold">
+                                Liste des régions
+                            </th>
+                        </tr>
+                        <tr class="table-success">
+                            <th class="textTblCenterBold">N°</th> 
+                            <th class="textTblCenterBold">Région</th>
+                            <th class="textTblCenterBold">Chef lieu</th>
+                            <th class="textTblCenterBold">Nombre des districts</th>
+                            <th class="textTblCenterBold">Nombre des RMA Nut reçu</th>
+                            <th class="textTblCenterBold">District éligible pour CRENAS</th>
+                            <th class="textTblCenterBold">District éligible pour CRENI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set increment = 1 %}
+                        {% for region in lstRegionRMANut %}
+                            <tr>
+                                <td>{{ increment }}</td>
+                                <td>
+                                    <a href="{{ path('app_sp_rmanut_region', {'regionId': region.regionId}) }}"> 
+                                        {{ region.regionNom }} 
+                                    </a> 
+                                </td>
+                                <td>{{ region.regionChefLieu }}</td>
+                                <td class="titleTblCenterBoldBlue">{{ region.nombreDeDistricts }}</td>
+                                {% if (region.nombreRMANuts > 0) %}
+                                    <td class="titleTblCenterBoldGreen">
+                                        <span class="badge bg-success badge-pill" style="font-size: 14px;">
+                                            {{ region.nombreRMANuts }}
+                                        </span>
+                                    </td>
+                                    {% else %}
+                                    <td class="textTblCenterBoldPink">
+                                        <span class="badge bg-danger badge-pill" style="font-size: 14px;">
+                                            {{ region.nombreRMANuts }}
+                                        </span>
+                                    </td>
+                                {% endif %}
+                                <td class="titleTblCenterBoldGreen">
+                                    <span class="badge bg-dark badge-pill" style="font-size: 14px;">
+                                        {{ region.nombreDistrictEligibleCrenas }}
+                                    </span>
+                                </td>
+                                <td class="titleTblCenterBoldGreen">
+                                    <span class="badge bg-dark badge-pill" style="font-size: 14px;">
+                                        {{ region.nombreDistrictEligibleCreni }}
+                                    </span>
+                                </td>
+                                {% set increment = increment +1 %} 
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div> 
+            <div class="col-lg-3">&nbsp;</div>
+        </div>
+
+        <div id="groupeCRENAS" class="row margin-left-right-20 margin-top-40" >
+            <div class="col-lg-3">&nbsp;</div>
+            <div class="col-lg-6">
+                <table class="table table-bordered">
+                    <tr class="table-primary">
+                        <th colspan="10" class="textTblCenterBold">
+                            Liste des groupes
+                        </th>
+                    </tr>
+                    <tr class="table-primary">
+                        <th class="textTblCenterBold">Groupe</th>
+                        <th class="textTblCenterBold">Provinces</th>
+                    </tr>
+                    {% for key, groupe in lstGroupData %}
+                            <tr>
+                                <td class="titleTblCenterBoldGreen">{{ key }}</td>
+                                <td>
+                                    <ul class="no-decoration">
+                                        {% for element in groupe %}
+                                            <li><a href="{{ path('app_crenas_group', {'groupId': element.idGroupe}) }}">{{ element.provinceNomFR }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="col-lg-3">&nbsp;</div> 
+        </div>
+
+        <div id="regionCRENI" class="row margin-left-right-20 margin-top-40" >
+            <div class="col-lg-3">&nbsp;</div>
+            <div class="col-lg-6">
+                <table class="table table-bordered">
+                        <tr class="table-success">
+                            <th colspan="10" class="textTblCenterBold">
+                                Liste des régions
+                            </th>
+                        </tr>
+                        <tr class="table-success">
+                            <td class="textTblCenterBold">N°</td> 
+                            <td class="textTblCenterBold">Région</td>
+                            <td class="textTblCenterBold">Chef lieu</td>
+                            <td class="textTblCenterBold">Nombre des districts<br> eligible CRENI</td>
+                            <td class="textTblCenterBold">Nombre des CRENI</td>
+                        </tr>
+                        {% set increment = 1 %}
+                        {% for region in lstRegionCreni %}
+                            <tr>
+                                <td>{{ increment }}</td>
+                                <td>
+                                    <a href="{{ path('app_creni_region', {'regionId': region.regionId}) }}"> 
+                                        {{ region.regionNom }} 
+                                    </a> 
+                                </td>
+                                <td>{{ region.regionChefLieu }}</td>
+                                <td class="titleTblCenterBoldBlue">{{ region.nombreDeDistricts }}</td>
+                                {% if (region.nombreDeCrenis > 0) %}
+                                    <td class="titleTblCenterBoldGreen">
+                                        <span class="badge bg-success badge-pill">
+                                            {{ region.nombreDeCrenis }}
+                                        </span>
+                                    </td>
+                                    {% else %}
+                                    <td class="textTblCenterBoldPink">
+                                        <span class="badge bg-danger badge-pill">
+                                            {{ region.nombreDeCrenis }}
+                                        </span>
+                                    </td>
+                                {% endif %}
+                                {% set increment = increment +1 %} 
+                            </tr>
+                        {% endfor %}
+                </table>
+            </div> 
+            <div class="col-lg-3">&nbsp;</div> 
+        </div>
+
+    </div>
+    <script>
+        $(document).ready(function() {
+            $("#regionRMANut").hide();
+            $("#groupeCRENAS").hide();
+            $("#regionCRENI").hide();
+            $("#showRegionRMANut").on("click", function(){
+                $("#regionRMANut").show();
+                $("#groupeCRENAS").hide();
+                $("#regionCRENI").hide();
+            });
+            $("#showBonCommandeCRENAS").on("click", function(){
+                $("#regionRMANut").hide();
+                $("#groupeCRENAS").show();
+                $("#regionCRENI").hide();
+            });
+            $("#showBonCommandeCRENI").on("click", function(){
+                $("#regionRMANut").hide();
+                $("#groupeCRENAS").hide();
+                $("#regionCRENI").show();
+            });
+        })
+    </script>
+    <script src="js/Chart.js"></script>
+{% endblock %}

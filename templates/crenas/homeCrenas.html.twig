@@ -1,0 +1,149 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BON DE COMMANDE INTRANTS CRENAS{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <h2>BON DE COMMANDE INTRANTS CRENAS Intégration SALAMA {{ dataGroupe.nomGroupe }} </h2>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="titleTblRightBold">Province</td>
+                    <td>{{ dataUser.nomFRProvince }}</td>
+                </tr>
+                <tr>
+                    <td class="titleTblRightBold">Région</td>
+                    <td>{{ dataUser.nomRegion }}</td>
+                </tr>
+                <tr>
+                    <td class="titleTblRightBold">District</td>
+                    <td>{{ dataUser.nomDistrict }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-lg-8">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="titleTblRightBold">Nom</td>
+                    <td>{{ dataUser.nomUser }}</td>
+                </tr>
+                <tr>
+                    <td class="titleTblRightBold">Prénoms</td>
+                    <td>{{ dataUser.prenomsUser }}</td>
+                </tr>
+                <tr>
+                    <td class="titleTblRightBold">Email</td>
+                    <td>{{ dataUser.emailUser }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    {% if (dataRMANut is null ) %}
+        <div class="card bg-secondary mb-3" style="max-width: 40rem;">
+            <div class="card-header">Information</div>
+            <div class="card-body">
+                <h4 class="card-title">Important</h4>
+                <p class="card-text">Vous devez <b><a href="/rmanut" style="color:#73a839">téléverser le fichier RMA Nut</a></b> avant d'insérer des données CRENAS.</p>
+            </div>
+        </div>
+    {% else %}
+        {% if (dataUser.isEligibleForCrenas == false ) %}
+            <div class="card text-white bg-warning mb-3" style="max-width: 40rem;">
+                <div class="card-header">Avertissement</div>
+                <div class="card-body">
+                    <h4 class="card-title">District non éligible</h4>
+                    <p class="card-text">Votre district n'est pas éligible pour insérer des données CRENAS.</p>
+                </div>
+            </div>
+        {% else %}
+            <form id="formCrenas" method="post" action="{{ path('app_crenas_save') }}">
+
+                <input type="hidden" name="GroupeId" id="GroupeId" value="{{ dataGroupe.idGroupe }}" />
+                <input type="hidden" name="DataCommandeTrimestrielleId" id="DataCommandeTrimestrielleId" value="{{ dataCommandeTrimestrielle.idCommandeTrimestrielle }}" /> 
+                <input type="hidden" name="isUserHavingDataCrenas" id="isUserHavingDataCrenas" value="{{ isUserHavingDataCrenas }}" /> 
+                <input type="hidden" name="DataCrenasId" id="DataCrenasId" value="{% if isUserHavingDataCrenas is defined and isUserHavingDataCrenas == true %} {{ dataCrenas.id }} {% endif %}" /> 
+                
+                <input type="hidden" name="valeurCalculTheoriqueATPE" id="valeurCalculTheoriqueATPE" value="{{ valeurCalculTheoriqueATPE }}" /> 
+                <input type="hidden" name="valeurCalculTheoriqueAMOX" id="valeurCalculTheoriqueAMOX" value="{{ valeurCalculTheoriqueAMOX }}" /> 
+                <input type="hidden" name="valeurCalculTheoriqueFichePatient" id="valeurCalculTheoriqueFichePatient" value="{{ valeurCalculTheoriqueFichePatient }}" /> 
+                <input type="hidden" name="valeurCalculTheoriqueRegistre" id="valeurCalculTheoriqueRegistre" value="{{ valeurCalculTheoriqueRegistre }}" /> 
+                <input type="hidden" name="valeurCalculTheoriqueCarnetRapport" id="valeurCalculTheoriqueCarnetRapport" value="{{ valeurCalculTheoriqueCarnetRapport }}" /> 
+                
+                <!-- DEBUT: NOMBRE D'ADMISSION CRENAS ENREGISTRE | NOMBRE D'ADMISSION QUI AVAIS ETE PROJETE | PROJECTION D'ADMISSION -->
+                {% set nombreMois = lstMoisAdmissionCRENASAnneePrecedent|length %}
+                {% set nombreMoisWithTotal = nombreMois + 1 %}
+                <div class="row">
+                    {% include 'crenas/admissionNumberCrenas.html.twig' %}
+                </div>
+                <!-- FIN: NOMBRE D'ADMISSION CRENAS ENREGISTRE | NOMBRE D'ADMISSION QUI AVAIS ETE PROJETE | PROJECTION D'ADMISSION -->
+
+                
+                <!-- DEBUT: QUANTITE NECESSAIRE EN INFRA NUTRITION -->
+                <div class="row">
+                    {% include 'crenas/theoricalRequirementCrenas.html.twig' %}
+                </div>
+                <!-- FIN : QUANTITE NECESSAIRE EN INFRA NUTRITION -->
+
+                <!-- DEBUT: STOCK DISPONIBLE ET UTILISABLE PN A L'INVENTAIRE EN CARTON (SDU TOTAL BSD) + (SDU TOTAL CSB) -->
+                <div class="row">
+                    {% include 'crenas/avalableSDUPNCartonBSDandCSBCrenas.html.twig' %}
+                </div>
+                <!-- FIN: STOCK DISPONIBLE ET UTILISABLE PN A L'INVENTAIRE EN CARTON (SDU TOTAL BSD) + (SDU TOTAL CSB) -->
+
+                <!-- DEBUT: STOCK DISPONIBLE ET UTILISABLE A L'INVENTAIRE AMOX EN BOITE DE 100 CP (SDU TOTAL BSD) + (SDU TOTAL CSB) -->
+                <div class="row">
+                    {% include 'crenas/avalableSDUAMOXCartonBSDandCSBCrenas.html.twig' %}
+                </div> 
+                <!-- FIN: STOCK DISPONIBLE ET UTILISABLE A L'INVENTAIRE AMOX EN BOITE DE 100 CP (SDU TOTAL BSD) + (SDU TOTAL CSB) -->
+                
+                <!-- DEBUT: SDU FICHE - NBR TOTAL CSB - NBR CSB CRENAS - TAUX COUVERTURE CRENAS - NBR CSB CRENAS - TAUX D ENVOI RAPPORT -->
+                <div class="row">
+                    {% include 'crenas/sduFicheNbrCSB.html.twig' %}
+                </div>
+                <!-- FIN: SDU FICHE - NBR TOTAL CSB - NBR CSB CRENAS - TAUX COUVERTURE CRENAS - NBR CSB CRENAS - TAUX D ENVOI RAPPORT -->
+                
+
+                <div class="container my-5">
+                    <div class="row">
+                        <div class="col-lg-6" style="text-align:right">
+                            <a class="btn btn-secondary" href="/">Retour à l'acceuil</a> 
+                        </div>
+                        <div class="col-lg-6">
+                            <button id="submitBtn" class="btn btn-primary" type="button"> Enregistré le bon de commande CRENAS </button> 
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- Modale de confirmation -->
+            <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirmer l'envoi du formulaire</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Veuillez confirmer l'envoi du formulaire du bon de commande intrants CRENAS avec les informations suivantes :</p>
+                            <pre id="summary"></pre>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button id="confirmSubmit" type="submit" class="btn btn-primary">Confirmer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %} 
+</div> 
+
+<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('js/controle-validation.js') }}"></script> 
+<script src="{{ asset('js/controle-crenas.js') }}"></script> 
+{% endblock %}

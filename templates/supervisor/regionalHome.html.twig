@@ -1,0 +1,422 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Superviseur régional- accueil{% endblock %}
+
+{% block body %}
+
+    <div class="container-supervisor">
+        <div class="row"> 
+            <h5>Tableau de Bord</h5> 
+            <div class="col-lg-12">
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="titleTblRightBold"><h4>Région</h4></td>
+                        <td><h4 class="text-warning">{{ dataUser.nomRegion }}</h4></td>
+                        <td class="titleTblRightBold">Nom</td>
+                        <td>{{ dataUser.nomUser }}</td>
+                        <td class="titleTblRightBold">Prénoms</td>
+                        <td>{{ dataUser.prenomsUser }}</td>
+                        <td class="titleTblRightBold">Email</td>
+                        <td>{{ dataUser.emailUser }}</td>
+                        <td class="titleTblRightBold">Téléphone</td>
+                        <td>{{ dataUser.telephone }}</td>
+                        <td class="titleTblRightBold">Province</td>
+                        <td>{{ dataUser.nomFRProvince }}</td> 
+                    </tr>  
+                </table>
+            </div>  
+        </div> 
+
+        <!-- INFORMATION CONCERNANT RMA NUT -->
+        <div class="row margin-left-right-10"> 
+            <div class="col-lg-6">
+                <table class="table table-bordered">
+                    <tr class="table-success">
+                        <th colspan="10" class="textTblCenterBold">
+                            Liste des RMA Nut envoyé par les districts
+                        </th>
+                    </tr>
+                    <tr class="table-success">
+                        <td class="textTblCenterBold">Districts</td>
+                        <td class="textTblCenterBold">Responsables</td> 
+                        <td class="textTblCenterBold">Date</td>
+                        <td class="textTblCenterBold">Fichier</td>
+                    </tr>
+                    {% for district in lstRMANutRegion %}
+                    <tr>
+                        <td class="textTblLeft" {% if district.nomUser|trim is empty %} style="color: #c71c22" {% endif %}>{{ district.districtNom }}</td>
+                        <td class="textTblLeft">{{ district.nomUser }} {{ district.prenomUser }} {{ district.telephoneUser }}</td> 
+                        <td class="textTblLeft">{% if district.nomUser|trim is not empty %} {{ district.uploadedDate|date('d-m-Y H:i:s') }} {% endif %}</td>
+                        <td class="textTblLeft"><a href="{{ asset('uploads/RMANut/' ~ district.newFileName) }}" target="_blank" style="color: #73a839; font-weight: bold;">{{ district.newFileName }}</a></td>
+                    </tr>
+                    {% endfor %} 
+                </table> 
+            </div> 
+            <div class="col-lg-6">
+                <canvas id="districtsChart" width="800px" height="200px"></canvas> 
+            </div>
+        </div> 
+        {% set nombreMois = dataMoisProjection|length %}
+        {% set nombreMoisWithTotal = nombreMois + 1 %}
+        <div class="row divWithScroll  margin-left-right-20">
+            <table class="table table-bordered">
+                <tr class="table-success">
+                    <th colspan="16" class="textTblCenterBold  fixeTd">
+                        Liste des données CRENAS par région
+                    </th>
+                </tr> 
+                <tr>
+                    <td class="textTblCenterBold fixeTd" rowspan="3">District (Responsables)</td> 
+
+                    <td class="titleTblCenterBoldGreen" colspan="{{nombreMoisWithTotal}}">Nombre d'admissions CRENAS enregistré</td>
+                    <td class="titleTblCenterBoldGreen" colspan="{{nombreMoisWithTotal}}">Nombre d'admissions qui avait été projeté </td>
+                    <td class="titleTblCenterBoldGreen" rowspan="3">Résultat</td>
+                    <td class="titleTblCenterBoldGreen" colspan="{{nombreMoisWithTotal}}">Projections du nombre d'admissions</td>
+                    <td class="titleTblCenterBoldGreen" rowspan="3">Résultat</td>
+
+                    <td colspan="5" class="titleTblCenterBoldBlue">Quantité nécessaire en intrants nutrition <br/><span style="color:#73a839;">(Besoins théoriques)</span></td>
+                    
+                    <td colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable à l’inventaire AMOX en Boite de 100 cp (SDU total BSD) <br/><span style="color:#73a839;">(SDU AMOX Boite de 100 cp au niveau BSD)</span></td>
+                    <td colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  AMOX à l’inventaire  en Boite de 100 cp (SDU total CSB) <br/><span style="color:#73a839;">(SDU AMOX Boite de 100 cp au niveau CSB)</span></td>
+                    <td rowspan="3" class="textTblCenterBoldPink">TOTAL SDU <br/>AMOX Boite de <br>100 Cp SDSP</td>
+
+                    <td colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  PN à l’inventaire en CARTON (SDU total BSD) <br/><span style="color:#73a839;">(SDU PN en Carton au niveau BSD)</span></td>
+                    <td colspan="9" class="titleTblCenterBoldBlue">Stock Disponible et Utilisable  PN à l’inventaire en CARTON (SDU total CSB) <br/><span style="color:#73a839;">(SDU PN en Carton au niveau CSB)</span></td>
+                    <td rowspan="3" class="textTblCenterBoldPink">TOTAL SDU <br/>PN en carton<br>SDSP</td>
+
+                    <td rowspan="3" class="titleTblCenterBoldGreen">SDU Fiche</td>
+                    <td rowspan="3" class="titleTblCenterBoldGreen">Nombre Total CSB</td>
+                    <td rowspan="3" class="titleTblCenterBoldGreen">Nombre CSB <br/>CRENAS</td>
+                    <td rowspan="3" class="textTblCenterBoldPink">Taux de couverture <br/>CRENAS</td>
+                    <td rowspan="3" class="titleTblCenterBoldGreen">Nombre CSB CRENAS <br/>qui ont soumis <br/>leurs Commandes </td>
+                    <td rowspan="3" class="textTblCenterBoldPink">Taux d'envoi <br/>de rapport bon de commande <br/>des CSB CRENAS </td>
+
+                </tr> 
+                <tr>
+                    {% for mois in lstMoisAdmissionCRENASAnneePrecedent %}
+                        <td class="titleTblCenterBold" rowspan="2" >{{ mois }}</td>
+                    {% endfor %}
+                        <td class="textTblCenterBoldPink" rowspan="2" >Total</td>
+                    {% for mois in lstMoisAdmissionProjeteAnneePrecedent %}
+                        <td class="titleTblCenterBold" rowspan="2" >{{ mois }}</td>
+                    {% endfor %}
+                    <td class="textTblCenterBoldPink" rowspan="2" >Total</td>
+                    {% for mois in lstMoisProjectionAnneePrevisionnelle %}
+                        <td class="titleTblCenterBold" rowspan="2" >{{ mois }}</td>
+                    {% endfor %}
+                    <td class="textTblCenterBoldPink" rowspan="2">Total</td> 
+
+                    <td class="titleTblCenterBold" rowspan="2">ATPE (en carton)</td>
+                    <td class="titleTblCenterBold" rowspan="2">AMOX (boite de 100)</td>
+                    <td class="titleTblCenterBold" rowspan="2">Fiche patient (unité)</td>
+                    <td class="titleTblCenterBold" rowspan="2">Registre (unité) </td>
+                    <td class="titleTblCenterBold" rowspan="2">Carnet de Rapport CRENAS (unité) </td> 
+
+                    <td class="titleTblCenterBold" colspan="2">Lot A</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot B</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot C</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot D</td>
+                    <td class="titleTblCenterBold" ></td> 
+
+                    <td class="titleTblCenterBold" colspan="2">Lot A</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot B</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot C</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot D</td>
+                    <td class="titleTblCenterBold" ></td>
+
+                    <td class="titleTblCenterBold" colspan="2">Lot A</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot B</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot C</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot D</td>
+                    <td class="titleTblCenterBold" ></td> 
+
+                    <td class="titleTblCenterBold" colspan="2">Lot A</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot B</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot C</td>
+                    <td class="titleTblCenterBold" colspan="2">Lot D</td>
+                    <td class="titleTblCenterBold" ></td>  
+                </tr> 
+                <tr>
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterBoldPink">Total</td>
+
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterBoldPink">Total</td>
+
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterBoldPink">Total</td>
+
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterSmall">Quantité</td>
+                    <td class="textTblCenterSmall">Date d'expiration <br/>(jj/mm/yyyy)</td> 
+                    <td class="textTblCenterBoldPink">Total</td>
+                </tr>
+                {% for dataCrenas in lstDataCrenasRegion %}
+                    <tr>
+                        <td class="fixeTd titleTblLeftrBoldBlue">{{ dataCrenas.nomDistrict }} <br/>({{ dataCrenas.nomUser }} {{ dataCrenas.prenomUser }})</td> 
+                        {% set numAdmissionCRENAS = 1 %}
+                        {% set incrementationAdmissionCRENAS = 0 %} 
+                        {% for moisVal in lstMoisAdmissionCRENASAnneePrecedent %}
+                            <td class="textTblCenter">
+                                {{ lstValueMoisAdmissionCRENASAnneePrecedent[dataCrenas.id][incrementationAdmissionCRENAS] | default('') }} 
+                            </td>
+                            {% set numAdmissionCRENAS = numAdmissionCRENAS + 1 %}
+                            {% set incrementationAdmissionCRENAS = incrementationAdmissionCRENAS + 1 %}
+                        {% endfor %}
+
+                        <td class="textTblCenter">
+                            {{ dataCrenas.totalCRENASAnneePrecedent }}
+                        </td>
+
+                        {% set numAdmissionProjete = 1 %}
+                        {% set incrementationAdmissionProjeteAnneePrecedent = 0 %} 
+                        {% for moisVal in lstMoisAdmissionProjeteAnneePrecedent %}
+                            <td class="textTblCenter">
+                                {{ lstValueMoisAdmissionProjeteAnneePrecedent[dataCrenas.id][incrementationAdmissionProjeteAnneePrecedent] | default('') }}
+                            </td>
+                            {% set numAdmissionProjete = numAdmissionProjete + 1 %}
+                            {% set incrementationAdmissionProjeteAnneePrecedent = incrementationAdmissionProjeteAnneePrecedent + 1 %}
+                        {% endfor %}
+
+                        <td class="textTblCenter">
+                            {{ dataCrenas.totalProjeteAnneePrecedent }}
+                        </td>
+
+                        <td class="textTblCenter">
+                            {{ dataCrenas.resultatAnneePrecedent }}
+                        </td>
+
+                        {% set numProjectionProjete = 1 %}
+                        {% set incrementationProjectionAnneePrevisionnelle = 0 %}
+                        {% for moisVal in lstMoisProjectionAnneePrevisionnelle %}
+                            <td class="textTblCenter">
+                                {{ lstValueMoisProjectionAnneePrevisionnelle[dataCrenas.id][incrementationProjectionAnneePrevisionnelle] | default('') }} 
+                            </td>
+                            {% set numProjectionProjete = numProjectionProjete + 1 %}
+                            {% set incrementationProjectionAnneePrevisionnelle = incrementationProjectionAnneePrevisionnelle + 1 %}
+                        {% endfor %}
+
+                        <td class="textTblCenter">
+                            {{ dataCrenas.totalAnneeProjection }}
+                        </td>
+
+                        <td class="textTblCenter">
+                            {{ dataCrenas.resultatAnneeProjection }}
+                        </td>
+
+                        <!-- Quantité nécessaire en intrants nutrition (Besoins théoriques) -->
+                        <td class="textTblCenter">
+                            {{ dataCrenas.besoinAPTE }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.besoinAMOX }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.besoinFichePatient }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.besoinRegistre }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.besoinCarnetRapportCRENAS }}
+                        </td>
+
+                        <!-- SDU AMOX Boite de 100 cp au niveau BSD -->
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite01AmoxSDUCartonBSD }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration01AmoxSDUCartonBSD|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite02AmoxSDUCartonBSD }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration02AmoxSDUCartonBSD|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite03AmoxSDUCartonBSD }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration03AmoxSDUCartonBSD|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite04AmoxSDUCartonBSD }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration04AmoxSDUCartonBSD|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.totalAmoxSDUCartonBSD }}
+                        </td>
+
+                        <!-- SDU AMOX Boite de 100 cp au niveau CSB -->
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite01AmoxSDUCartonCSB }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration01AmoxSDUCartonCSB|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite02AmoxSDUCartonCSB }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration02AmoxSDUCartonCSB|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite03AmoxSDUCartonCSB }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration03AmoxSDUCartonCSB|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite04AmoxSDUCartonCSB }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration04AmoxSDUCartonCSB|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.totalAmoxSDUCartonCSB }}
+                        </td>
+
+                        <!-- TOTAL SDU AMOX Boite de 100 Cp SDSP -->
+                        <td class="textTblCenter">{{ dataCrenas.totalAmoxSDUCartonSDSP }}</td>
+
+                        <!-- SDU PN en Carton au niveau BSD -->
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite01PnSDUCartonBSD }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration01PnSDUCartonBSD|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite02PnSDUCartonBSD }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration02PnSDUCartonBSD|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite03PnSDUCartonBSD }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration03PnSDUCartonBSD|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite04PnSDUCartonBSD }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration04PnSDUCartonBSD|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.totalPnSDUCartonBSD }}
+                        </td>
+
+                        <!-- SDU PN en Carton au niveau CSB -->
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite01PnSDUCartonCSB }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration01PnSDUCartonCSB|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite02PnSDUCartonCSB }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration02PnSDUCartonCSB|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite03PnSDUCartonCSB }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration03PnSDUCartonCSB|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.quantite04PnSDUCartonCSB }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.dateExpiration04PnSDUCartonCSB|date('Y-m-d') }}
+                        </td>
+                        <td class="textTblCenter">
+                            {{ dataCrenas.totalPnSDUCartonCSB }}
+                        </td>
+
+                        <!-- TOTAL SDU PN en carton SDSP -->
+                        <td class="textTblCenter">{{ dataCrenas.totalPnSDUCartonSDSP }}</td>
+
+                        <td class="textTblCenter">{{ dataCrenas.sduFiche }}</td>
+                        <td class="textTblCenter">{{ dataCrenas.nbrTotalCsb }}</td>
+                        <td class="textTblCenter">{{ dataCrenas.nbrCSBCRENAS }}</td>
+                        <td class="textTblCenter">{{ dataCrenas.tauxCouvertureCRENAS }}</td>
+                        <td class="textTblCenter">{{ dataCrenas.nbrCSBCRENASCommande }}</td>
+                        <td class="textTblCenter">{{ dataCrenas.tauxEnvoiCommandeCSBCRENAS }}</td>
+                    </tr>
+                {% endfor %} 
+            </table>
+        </div>
+
+    </div>
+    <script src="js/Chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var districtsDataRmaNut = {{ districtsDataRmaNut|json_encode|raw }};
+            var ctx = document.getElementById('districtsChart').getContext('2d');
+
+            var labels = [];
+            var data = [];
+
+            districtsDataRmaNut.forEach(function(district) {
+                labels.push(district.districtName);
+                data.push(district.countRMANut );
+            });
+
+            var myChartRmaNut = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Districts ayant envoyé le fichier RMANut',
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    maintainAspectRatio: false, // Désactiver le maintien du rapport d'aspect
+                    responsive: true
+                }
+            });
+        });
+    </script>
+{% endblock %}

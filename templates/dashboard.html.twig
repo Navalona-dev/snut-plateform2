@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de Bord
+{% endblock %}
+
+{% block body %}
+	<form method="post" action="{{ path('app_dashboard_export') }}">
+		<div class="container">
+			<div class="centerContentDiv">
+				<h3>Tableau de Bord</h3>
+			</div>
+
+			<div class="row">
+
+				<div
+					class="row d-flex flex-wrap">
+					<!-- NB DISTRICT -->
+					<div class="col-xl-3 col-md-6 mb-4">
+						<div class="card border-left-primary shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+											NB DISTRICT</div>
+										<div class="h5 mb-0 font-weight-bold text-gray-800">{{NumberDistrict}}</div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-calendar fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- RAPPORTS ATTENDUS -->
+					<div class="col-xl-3 col-md-6 mb-4">
+						<div class="card border-left-success shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+											RAPPORTS ATTENDUS</div>
+										<div class="h5 mb-0 font-weight-bold text-gray-800">{{RapportAttendus}}</div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- RAPPORTS PARVENUS -->
+					<div class="col-xl-3 col-md-6 mb-4">
+						<div class="card border-left-info shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-info text-uppercase mb-1">RAPPORTS PARVENUS
+										</div>
+										<div class="row no-gutters align-items-center">
+											<div class="col-auto">
+												<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{RapportParvenus}}</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- TAUX DE RAPPORTAGE -->
+					<div class="col-xl-3 col-md-6 mb-4">
+						<div class="card border-left-warning shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+											TAUX DE RAPPORTAGE</div>
+										<div class="h5 mb-0 font-weight-bold text-gray-800">{{TauxRapportage}}
+											%</div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-comments fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- TAUX DE PROMPTITUDE -->
+					<div class="col-xl-3 col-md-6 mb-4">
+						<div class="card border-left-warning shadow h-100 py-2">
+							<div class="card-body">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+											TAUX DE PROMPTITUDE</div>
+										<div class="h5 mb-0 font-weight-bold text-gray-800">{{TauxProptitude}}
+											%</div>
+									</div>
+									<div class="col-auto">
+										<i class="fas fa-comments fa-2x text-gray-300"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row margin-left-right-20 margin-top-40">
+				<div class="col-md-12">
+					<table class="table table-bordered table-fixed-header" id="tableDashboard">
+						<tr class="table-success">
+							<th class="textTblCenterBold" rowspan="2">PROVINCES</th>
+							<th class="textTblCenterBold" rowspan="2">REGIONS</th>
+							<th class="textTblCenterBold" rowspan="2">DISTRICTS</th>
+							<th class="textTblCenterBold" rowspan="2">PROMPTITUDE</th>
+							<th class="textTblCenterBold" colspan="3">COMPLETUDE</th>
+							<th class="textTblCenterBold" rowspan="2">POURCENTAGE</th>
+						</tr>
+						<tr class="table-success">
+							<th class="textTblCenterBold">RMA Snut</th>
+							<th class="textTblCenterBold">BC CRENAS</th>
+							<th class="textTblCenterBold">BC CRENI</th>
+						</tr>
+						{% set increment = 1 %}
+						{% for rapportParvenu in RapportParvenusData %}
+							<tr>
+								<td>{{rapportParvenu["provinceNom"]}}</td>
+								<td>{{rapportParvenu["regionNom"]}}</td>
+								<td>{{rapportParvenu["districtNom"]}}</td>
+								<td>Oui</td>
+								<td>Oui</td>
+								<td>Oui</td>
+								<td>Oui</td>
+								<td>100%</td>
+							</tr>
+							{% set increment = increment +1 %}
+						{% endfor %}
+					</table>
+				</div>
+			</div>
+
+			<input type="hidden" value="{{ NumberDistrict }}" name="hidNumberDistrict">
+			<input type="hidden" value="{{ RapportAttendus }}" name="hidRapportAttendus">
+			<input type="hidden" value="{{ RapportParvenus }}" name="hidRapportParvenus">
+			<input type="hidden" value="{{ TauxRapportage }}" name="hidTauxRapportage">
+			<input type="hidden" value="{{ TauxProptitude }}" name="hidTauxProptitude">
+
+			<div class="centerContentDiv">
+				<button class="btn btn-success" type="submit">Exporter en format Excel</button>
+			</div>
+		</div>
+	</form>
+	<script>
+		$(document).ready(function () {
+		new DataTable('#example', {
+			order: [
+					[3, 'desc']
+				]
+			});
+		});
+	</script>
+{% endblock %}
