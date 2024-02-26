@@ -12,6 +12,7 @@ use App\Service\EmailEnvoyer;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 
 class AdminController extends AbstractController
 {
@@ -36,9 +37,9 @@ class AdminController extends AbstractController
             'resetToken' => $token,
         ])
     ;*/
-    
+            
         $this->sendMail->sendEmailUser("bermamitina@gmail.com", "nnavalona@gmail.com", "mon objet",null,['ici']);
-        dd("ici");
+     
         return $this->render('admin/dashboard/index.html.twig', []);
     }
 
