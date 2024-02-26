@@ -8,21 +8,37 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\AccesService;
+use App\Service\EmailEnvoyer;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 
 class AdminController extends AbstractController
 {
 
     private $accesService;
-    public function __construct()
+    private $sendMail;
+    public function __construct(EmailEnvoyer $sendMail)
     {
-       
+       $this->sendMail =$sendMail;
     }
 
-    /**
-     * @Route("/admin", name="admin")
-     */
+    #[Route('/admin', name: 'admin', methods: ['GET'])]
     public function index(Request $request)
     {
+       /* $token['token'] = "xxx";
+        $email = (new TemplatedEmail())
+        ->from(new Address('mailer@snut.mg', 'snut'))
+        ->to("nnavalona@gmail.com")
+        ->subject('Your password reset request')
+        ->htmlTemplate('reset_password/email.html.twig')
+        ->context([
+            'resetToken' => $token,
+        ])
+    ;*/
+    
+        $this->sendMail->sendEmailUser("bermamitina@gmail.com", "nnavalona@gmail.com", "mon objet",null,['ici']);
+        dd("ici");
         return $this->render('admin/dashboard/index.html.twig', []);
     }
 

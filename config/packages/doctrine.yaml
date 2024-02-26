@@ -1,46 +1,25 @@
 doctrine:
     dbal:
-        default_connection: snut
-        connections:
-            snut: 
-                url: '%env(resolve:DATABASE_URL)%snutplateform'
-                driver: 'pdo_mysql'
-                server_version: '5.7'
-                charset: utf8mb4
-                default_table_options:
-                    charset: utf8mb4
-                    collate: utf8mb4_unicode_ci
+        url: '%env(resolve:DATABASE_URL)%'
 
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '15'
 
-        #profiling_collect_backtrace: '%kernel.debug%'
+        profiling_collect_backtrace: '%kernel.debug%'
     orm:
         auto_generate_proxy_classes: true
-        default_entity_manager: snut_plateform
-        entity_managers:
-            snut_plateform:
-                connection: snut
-                dql:
-                    string_functions:
-                        GROUP_CONCAT: DoctrineExtensions\Query\Mysql\GroupConcat
-                        JSON_CONTAINS : DoctrineExtensions\Query\Mysql\JsonContains
-                    datetime_functions:
-                        LAST_DAY: DoctrineExtensions\Query\Mysql\LastDay
-                        YEAR : DoctrineExtensions\Query\Mysql\Year
-                        MONTH : DoctrineExtensions\Query\Mysql\Month
-                        IFNULL : DoctrineExtensions\Query\Mysql\IfNull
-                        CONCAT_WS : DoctrineExtensions\Query\Mysql\ConcatWs
-                        REGEXP : DoctrineExtensions\Query\Mysql\Regexp
-                        DATE : DoctrineExtensions\Query\Mysql\Date
-                mappings:
-                    App:
-                        is_bundle: false
-                        dir: '%kernel.project_dir%/src/Entity'
-                        prefix: 'App\Entity'
-                        alias: App
-        
+        enable_lazy_ghost_objects: true
+        report_fields_where_declared: true
+        validate_xml_mapping: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
 
 when@test:
     doctrine:

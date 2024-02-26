@@ -23,6 +23,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Service\EmailEnvoyer:
+        arguments: ['@Symfony\Component\Mailer\MailerInterface']
+        public: true
+
     App\Service\GroupeService:
         public: true
 
