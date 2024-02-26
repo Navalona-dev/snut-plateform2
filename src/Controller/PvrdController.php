@@ -225,18 +225,21 @@ class PvrdController extends AbstractController
             $dataPeriode2 = $this->_commandeSemestrielle->findDataCommandeSemestrielle();
             $dataPeriode = [$dataPeriode1, $dataPeriode2]; 
             $dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($userId, 1, $pvrd->getId());
-            return $this->render('pvrd/homePvrd.html.twig', [
+            $dataPvrdProduit = $this->_pvrd_produit_service->findDataPvrdProduitByIdPvrd($pvrd->getId()); 
+            return $this->render('pvrd/pvrdDistrict.html.twig', [
                 'controller_name' => 'PvrdController',
                 "dataUser" => $dataUser,
                 "dataProduit" => $dataProduit,
                 "dataPeriode" => $dataPeriode,
-                "dataPvrd" => $dataPvrd
+                "dataPvrd" => $dataPvrd,
+                "mnuActive" => "Pvrd",
+                "dataPvrdProduit" => $dataPvrdProduit
             ]);
         } else {
             return $this->redirectToRoute('app_login');
         }
     }
-    
+
     #[Route('/supervisor/pvrd/region/{regionId}', name: 'app_sp_pvrd_region')]
     public function listePvrdRegion($regionId, EntityManagerInterface $entityManager)
     {
