@@ -14,20 +14,20 @@ class PvrdProduit
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'quantite_inscrit_sur_bl')]
     private ?float $QuantiteInscritSurBL = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'quantite_recue')]
     private ?float $QuantiteRecue = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'ecart_entre_quantite')]
     private ?float $EcartEntreQuantite = null;
 
     #[ORM\ManyToOne(inversedBy: 'pvrdProduits')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, name: 'pvrd_id')]
     private ?Pvrd $Pvrd = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, name: 'periode')]
     private ?string $Periode = null;
 
     #[ORM\ManyToOne(inversedBy: 'pvrdProduits')]
