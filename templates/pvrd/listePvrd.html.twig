@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}District- PVRD visualisation{% endblock %}
+
+{% block body %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Liste des PVRD envoyés par les districts  </h1>
+        <p class="mb-4">Vous êtes sur la page dédiée à la visualisation des PVRD par district. Vous y trouverez les PVRD envoyé.</p>
+        
+        <div class="row">
+             <div class="col-lg-3">
+                                    <a class="btn btn-success" href="{{ path('app_pvrd') }}">Déposer fichier PVRD</a> 
+            </div> 
+        </div>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Liste des PVRD envoyé par district</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive table-wrapper"> 
+                    <table class="table table-bordered table-fixed-header" id="dataTablePvrdRegion" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="textTblCenterBold">Pvrd</th> 
+                                <th class="textTblCenterBold">Responsables</th> 
+                                <th class="textTblCenterBold">Date de réception</th>
+                                <th class="textTblCenterBold">Date de PVRD</th>
+                                <th class="textTblCenterBold">Date d'envoi (Téléversement)</th>
+                                <th class="textTblCenterBold">Promptitude</th>
+                                <th class="textTblCenterBold">Fichier</th> 
+                            </tr> 
+                        </thead>
+                        <tbody>
+                            {% for district in lstPvrdDistrict %} 
+                                <tr>
+                                    <td class="textTblLeft" {% if district.nomUser|trim is empty %} style="color: #c71c22" {% endif %}>
+                                       
+                                        {% if district.idUser is defined and district.idUser is not null and district.IdPvrd is defined and district.IdPvrd is not null %}
+                                         {{ district.nomUser }} <br/> 
+                                            <a href="{{ path('detail_pvrd', {'id': district.IdPvrd}) }}"> Visualiser détail</a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="textTblLeft">{% if district.nomUser|trim is not empty %} {{ district.nomUser }} {{ district.prenomUser }} <br/> <span style="font-size: 12px;">{{ district.telephoneUser }} <br/><b>Email: {{ district.email }} </b> </span>{% endif %}</td> 
+                                    <td class="textTblLeft">{% if district.nomUser|trim is not empty %} {{ district.DateReception|date('d-m-Y') }} {% endif %}</td>
+                                    
+                                    <td class="textTblLeft">{% if district.nomUser|trim is not empty %} {{ district.DatePvrd|date('d-m-Y') }} {% endif %}</td>
+                                    <td class="textTblLeft">{% if district.nomUser|trim is not empty %} {{ district.DateTeleversement|date('d-m-Y H:i:s') }} {% endif %}</td>
+                                    <td class="textTblCenter">{% if district.nomUser|trim is not empty %} {% if (district.JoursOuvrablesDifference > 3) %} <span class="badge bg-danger badge-pill" style="font-size: 14px; color: #FFF"> Non </span> {% else %} <span class="badge bg-success badge-pill" style="font-size: 14px; color: #FFF"> Oui </span> {% endif %} {% endif %}</td>
+                                    <td class="textTblLeft"><a href="{{ asset('uploads/PVRD/' ~ district.NewFileName) }}" target="_blank" style="color: #73a839; font-weight: bold;"><span style="font-size: 12px;">{{ district.NewFileName }}</span></a></td>
+                                </tr>
+                            {% endfor %} 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            {# <div class="centerContentDiv">
+                <a href="{{ path('app_accueil_sp_pvrd') }}" class="btn btn-secondary btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-arrow-left"></i>
+                    </span>
+                    <span class="text">Retour à la liste par région</span>
+                </a>
+            </div> #}
+        </div>
+
+    </div> 
+    <script src="{{ asset('js/Chart.js') }}"></script>
+    <script>
+    </script>
+{% endblock %}

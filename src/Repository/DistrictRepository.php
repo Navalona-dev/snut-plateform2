@@ -31,7 +31,7 @@ class DistrictRepository extends ServiceEntityRepository
                     ->from('district', 'd');
 
         if (null != $provinces) {
-                $queryBuilder->andWhere("d.province_id IN (".implode(",",$provinces ).") and (d.is_eligible_for_crenas = 1 or  d.is_eligible_for_creni = 1)")
+                $queryBuilder->andWhere("d.province_id IN (".implode(",",$provinces ).") and (d.is_eligible_for_crenas = 1 or d.is_eligible_for_creni = 1)")
             ;
         }
 

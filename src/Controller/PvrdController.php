@@ -54,13 +54,64 @@ class PvrdController extends AbstractController
             $dataPeriode1 = $this->_commandeTrimestrielle->findDataCommandeTrimestrielle();
             $dataPeriode2 = $this->_commandeSemestrielle->findDataCommandeSemestrielle();
             $dataPeriode = [$dataPeriode1, $dataPeriode2]; 
-            $dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($userId, 1);
+            //$dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($userId, 1);
+            return $this->render('pvrd/homePvrd.html.twig', [
+                'controller_name' => 'PvrdController',
+                "dataUser" => $dataUser,
+                "dataProduit" => $dataProduit,
+                "dataPeriode" => $dataPeriode,
+                "dataPvrd" => null
+            ]);
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+    }
+
+    #[Route('/pvrd/{id}', name: 'detail_pvrd')]
+    public function voirPvrd(Pvrd $pvrd): Response
+    {
+        $user = $this->getUser();
+        if ($user) { 
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+            $dataProduit = $this->_produit->findAllProduct();
+            $dataPeriode1 = $this->_commandeTrimestrielle->findDataCommandeTrimestrielle();
+            $dataPeriode2 = $this->_commandeSemestrielle->findDataCommandeSemestrielle();
+            $dataPeriode = [$dataPeriode1, $dataPeriode2]; 
+            $dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($userId, 1, $pvrd->getId());
             return $this->render('pvrd/homePvrd.html.twig', [
                 'controller_name' => 'PvrdController',
                 "dataUser" => $dataUser,
                 "dataProduit" => $dataProduit,
                 "dataPeriode" => $dataPeriode,
                 "dataPvrd" => $dataPvrd
+            ]);
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+    }
+
+    #[Route('/liste/pvrd', name: 'liste_pvrd')]
+    public function listePvrd(EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if ($user) { 
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+            $districtId = $user->getDistrict()->getId();
+            $lstPvrdDistrict = $this->_pvrd_service->findListPvrdByDistrict($districtId);
+          /*  $District = $entityManager->getRepository(Region::class)->find($regionId);
+            if (!$Region) {
+                throw $this->createNotFoundException('La région n\'existe pas.');
+            }*/
+          
+            return $this->render('pvrd/listePvrd.html.twig', [
+                "mnuActive" => "Pvrd",
+                "dataUser" => $dataUser,
+                "District" => $user->getDistrict(),
+                "lstPvrdDistrict" => $lstPvrdDistrict,
+                "numberOfDistrictSendPvrd" => count($lstPvrdDistrict),
+                "numberOfDistricts" => null,
             ]);
         } else {
             return $this->redirectToRoute('app_login');
@@ -223,7 +274,7 @@ class PvrdController extends AbstractController
         if ($user) {
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
-            $dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($responsableDistrict, 1);
+            $dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($responsableDistrict, 1, null);
             $dataPvrdProduit = $this->_pvrd_produit_service->findDataPvrdProduitByIdPvrd($dataPvrd["IdPvrd"]); 
             return $this->render('supervisor/supervisorCentralPvrdDistrict.html.twig', [
                 "mnuActive" => "Pvrd",

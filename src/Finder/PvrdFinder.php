@@ -14,30 +14,57 @@ Class PvrdFinder
         $this->em = $em;
     }
 
-    public function findDataPvrdByUserCommandeTrimestrielle($prmUserId, $prmCommandeTrimestrielle)
+    public function findDataPvrdByUserCommandeTrimestrielle($prmUserId, $prmCommandeTrimestrielle, $idPvrd = null)
     {
-        $query = $this->em->createQuery(
-            'SELECT 
-                pv.id AS IdPvrd, 
-                pv.Site AS Site,
-                pv.DateReception AS DateReception,
-                pv.DatePvrd AS DatePvrd,
-                pv.DateTeleversement AS DateTeleversement,
-                pv.NumeroBonLivraison AS NumeroBonLivraison,
-                pv.Fournisseur AS Fournisseur,
-                pv.UploadedDateTime AS UploadedDateTime,
-                pv.NewFileName AS NewFileName,
-                d.id AS IdDistrict,
-                d.Nom As NomDistrict,
-                r.id AS IdRegion,
-                r.Nom AS NomRegion
-             FROM App:Pvrd pv
-             INNER JOIN pv.ResponsableDistrict u 
-             INNER JOIN pv.District d
-             INNER JOIN pv.Region r
-             WHERE pv.ResponsableDistrict = :prmUserId'
-        )
-        ->setParameter('prmUserId', $prmUserId)
+        if (null != $idPvrd) {
+            $query = $this->em->createQuery(
+                'SELECT 
+                    pv.id AS IdPvrd, 
+                    pv.Site AS Site,
+                    pv.DateReception AS DateReception,
+                    pv.DatePvrd AS DatePvrd,
+                    pv.DateTeleversement AS DateTeleversement,
+                    pv.NumeroBonLivraison AS NumeroBonLivraison,
+                    pv.Fournisseur AS Fournisseur,
+                    pv.UploadedDateTime AS UploadedDateTime,
+                    pv.NewFileName AS NewFileName,
+                    d.id AS IdDistrict,
+                    d.Nom As NomDistrict,
+                    r.id AS IdRegion,
+                    r.Nom AS NomRegion
+                 FROM App:Pvrd pv
+                 INNER JOIN pv.ResponsableDistrict u 
+                 INNER JOIN pv.District d
+                 INNER JOIN pv.Region r
+                 WHERE pv.ResponsableDistrict = :prmUserId and pv.id =:idPvrd'
+            )
+
+            ->setParameter('idPvrd', $idPvrd);
+        } else {
+            $query = $this->em->createQuery(
+                'SELECT 
+                    pv.id AS IdPvrd, 
+                    pv.Site AS Site,
+                    pv.DateReception AS DateReception,
+                    pv.DatePvrd AS DatePvrd,
+                    pv.DateTeleversement AS DateTeleversement,
+                    pv.NumeroBonLivraison AS NumeroBonLivraison,
+                    pv.Fournisseur AS Fournisseur,
+                    pv.UploadedDateTime AS UploadedDateTime,
+                    pv.NewFileName AS NewFileName,
+                    d.id AS IdDistrict,
+                    d.Nom As NomDistrict,
+                    r.id AS IdRegion,
+                    r.Nom AS NomRegion
+                 FROM App:Pvrd pv
+                 INNER JOIN pv.ResponsableDistrict u 
+                 INNER JOIN pv.District d
+                 INNER JOIN pv.Region r
+                 WHERE pv.ResponsableDistrict = :prmUserId'
+            );
+        }
+        
+        $query ->setParameter('prmUserId', $prmUserId)
         //->setParameter('prmCommandeTrimestrielle', $prmCommandeTrimestrielle)
         ->setMaxResults(1);
 
@@ -119,6 +146,70 @@ Class PvrdFinder
             ->setParameter('prmRegionId', $prmRegionId);
         $resultLstRegionCreni = $query->getArrayResult()[0]["nombrePvrds"];
         return $resultLstRegionCreni;
+    }
+
+    public function findListPvrdByDistrict($prmDistrictId)
+    {
+        $query = $this->em->createQuery("SELECT 
+                                            d.id AS districtId,
+                                            d.Nom AS districtNom,
+                                            pv.id AS IdPvrd, 
+                                            pv.Site AS Site,
+                                            pv.DateReception AS DateReception, 
+                                            pv.DatePvrd AS DatePvrd,
+                                            pv.DateTeleversement AS DateTeleversement,
+                                            pv.NumeroBonLivraison AS NumeroBonLivraison,
+                                            pv.Fournisseur AS Fournisseur,
+                                            pv.UploadedDateTime AS UploadedDateTime,
+                                            pv.NewFileName AS NewFileName,
+                                            u.id As idUser,
+                                            u.Nom AS nomUser,
+                                            u.Prenoms AS prenomUser,
+                                            u.Telephone AS telephoneUser,
+                                            u.email AS email 
+                                        FROM App:District d  
+                                        LEFT JOIN App:Pvrd pv WITH pv.District = d.id
+                                        LEFT JOIN App:User u WITH pv.ResponsableDistrict = u.id
+                                        WHERE d.id = :prmDistrictId")
+                    ->setParameter('prmDistrictId', $prmDistrictId);
+     
+        try {
+            $resultLstPvrd = $query->getArrayResult(); 
+            if (is_array($resultLstPvrd) && count($resultLstPvrd) > 0) {
+
+                for ($i = 0; $i < count($resultLstPvrd); $i++) {
+                    $dateReception = $resultLstPvrd[$i]["DateReception"];
+                    $dateTeleversement = $resultLstPvrd[$i]["DateTeleversement"];
+                
+                    // Vérifier si les dates sont bien des objets DateTime
+                    if ($dateReception instanceof DateTime && $dateTeleversement instanceof DateTime) {
+                        $days = 0;
+                        $modifiedDateReception = clone $dateReception;
+                
+                        while ($modifiedDateReception < $dateTeleversement) {
+                            if ($modifiedDateReception->format('N') != 6 && $modifiedDateReception->format('N') != 7) {
+                                $days++;
+                            }
+                            $modifiedDateReception->modify('+1 day');
+                        }
+                
+                        $resultLstPvrd[$i]["JoursOuvrablesDifference"] = $days;
+                    } else {
+                        // Gérer le cas où l'une des valeurs n'est pas un objet DateTime
+                        $resultLstPvrd[$i]["JoursOuvrablesDifference"] = 0;
+                    }
+                }
+                
+            }
+        } catch (\Exception $e) {
+            // Gérer l'erreur
+            // Par exemple, afficher le message d'erreur pour le débogage
+            echo $e->getMessage();
+            // Peut-être retourner une valeur par défaut ou autre chose en cas d'erreur
+            return [];
+        }
+        
+        return $resultLstPvrd;
     }
 
     public function findListPvrdByRegion($prmRegionId)

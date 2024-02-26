@@ -46,7 +46,7 @@
                                     <a class="btn btn-success" href="{{ path('app_creni') }}">{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} Modifier {% else %} Remplir {% endif %} le bon de commande CRENI</a> 
                                 </div>
                                 <div class="col-lg-3">
-                                    <a class="btn btn-success" href="{{ path('app_pvrd') }}">{% if (dataPvrd is defined and dataPvrd is null) %} Déposer {% else %} Consulter {% endif %} le fichier PVRD</a> 
+                                    <a class="btn btn-success" href="{{ path('liste_pvrd') }}">Consulter les fichiers PVRD</a> 
                                 </div> 
                         </div>
                     {% endif %}
