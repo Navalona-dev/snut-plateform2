@@ -14,16 +14,16 @@ class QuantitiesProductRiskExpiry
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, name: 'pn')]
     private ?string $PN = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, name: 'amoxi')]
     private ?string $AMOXI = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, name: 'f75')]
     private ?string $F75 = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, name: 'f100')]
     private ?string $F100 = null;
 
     #[ORM\ManyToOne]

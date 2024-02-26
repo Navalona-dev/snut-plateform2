@@ -17,7 +17,7 @@ class CommandeTrimestrielle
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, name: 'nom')]
     private ?string $Nom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, name: 'date_debut')]
