@@ -65,12 +65,12 @@ $config["smtp_encoding"] = "base64";
 */
 
            $mail->isSMTP(); 
-           $mail->Host = 'mail.nogaetechnologies.com'; //"smtp.zoho.com"; //"smtp.mailgun.org";
+           $mail->Host = "smtp.zoho.com";//'mail.nogaetechnologies.com';  //"smtp.mailgun.org";
            $mail->Port = 465;
            $mail->SMTPSecure = 'ssl';
            $mail->SMTPAuth = true;
-           $mail->Username = 'matac@nogaetechnologies.com';//'snutplateform@zohomail.com'; //'postmaster@mailgun.ibonia.mg'; // Remplacez par votre nom d'utilisateur Mailgun
-           $mail->Password = 'dgf%W1iw,_Hz';//'ghrtksme34tjf'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
+           $mail->Username = 'snutplateform@zohomail.com';//'matac@nogaetechnologies.com'; //'postmaster@mailgun.ibonia.mg'; // Remplacez par votre nom d'utilisateur Mailgun
+           $mail->Password = 'ghrtksme34tjf';//'dgf%W1iw,_Hz'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
            $mail->CharSet = 'UTF-8'; // Maintenir 'UTF-8'
            $mail->SMTPAutoTLS = false;
 
