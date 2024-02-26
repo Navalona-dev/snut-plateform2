@@ -67,30 +67,6 @@ class PvrdController extends AbstractController
         }
     }
 
-    #[Route('/pvrd/{id}', name: 'detail_pvrd')]
-    public function voirPvrd(Pvrd $pvrd): Response
-    {
-        $user = $this->getUser();
-        if ($user) { 
-            $userId = $user->getId();
-            $dataUser = $this->_userService->findDataUser($userId);
-            $dataProduit = $this->_produit->findAllProduct();
-            $dataPeriode1 = $this->_commandeTrimestrielle->findDataCommandeTrimestrielle();
-            $dataPeriode2 = $this->_commandeSemestrielle->findDataCommandeSemestrielle();
-            $dataPeriode = [$dataPeriode1, $dataPeriode2]; 
-            $dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($userId, 1, $pvrd->getId());
-            return $this->render('pvrd/homePvrd.html.twig', [
-                'controller_name' => 'PvrdController',
-                "dataUser" => $dataUser,
-                "dataProduit" => $dataProduit,
-                "dataPeriode" => $dataPeriode,
-                "dataPvrd" => $dataPvrd
-            ]);
-        } else {
-            return $this->redirectToRoute('app_login');
-        }
-    }
-
     #[Route('/liste/pvrd', name: 'liste_pvrd')]
     public function listePvrd(EntityManagerInterface $entityManager): Response
     {
@@ -237,6 +213,30 @@ class PvrdController extends AbstractController
         }
     }
 
+    #[Route('/pvrd/detail/{id}', name: 'detail_pvrd')]
+    public function voirPvrd(Pvrd $pvrd): Response
+    {
+        $user = $this->getUser();
+        if ($user) { 
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+            $dataProduit = $this->_produit->findAllProduct();
+            $dataPeriode1 = $this->_commandeTrimestrielle->findDataCommandeTrimestrielle();
+            $dataPeriode2 = $this->_commandeSemestrielle->findDataCommandeSemestrielle();
+            $dataPeriode = [$dataPeriode1, $dataPeriode2]; 
+            $dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($userId, 1, $pvrd->getId());
+            return $this->render('pvrd/homePvrd.html.twig', [
+                'controller_name' => 'PvrdController',
+                "dataUser" => $dataUser,
+                "dataProduit" => $dataProduit,
+                "dataPeriode" => $dataPeriode,
+                "dataPvrd" => $dataPvrd
+            ]);
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+    }
+    
     #[Route('/supervisor/pvrd/region/{regionId}', name: 'app_sp_pvrd_region')]
     public function listePvrdRegion($regionId, EntityManagerInterface $entityManager)
     {
