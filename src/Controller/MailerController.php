@@ -65,16 +65,16 @@ $config["smtp_encoding"] = "base64";
 */
 
            $mail->isSMTP(); 
-           $mail->Host = 'mail.nogaetechnologies.com'; //"smtp.zoho.com"; //"smtp.mailgun.org";
+           $mail->Host = 'smtp.zoho.com'; //"smtp.zoho.com"; //"smtp.mailgun.org";
            $mail->Port = 465;
            $mail->SMTPSecure = 'ssl';
            $mail->SMTPAuth = true;
-           $mail->Username = 'matac@nogaetechnologies.com';//'snutplateform@zohomail.com'; //'postmaster@mailgun.ibonia.mg'; // Remplacez par votre nom d'utilisateur Mailgun
-           $mail->Password = 'dgf%W1iw,_Hz';//'ghrtksme34tjf'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
+           $mail->Username = 'snutplateform@zohomail.com';//'snutplateform@zohomail.com'; //'postmaster@mailgun.ibonia.mg'; // Remplacez par votre nom d'utilisateur Mailgun
+           $mail->Password = 'ghrtksme34tjf';//'ghrtksme34tjf'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
            $mail->CharSet = 'UTF-8'; // Maintenir 'UTF-8'
-           $mail->SMTPAutoTLS = false;
+           //$mail->SMTPAutoTLS = false;
 
-            $mail->setFrom("thierry.louisfernand@gmail.com", 'RLFThierry');
+            $mail->setFrom("snutplateform@zohomail.com", 'RLFThierry');
             $mail->addAddress("nnavalona@gmail.com");
             $mail->Subject = $subject;
             $mail->msgHTML($htmlContent);

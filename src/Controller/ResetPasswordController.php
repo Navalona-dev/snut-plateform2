@@ -19,6 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
+use PHPMailer\PHPMailer\PHPMailer;
 
 #[Route('/reset-password')]
 class ResetPasswordController extends AbstractController
@@ -44,7 +45,8 @@ class ResetPasswordController extends AbstractController
             return $this->processSendingPasswordResetEmail(
                 $form->get('email')->getData(),
                 $mailer,
-                $translator
+                $translator,
+                $request
             );
         }
 
@@ -121,7 +123,7 @@ class ResetPasswordController extends AbstractController
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_accueil');
         }
 
         return $this->render('reset_password/reset.html.twig', [
@@ -129,7 +131,7 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
+    private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator, Request $request): RedirectResponse
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
@@ -156,7 +158,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
-        $email = (new TemplatedEmail())
+        /*$email = (new TemplatedEmail())
             ->from(new Address('mailer@snut.mg', 'snut'))
             ->to($user->getEmail())
             ->subject('Your password reset request')
@@ -166,7 +168,43 @@ class ResetPasswordController extends AbstractController
             ])
         ;
 
-        $mailer->send($email);
+        $mailer->send($email);*/
+
+        $scheme = $request->getScheme();
+        $host = $request->getHost();
+
+        $mail = new PHPMailer();
+        $subject = "SNUT-PLATEFORME : REINITIALISATION DE MOT DE PASSE";
+        $subject = mb_convert_encoding($subject, 'UTF-8');
+        $urlReset = $this->generateUrl('app_reset_password', ['token' => $resetToken->getToken()]); 
+        $htmlContent = '
+            Bonjour <b> "'.$user->getNom().'" </b>,<br/><br/>
+            Pour réinitialiser votre mot de passe dans la plateforme, veuillez cliquer sur le lien ci-dessous : <br/>
+            <a href="' . $scheme.'://' .$host.$urlReset . '">Réinitialiser mon mot de passe</a> <br/>
+            Ce lien expirera le <b> demain</b>. <br/> <br/>
+            Cordialement, <br/>
+            Ceci est un mail automatique, ne pas répondre'; 
+        
+        $mail->isSMTP(); 
+        $mail->Host = 'smtp.zoho.com'; //"smtp.zoho.com"; //"smtp.mailgun.org";
+        $mail->Port = 465;
+        $mail->SMTPSecure = 'ssl';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'snutplateform@zohomail.com';//'snutplateform@zohomail.com'; //'postmaster@mailgun.ibonia.mg'; // Remplacez par votre nom d'utilisateur Mailgun
+        $mail->Password = 'ghrtksme34tjf';//'ghrtksme34tjf'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
+        $mail->CharSet = 'UTF-8'; // Maintenir 'UTF-8'
+        //$mail->SMTPAutoTLS = false;
+
+        $mail->setFrom("snutplateform@zohomail.com", 'RLFThierry');
+        $mail->addAddress($user->getEmail());
+        $mail->Subject = $subject;
+        $mail->msgHTML($htmlContent);
+        
+        if (!$mail->send()) {
+            echo "Mailer Error: " . $mail->ErrorInfo;
+        } else {
+            echo "Message sent!";
+        }
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);
