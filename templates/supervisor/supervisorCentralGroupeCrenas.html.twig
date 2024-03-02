@@ -37,7 +37,8 @@
                                 <td>
                                     <ul class="no-decoration">
                                         {% for element in groupe %}
-                                            <li><a href="{{ path('app_accueil_sp_crenas_in_groupe', {'groupId': element.idGroupe}) }}">{{ element.provinceNomFR }}</a></li>
+                                            {# <li><a href="{{ path('app_accueil_sp_crenas_in_groupe', {'groupId': element.idGroupe}) }}">{{ element.provinceNomFR }}</a></li> #}
+                                            <li><a href="{{ path('app_accueil_sp_crenas_in_groupe', {'groupId': element.idGroupe}) }}">{{ element.provinces }}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </td>

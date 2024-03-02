@@ -188,6 +188,10 @@ class DataCrenas
     #[ORM\OneToMany(mappedBy: 'DataCrenas', targetEntity: DataValidationCrenas::class)]
     private Collection $dataValidationCrenas;
 
+    #[ORM\ManyToOne(inversedBy: 'dataCrenas')]
+    #[ORM\JoinColumn(name: 'groupe_id')]
+    private ?Groupe $groupe = null;
+
     public function __construct()
     {
         $this->dataCrenasMoisProjectionAdmissions = new ArrayCollection();
@@ -917,6 +921,18 @@ class DataCrenas
                 $dataValidationCrena->setDataCrenas(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGroupe(): ?Groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?Groupe $groupe): static
+    {
+        $this->groupe = $groupe;
 
         return $this;
     }

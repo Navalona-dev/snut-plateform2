@@ -254,7 +254,7 @@ class AccueilController extends AbstractController
                 if (isset($dataCreni) && is_array($dataCreni) && count($dataCreni) > 0) {
                     $isUserHavingDataCreni = true;
                 }
-                $dataPvrd = $this->_pvrdService->findDataPvrdByUserCommandeTrimestrielle($userId, 1);
+                $dataPvrd = $this->_pvrdService->findDataPvrdByUserCommandeTrimestrielle($userId, 1, null);
 
                 return $this->render('home.html.twig', [
                     'controller_name' => 'RmaNutController',
@@ -1086,7 +1086,10 @@ class AccueilController extends AbstractController
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
-            $lstGroupe = $this->_groupeService->findAllDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"]);
+            //$lstGroupe = $this->_groupeService->findAllDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"]);
+            //$lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser['idRegion']);
+            $lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle["IdAnneePrevisionnelle"]);
+           
             $lstGroupData = [];
             if (isset($lstGroupe) && is_array($lstGroupe) && count($lstGroupe) > 0) {
                 for ($i = 0; $i < count($lstGroupe); $i++) {
@@ -1117,16 +1120,42 @@ class AccueilController extends AbstractController
 
             // Obtenir les informations concernant les données crenas enregistrer
             $lstDataCrenasGroupe = array();
-            $arrDataCrenasGroupe =  $this->_dataCrenaService->findDataCrenasByGroupe($groupId);
-            if ($arrDataCrenasGroupe != null && is_array($arrDataCrenasGroupe) && count($arrDataCrenasGroupe) > 0) {
-                foreach ($arrDataCrenasGroupe as $dataCrenasGroupe) {
-                    if (isset($dataCrenasGroupe) && is_array($dataCrenasGroupe) && count($dataCrenasGroupe) > 0) {
-                        for ($i = 0; $i < count($dataCrenasGroupe); $i++) {
-                            $lstDataCrenasGroupe[] = $dataCrenasGroupe[$i];
+
+            if ($this->isGranted('ROLE_REGIONAL_SUPERVISOR')) {
+                $arrDataCrenasGroupe =  $this->_dataCrenaService->findDataCrenasByGroupeByRegion($groupId, $dataUser['idRegion']);
+
+                if ($arrDataCrenasGroupe != null && is_array($arrDataCrenasGroupe) && count($arrDataCrenasGroupe) > 0) {
+                    foreach ($arrDataCrenasGroupe as $dataCrenasGroupe) {
+                        if (isset($dataCrenasGroupe) && is_array($dataCrenasGroupe) && count($dataCrenasGroupe) > 0) {
+                            for ($i = 0; $i < count($dataCrenasGroupe); $i++) {
+                                if (array_key_exists($i, $dataCrenasGroupe)) {
+                                    $lstDataCrenasGroupe[] = $dataCrenasGroupe[$i];
+                                }
+                            }
                         }
                     }
                 }
             }
+
+            if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_CENTRAL_SUPERVISOR')) {
+                $arrDataCrenasGroupe =  $this->_dataCrenaService->findAllDataCrenasByRegionId($groupId);
+
+                if ($arrDataCrenasGroupe != null && is_array($arrDataCrenasGroupe) && count($arrDataCrenasGroupe) > 0) {
+                    foreach ($arrDataCrenasGroupe as $dataCrenasGroupe) {
+                        if (isset($dataCrenasGroupe) && is_array($dataCrenasGroupe) && count($dataCrenasGroupe) > 0) {
+                            //for ($i = 0; $i < count($dataCrenasGroupe); $i++) {
+                                    $lstDataCrenasGroupe[] = $dataCrenasGroupe;
+                                
+                            //}
+                        }
+                    }
+                }
+            }
+            //$arrDataCrenasGroupe =  $this->_dataCrenaService->findDataCrenasByGroupe($groupId);
+            
+           // dd($arrDataCrenasGroupe);
+            //dd($groupId, $dataUser, $arrDataCrenasGroupe);
+           
 
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($groupId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
@@ -1143,6 +1172,24 @@ class AccueilController extends AbstractController
                 }
             }
 
+             // Gestion enclave
+             $isEnclave = false;
+             
+             if ($dataGroupe[0]['type'] != null && $dataGroupe[0]['type'] != "" && $dataGroupe[0]['type'] == "enclave") {
+                 $isEnclave = true;
+                 $allMoisPrevisionnelle = $this->_moisProjectionAdmissionService->findDataMoisPrevisionnelleProjection($dataGroupe[0]['idGroupe']);
+                 if (count($allMoisPrevisionnelle) > 0) {
+                     foreach($allMoisPrevisionnelle as $moisPrevision) {
+                         if (!in_array($moisPrevision['MoisProjectionAnneePrevisionnelle'], $lstMoisProjectionAnneePrevisionnelle)) {
+                             array_push($lstMoisProjectionAnneePrevisionnelle, $moisPrevision['MoisProjectionAnneePrevisionnelle']);
+                         }
+                     }
+                 }
+                // dd($dataGroupe, $lstMoisProjectionAnneePrevisionnelle, $allMoisPrevisionnelle);
+             }
+           
+             // Gestion enclave
+            $valueDataMoisProjection = null;
             $lstValueMoisAdmissionCRENASAnneePrecedent = array();
             $lstValueMoisAdmissionProjeteAnneePrecedent = array();
             $lstValueMoisProjectionAnneePrevisionnelle = array();
@@ -1151,6 +1198,12 @@ class AccueilController extends AbstractController
                 for ($j = 0; $j < count($lstDataCrenasGroupe); $j++) {
                     $dataCrenasId = $lstDataCrenasGroupe[$j]["id"];
                     $valueDataMoisProjection = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisProjectionAdmissionByCrenasId($dataCrenasId);
+                    if ($isEnclave) {
+                        $valueDataMoisPrevisionneleProjection = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisPrevisionnelleAdmissionByCrenasId($dataCrenasId);
+                        $valueDataMoisProjection = array_merge($valueDataMoisProjection, $valueDataMoisPrevisionneleProjection);
+                        //dd($valueDataMoisPrevisionneleProjection, $valueDataMoisProjection);
+                    }
+                    
 
                     if (isset($valueDataMoisProjection) && count($valueDataMoisProjection) > 0) {
                         for ($i = 0; $i < count($valueDataMoisProjection); $i++) {

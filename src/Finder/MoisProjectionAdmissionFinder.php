@@ -30,6 +30,20 @@ Class MoisProjectionAdmissionFinder
         $resultDataMoisProjection = $queryBuilder->getQuery()->getArrayResult(); 
         return $resultDataMoisProjection;
     }
+
+    public function findDataMoisPrevisionnelleProjection($prmGroupeId, $prmCommandeTrimestrielleId = null)
+    { 
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder 
+            ->select('m.id AS idMoisProjection, 
+                m.mois AS MoisProjectionAnneePrevisionnelle')
+            ->from('App:MoisPrevisionnelleEnclave', 'm')
+            ->join('m.groupe', 'g')
+            ->where('g.id = :groupeId') 
+            ->setParameter('groupeId', $prmGroupeId);
+        $resultDataMoisPrevisionneleProjection = $queryBuilder->getQuery()->getArrayResult(); 
+        return $resultDataMoisPrevisionneleProjection;
+    }
 }
 
 ?>

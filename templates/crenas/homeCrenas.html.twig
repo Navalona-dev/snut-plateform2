@@ -5,7 +5,7 @@
 {% block body %}
 <div class="container">
     <div class="row">
-        <h2>BON DE COMMANDE INTRANTS CRENAS Intégration SALAMA {{ dataGroupe.nomGroupe }} </h2>
+        <h2>BON DE COMMANDE INTRANTS CRENAS Intégration SALAMA {% if dataGroupe is not null %} {{ dataGroupe.nomGroupe }} {% endif %} </h2>
     </div>
     <div class="row">
         <div class="col-lg-4">
@@ -51,12 +51,20 @@
             </div>
         </div>
     {% else %}
-        {% if (dataUser.isEligibleForCrenas == false ) %}
+        {% if (dataUser.isEligibleForCrenas == false ) and dataUser.isDistrictIsInGroup is null %}
             <div class="card text-white bg-warning mb-3" style="max-width: 40rem;">
                 <div class="card-header">Avertissement</div>
                 <div class="card-body">
                     <h4 class="card-title">District non éligible</h4>
                     <p class="card-text">Votre district n'est pas éligible pour insérer des données CRENAS.</p>
+                </div>
+            </div>
+        {% elseif dataUser.isDistrictIsInGroup is defined %}
+            <div class="card text-white bg-warning mb-3" style="max-width: 40rem;">
+                <div class="card-header">Avertissement</div>
+                <div class="card-body">
+                    <h4 class="card-title">District doit appartient à une groupe</h4>
+                    <p class="card-text">Merci de contancter votre l'administrateur du plateforme.</p>
                 </div>
             </div>
         {% else %}

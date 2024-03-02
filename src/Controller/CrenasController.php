@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\DataCrenas;
 use App\Entity\DataCrenasMoisProjectionAdmission;
 use App\Entity\DataValidationCrenas;
+use App\Entity\MoisPrevisionnelleEnclave;
 use App\Entity\MoisProjectionsAdmissions;
 use App\Finder\AnneePrevisionelleFinder;
 use App\Finder\CommandeTrimestrielleFinder;
@@ -63,9 +64,9 @@ class CrenasController extends AbstractController
             $dataUser = $this->_userService->findDataUser($userId);
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
-            $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"]);
+            $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
             $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
-            
+               
             if ($dataRMANut == NULL) {
                 return $this->render('crenas/homeCrenas.html.twig', [
                     "dataUser" => $dataUser,
@@ -73,92 +74,139 @@ class CrenasController extends AbstractController
                     "dataGroupe" => $dataGroupe
                 ]); 
             } else {
+                if ($dataGroupe != null) {
+                    $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId);  
+                    $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+                    $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+                
+                    $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataGroupe["idGroupe"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+                    $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
 
-                $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId);  
-                $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
-                $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"]);
-                $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataGroupe["idGroupe"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
-                $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
-
-                $lstMoisAdmissionCRENASAnneePrecedent = array();
-                $lstMoisAdmissionProjeteAnneePrecedent = array();
-                $lstMoisProjectionAnneePrevisionnelle = array();
-    
-                if (isset($dataMoisProjection) && count($dataMoisProjection) > 0) {
-                    for ($i=0; $i < count($dataMoisProjection); $i++) { 
-                        $lstMoisAdmissionCRENASAnneePrecedent[] = $dataMoisProjection[$i]["MoisAdmissionCRENASAnneePrecedent"];
-                        $lstMoisAdmissionProjeteAnneePrecedent[] = $dataMoisProjection[$i]["MoisAdmissionProjeteAnneePrecedent"];
-                        $lstMoisProjectionAnneePrevisionnelle[] = $dataMoisProjection[$i]["MoisProjectionAnneePrevisionnelle"];
-                    }
-                } 
-
-                // Verifier si l'utilisateur a déjà renseigner son donnée CRENAS
-                $isUserHavingDataCrenas = false;
-                $valueDataMoisProjection = null;
-
-                $lstValueMoisAdmissionCRENASAnneePrecedent = array();
-                $lstValueMoisAdmissionProjeteAnneePrecedent = array();
-                $lstValueMoisProjectionAnneePrevisionnelle = array();
-
-                if (isset($dataCrenas) && is_array($dataCrenas) && count($dataCrenas) > 0) {
-                    $isUserHavingDataCrenas = true;
-                    $valueDataMoisProjection = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisProjectionAdmissionByCrenasId($dataCrenas["id"]);
-
-                    if (isset($valueDataMoisProjection) && count($valueDataMoisProjection) > 0) {
-                        for ($i=0; $i < count($valueDataMoisProjection); $i++) {
-                            $lstValueMoisAdmissionCRENASAnneePrecedent[] = $valueDataMoisProjection[$i]["DataMoisAdmissionCRENASAnneePrecedent"];
-                            $lstValueMoisAdmissionProjeteAnneePrecedent[] = $valueDataMoisProjection[$i]["DataMoisAdmissionProjeteAnneePrecedent"];
-                            $lstValueMoisProjectionAnneePrevisionnelle[] = $valueDataMoisProjection[$i]["DataMoisProjectionAnneePrevisionnelle"];
+                    $lstMoisAdmissionCRENASAnneePrecedent = array();
+                    $lstMoisAdmissionProjeteAnneePrecedent = array();
+                    $lstMoisProjectionAnneePrevisionnelle = array();
+                
+                    if (isset($dataMoisProjection) && count($dataMoisProjection) > 0) {
+                        for ($i=0; $i < count($dataMoisProjection); $i++) { 
+                            $lstMoisAdmissionCRENASAnneePrecedent[] = $dataMoisProjection[$i]["MoisAdmissionCRENASAnneePrecedent"];
+                            $lstMoisAdmissionProjeteAnneePrecedent[] = $dataMoisProjection[$i]["MoisAdmissionProjeteAnneePrecedent"];
+                            $lstMoisProjectionAnneePrevisionnelle[] = $dataMoisProjection[$i]["MoisProjectionAnneePrevisionnelle"];
                         }
+                    } 
+                    // Gestion enclave
+                    $isEnclave = false;
+                    if ($dataGroupe['type'] != null && $dataGroupe['type'] != "" && $dataGroupe['type'] == "enclave") {
+                        $isEnclave = true;
+                        $allMoisPrevisionnelle = $this->_moisProjectionAdmissionService->findDataMoisPrevisionnelleProjection($dataGroupe['idGroupe']);
+                        if (count($allMoisPrevisionnelle) > 0) {
+                            foreach($allMoisPrevisionnelle as $moisPrevision) {
+                                if (!in_array($moisPrevision['MoisProjectionAnneePrevisionnelle'], $lstMoisProjectionAnneePrevisionnelle)) {
+                                    array_push($lstMoisProjectionAnneePrevisionnelle, $moisPrevision['MoisProjectionAnneePrevisionnelle']);
+                                }
+                            }
+                        }
+                    // dd($dataGroupe, $lstMoisProjectionAnneePrevisionnelle, $allMoisPrevisionnelle);
                     }
-                } 
+                    // Gestion enclave
+                    // Verifier si l'utilisateur a déjà renseigner son donnée CRENAS
+                    $isUserHavingDataCrenas = false;
+                    $valueDataMoisProjection = null;
 
-                $valeurCalculTheoriqueATPE = null;
-                $valeurCalculTheoriqueAMOX = null;
-                $valeurCalculTheoriqueFichePatient = null;
-                $valeurCalculTheoriqueRegistre = null;
-                $valeurCalculTheoriqueCarnetRapport = null; 
-                if (isset($dataCommandeTrimestrielle) && $dataCommandeTrimestrielle != NULL) {
-                    if (strpos($dataCommandeTrimestrielle["Slug"], "T1") !== false  && $dataCommandeTrimestrielle["isActive"] == 1) { 
-                        $valeurCalculTheoriqueATPE = $dataAnneePrevisionnelle["ValeurCalculTheoriqueATPE01"];
-                        $valeurCalculTheoriqueAMOX = $dataAnneePrevisionnelle["ValeurCalculTheoriqueAMOX01"];
-                        $valeurCalculTheoriqueFichePatient = $dataAnneePrevisionnelle["ValeurCalculTheoriqueFichePatient01"];
-                        $valeurCalculTheoriqueRegistre = $dataAnneePrevisionnelle["ValeurCalculTheoriqueRegistre01"];
-                        $valeurCalculTheoriqueCarnetRapport = $dataAnneePrevisionnelle["ValeurCalculTheoriqueCarnetRapport01"];
-                    } else {
-                        $valeurCalculTheoriqueATPE = $dataAnneePrevisionnelle["ValeurCalculTheoriqueATPE02"];
-                        $valeurCalculTheoriqueAMOX = $dataAnneePrevisionnelle["ValeurCalculTheoriqueAMOX02"];
-                        $valeurCalculTheoriqueFichePatient = $dataAnneePrevisionnelle["ValeurCalculTheoriqueFichePatient02"];
-                        $valeurCalculTheoriqueRegistre = $dataAnneePrevisionnelle["ValeurCalculTheoriqueRegistre02"];
-                        $valeurCalculTheoriqueCarnetRapport = $dataAnneePrevisionnelle["ValeurCalculTheoriqueCarnetRapport02"];
-                    }
-                } 
+                    $lstValueMoisAdmissionCRENASAnneePrecedent = array();
+                    $lstValueMoisAdmissionProjeteAnneePrecedent = array();
+                    $lstValueMoisProjectionAnneePrevisionnelle = array();
 
-            
-                //dump("valeurCalculTheoriqueATPE = " . $valeurCalculTheoriqueATPE . " | valeurCalculTheoriqueAMOX = " . $valeurCalculTheoriqueAMOX . " | valeurCalculTheoriqueFichePatient = " . $valeurCalculTheoriqueFichePatient . " | valeurCalculTheoriqueRegistre = " . $valeurCalculTheoriqueRegistre . " | valeurCalculTheoriqueCarnetRapport = " . $valeurCalculTheoriqueCarnetRapport); dd();
-                //dd();
+                    if (isset($dataCrenas) && is_array($dataCrenas) && count($dataCrenas) > 0) {
+                        $isUserHavingDataCrenas = true;
+                        $valueDataMoisProjection = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisProjectionAdmissionByCrenasId($dataCrenas["id"]);
 
+                        if ($isEnclave) {
+                            $valueDataMoisPrevisionneleProjection = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisPrevisionnelleAdmissionByCrenasId($dataCrenas["id"]);
+                            $valueDataMoisProjection = array_merge($valueDataMoisProjection, $valueDataMoisPrevisionneleProjection);
+                            //dd($valueDataMoisPrevisionneleProjection, $valueDataMoisProjection);
+                        }
+                        if (isset($valueDataMoisProjection) && count($valueDataMoisProjection) > 0) {
+                            for ($i=0; $i < count($valueDataMoisProjection); $i++) {
+                                $lstValueMoisAdmissionCRENASAnneePrecedent[] = $valueDataMoisProjection[$i]["DataMoisAdmissionCRENASAnneePrecedent"];
+                                $lstValueMoisAdmissionProjeteAnneePrecedent[] = $valueDataMoisProjection[$i]["DataMoisAdmissionProjeteAnneePrecedent"];
+                                $lstValueMoisProjectionAnneePrevisionnelle[] = $valueDataMoisProjection[$i]["DataMoisProjectionAnneePrevisionnelle"];
+                            }
+                        }
+                    
+                        
+                    } 
+                
+                    $valeurCalculTheoriqueATPE = null;
+                    $valeurCalculTheoriqueAMOX = null;
+                    $valeurCalculTheoriqueFichePatient = null;
+                    $valeurCalculTheoriqueRegistre = null;
+                    $valeurCalculTheoriqueCarnetRapport = null; 
+                    if (isset($dataCommandeTrimestrielle) && $dataCommandeTrimestrielle != NULL) {
+                        if (strpos($dataCommandeTrimestrielle["Slug"], "T1") !== false  && $dataCommandeTrimestrielle["isActive"] == 1) { 
+                            $valeurCalculTheoriqueATPE = $dataAnneePrevisionnelle["ValeurCalculTheoriqueATPE01"];
+                            $valeurCalculTheoriqueAMOX = $dataAnneePrevisionnelle["ValeurCalculTheoriqueAMOX01"];
+                            $valeurCalculTheoriqueFichePatient = $dataAnneePrevisionnelle["ValeurCalculTheoriqueFichePatient01"];
+                            $valeurCalculTheoriqueRegistre = $dataAnneePrevisionnelle["ValeurCalculTheoriqueRegistre01"];
+                            $valeurCalculTheoriqueCarnetRapport = $dataAnneePrevisionnelle["ValeurCalculTheoriqueCarnetRapport01"];
+                        } else {
+                            $valeurCalculTheoriqueATPE = $dataAnneePrevisionnelle["ValeurCalculTheoriqueATPE02"];
+                            $valeurCalculTheoriqueAMOX = $dataAnneePrevisionnelle["ValeurCalculTheoriqueAMOX02"];
+                            $valeurCalculTheoriqueFichePatient = $dataAnneePrevisionnelle["ValeurCalculTheoriqueFichePatient02"];
+                            $valeurCalculTheoriqueRegistre = $dataAnneePrevisionnelle["ValeurCalculTheoriqueRegistre02"];
+                            $valeurCalculTheoriqueCarnetRapport = $dataAnneePrevisionnelle["ValeurCalculTheoriqueCarnetRapport02"];
+                        }
+                    } 
+
+                
+                    //dump("valeurCalculTheoriqueATPE = " . $valeurCalculTheoriqueATPE . " | valeurCalculTheoriqueAMOX = " . $valeurCalculTheoriqueAMOX . " | valeurCalculTheoriqueFichePatient = " . $valeurCalculTheoriqueFichePatient . " | valeurCalculTheoriqueRegistre = " . $valeurCalculTheoriqueRegistre . " | valeurCalculTheoriqueCarnetRapport = " . $valeurCalculTheoriqueCarnetRapport); dd();
+
+                //dd($lstValueMoisProjectionAnneePrevisionnelle,$dataMoisProjection, $dataGroupe, $lstMoisAdmissionCRENASAnneePrecedent, $dataCrenas);
+                    return $this->render('crenas/homeCrenas.html.twig', [
+                        "isUserHavingDataCrenas" => $isUserHavingDataCrenas,
+                        'controller_name' => 'CrenasController',
+                        "dataUser" => $dataUser,
+                        "dataRMANut" => $dataRMANut,
+                        "dataGroupe" => $dataGroupe,
+                        "dataMoisProjection" => $dataMoisProjection,
+                        "dataAnneePrevisionnelle" => $dataAnneePrevisionnelle,
+                        "dataCommandeTrimestrielle" => $dataCommandeTrimestrielle,
+                        "dataCrenas" => $dataCrenas,
+                        "lstMoisAdmissionCRENASAnneePrecedent" => $lstMoisAdmissionCRENASAnneePrecedent, 
+                        "lstMoisAdmissionProjeteAnneePrecedent" => $lstMoisAdmissionProjeteAnneePrecedent, 
+                        "lstMoisProjectionAnneePrevisionnelle" => $lstMoisProjectionAnneePrevisionnelle,
+                        "lstValueMoisAdmissionCRENASAnneePrecedent" => $lstValueMoisAdmissionCRENASAnneePrecedent, 
+                        "lstValueMoisAdmissionProjeteAnneePrecedent" => $lstValueMoisAdmissionProjeteAnneePrecedent, 
+                        "lstValueMoisProjectionAnneePrevisionnelle" => $lstValueMoisProjectionAnneePrevisionnelle,
+                        "valeurCalculTheoriqueATPE" => $valeurCalculTheoriqueATPE, 
+                        "valeurCalculTheoriqueAMOX" => $valeurCalculTheoriqueAMOX, 
+                        "valeurCalculTheoriqueFichePatient" => $valeurCalculTheoriqueFichePatient, 
+                        "valeurCalculTheoriqueRegistre" => $valeurCalculTheoriqueRegistre, 
+                        "valeurCalculTheoriqueCarnetRapport" => $valeurCalculTheoriqueCarnetRapport
+                    ]);
+                }
+                $dataUser['isEligibleForCrenas'] = false;
+                $dataUser['isDistrictIsInGroup'] = false;
                 return $this->render('crenas/homeCrenas.html.twig', [
-                    "isUserHavingDataCrenas" => $isUserHavingDataCrenas,
+                    "isUserHavingDataCrenas" => false,
                     'controller_name' => 'CrenasController',
                     "dataUser" => $dataUser,
                     "dataRMANut" => $dataRMANut,
-                    "dataGroupe" => $dataGroupe,
-                    "dataMoisProjection" => $dataMoisProjection,
+                    "dataGroupe" => null,
+                    "dataMoisProjection" => [],
                     "dataAnneePrevisionnelle" => $dataAnneePrevisionnelle,
                     "dataCommandeTrimestrielle" => $dataCommandeTrimestrielle,
-                    "dataCrenas" => $dataCrenas,
-                    "lstMoisAdmissionCRENASAnneePrecedent" => $lstMoisAdmissionCRENASAnneePrecedent, 
-                    "lstMoisAdmissionProjeteAnneePrecedent" => $lstMoisAdmissionProjeteAnneePrecedent, 
-                    "lstMoisProjectionAnneePrevisionnelle" => $lstMoisProjectionAnneePrevisionnelle,
-                    "lstValueMoisAdmissionCRENASAnneePrecedent" => $lstValueMoisAdmissionCRENASAnneePrecedent, 
-                    "lstValueMoisAdmissionProjeteAnneePrecedent" => $lstValueMoisAdmissionProjeteAnneePrecedent, 
-                    "lstValueMoisProjectionAnneePrevisionnelle" => $lstValueMoisProjectionAnneePrevisionnelle,
-                    "valeurCalculTheoriqueATPE" => $valeurCalculTheoriqueATPE, 
-                    "valeurCalculTheoriqueAMOX" => $valeurCalculTheoriqueAMOX, 
-                    "valeurCalculTheoriqueFichePatient" => $valeurCalculTheoriqueFichePatient, 
-                    "valeurCalculTheoriqueRegistre" => $valeurCalculTheoriqueRegistre, 
-                    "valeurCalculTheoriqueCarnetRapport" => $valeurCalculTheoriqueCarnetRapport 
+                    "dataCrenas" => [],
+                    "lstMoisAdmissionCRENASAnneePrecedent" => [], 
+                    "lstMoisAdmissionProjeteAnneePrecedent" => [], 
+                    "lstMoisProjectionAnneePrevisionnelle" => [],
+                    "lstValueMoisAdmissionCRENASAnneePrecedent" => [], 
+                    "lstValueMoisAdmissionProjeteAnneePrecedent" => [], 
+                    "lstValueMoisProjectionAnneePrevisionnelle" => [],
+                    "valeurCalculTheoriqueATPE" => [], 
+                    "valeurCalculTheoriqueAMOX" => [], 
+                    "valeurCalculTheoriqueFichePatient" => [], 
+                    "valeurCalculTheoriqueRegistre" => [], 
+                    "valeurCalculTheoriqueCarnetRapport" => []
                 ]);
 
             } 
@@ -169,7 +217,7 @@ class CrenasController extends AbstractController
     }
 
     #[Route('/crenas/save', name: 'app_crenas_save', methods: ['GET', 'POST'])]
-    public function save(Request $request, EntityManagerInterface $entityManager): Response
+    public function save(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         if ($request->isMethod('POST')) {  
             $totalCRENASAnneePrecedent = (float) $request->request->get('totalCRENASAnneePrecedent');
@@ -177,7 +225,7 @@ class CrenasController extends AbstractController
             $totalAnneeProjection = (float) $request->request->get('totalAnneeProjection');
             $resultatAnneePrecedent = (float) $request->request->get('resultatAnneePrecedent');
             $resultatAnneeProjection = (float) $request->request->get('resultatAnneeProjection'); 
-
+         
             // DEBUT GET QUANTITE NECESSAIRE EN INTRANTS NUTRITIONS BESOINS THEORIQUES
             $besoinAPTE = (float) $request->request->get('besoinAPTE');
             $besoinAMOX = (float) $request->request->get('besoinAMOX');
@@ -257,7 +305,7 @@ class CrenasController extends AbstractController
                 $user = $this->getUser();
                 $dataCrenasEnity->setUser($user);
             } 
-
+            
             $dataCrenasEnity->setTotalCRENASAnneePrecedent($totalCRENASAnneePrecedent);
             $dataCrenasEnity->setTotalProjeteAnneePrecedent($totalProjeteAnneePrecedent);
             $dataCrenasEnity->setTotalAnneeProjection($totalAnneeProjection);
@@ -342,37 +390,122 @@ class CrenasController extends AbstractController
             $DataCommandeTrimestrielleId = (int) $request->request->get('DataCommandeTrimestrielleId');
 
             $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($GroupeId, $DataCommandeTrimestrielleId);
+            
 
-            if(isset($dataMoisProjection) && is_array($dataMoisProjection) && count($dataMoisProjection) > 0) {
-                for ($i=0; $i < count($dataMoisProjection); $i++) {
-                    $idMoisDeProjection = $dataMoisProjection[$i]["idMoisProjection"];
-
-                    $incr = $i+1;
-
-                    $dataMoisAdmissionCRENASAnneePrecedent = (float) $request->request->get('moisAdmissionCRENASAnneePrecedent'.$incr);
-                    $dataMoisAdmissionProjeteAnneePrecedent = (float) $request->request->get('moisAdmissionProjeteAnneePrecedent'.$incr);
-                    $dataMoisProjectionAnneePrevisionnelle = (float) $request->request->get('moisProjectionAnneePrevisionnelle'.$incr);
-
-                    if ($isUserHavingDataCrenas == 1) { // Edit an entity
-                        // Prendre data à partir de l'ID dataCrenasId et l'ID moisProjectionsAdmissions
-                        $valueDataCrenasMoisProcetionAdmission = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisProjectionAdmissionByCrenasIdAndMoisProjection($DataCrenasId, $idMoisDeProjection);
-                        $dataCrenasMoisProcetionAdmission =  $entityManager->getRepository(DataCrenasMoisProjectionAdmission::class)->find($valueDataCrenasMoisProcetionAdmission["id"]);
-                    } else {
-                        $MoisProjectionAdmission = $entityManager->getRepository(MoisProjectionsAdmissions::class)->find($idMoisDeProjection); 
-                        $dataCrenasMoisProcetionAdmission = new DataCrenasMoisProjectionAdmission();
-                        $dataCrenasMoisProcetionAdmission->setMoisProjectionsAdmissions($MoisProjectionAdmission);
-                    } 
-                    
-                    $dataCrenasMoisProcetionAdmission->setDataCrenas($dataCrenasEnity);
-                    $dataCrenasMoisProcetionAdmission->setDataMoisAdmissionCRENASAnneePrecedent($dataMoisAdmissionCRENASAnneePrecedent);
-                    $dataCrenasMoisProcetionAdmission->setDataMoisAdmissionProjeteAnneePrecedent($dataMoisAdmissionProjeteAnneePrecedent);
-                    $dataCrenasMoisProcetionAdmission->setDataMoisProjectionAnneePrevisionnelle($dataMoisProjectionAnneePrevisionnelle);
-                    
-                    $entityManager->persist($dataCrenasMoisProcetionAdmission);
-                    $entityManager->flush();
-
+            // Gestion enclave
+            $user = $security->getUser();
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+            $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+            $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+            if ($dataGroupe['type'] != null && $dataGroupe['type'] != "" && $dataGroupe['type'] == "enclave") {
+                $allMoisPrevisionnelle = $this->_moisProjectionAdmissionService->findDataMoisPrevisionnelleProjection($dataGroupe['idGroupe']);
+                $tabMoisProjection = [];
+                
+                if (count($dataMoisProjection) > 0) {
+                    foreach($dataMoisProjection as $moisProjection) {
+                        $monthProj = [];
+                        $monthProj['isPrevisionnel'] = false;
+                        $monthProj['idMoisProjection'] = $moisProjection['idMoisProjection'];
+                        $monthProj['MoisAdmissionCRENASAnneePrecedent'] = $moisProjection['MoisAdmissionCRENASAnneePrecedent'];
+                        $monthProj['MoisAdmissionProjeteAnneePrecedent'] = $moisProjection['MoisAdmissionProjeteAnneePrecedent'];
+                        $monthProj['MoisProjectionAnneePrevisionnelle'] = $moisProjection['MoisProjectionAnneePrevisionnelle'];
+                        array_push($tabMoisProjection, $monthProj);
+                    }
+                }
+                if (count($allMoisPrevisionnelle) > 0) {
+                    foreach($allMoisPrevisionnelle as $moisPrevision) {
+                             $monthPrev = [];
+                             $monthPrev['isPrevisionnel'] = true;
+                             $monthPrev['idMoisProjection'] = $moisPrevision['idMoisProjection'];
+                             $monthPrev['MoisAdmissionCRENASAnneePrecedent'] = null;
+                             $monthPrev['MoisAdmissionProjeteAnneePrecedent'] = null;
+                             $monthPrev['MoisProjectionAnneePrevisionnelle'] = $moisPrevision['MoisProjectionAnneePrevisionnelle'];
+                            array_push($tabMoisProjection, $monthPrev);
+                       
+                    }
+                }
+              // dd($request->request);
+                if(isset($tabMoisProjection) && is_array($tabMoisProjection) && count($tabMoisProjection) > 0) {
+                    for ($i=0; $i < count($tabMoisProjection); $i++) {
+                        $idMoisDeProjection = $tabMoisProjection[$i]["idMoisProjection"];
+                        $isPrevisionnel = $tabMoisProjection[$i]["isPrevisionnel"];
+                        $incr = $i+1;
+    
+                        $dataMoisAdmissionCRENASAnneePrecedent = (float) $request->request->get('moisAdmissionCRENASAnneePrecedent'.$incr);
+                        $dataMoisAdmissionProjeteAnneePrecedent = (float) $request->request->get('moisAdmissionProjeteAnneePrecedent'.$incr);
+                        $dataMoisProjectionAnneePrevisionnelle = (float) $request->request->get('moisProjectionAnneePrevisionnelle'.$incr);
+    
+                        if ($isUserHavingDataCrenas == 1) { // Edit an entity
+                            // Prendre data à partir de l'ID dataCrenasId et l'ID moisProjectionsAdmissions
+                            if (!$isPrevisionnel) {
+                                $valueDataCrenasMoisProcetionAdmission = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisProjectionAdmissionByCrenasIdAndMoisProjection($DataCrenasId, $idMoisDeProjection);
+                                $dataCrenasMoisProcetionAdmission =  $entityManager->getRepository(DataCrenasMoisProjectionAdmission::class)->find($valueDataCrenasMoisProcetionAdmission["id"]);
+                            } else {
+                                $valueDataCrenasMoisProcetionAdmission = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisPrevisionnelleAdmissionByCrenasIdAndMoisProjection($DataCrenasId, $idMoisDeProjection);
+                                $dataCrenasMoisProcetionAdmission =  $entityManager->getRepository(DataCrenasMoisProjectionAdmission::class)->find($valueDataCrenasMoisProcetionAdmission["id"]);
+                            }
+                            
+                        } else {
+                            if (!$isPrevisionnel) {
+                                $MoisProjectionAdmission = $entityManager->getRepository(MoisProjectionsAdmissions::class)->find($idMoisDeProjection); 
+                                $dataCrenasMoisProcetionAdmission = new DataCrenasMoisProjectionAdmission();
+                                $dataCrenasMoisProcetionAdmission->setMoisProjectionsAdmissions($MoisProjectionAdmission);
+                            } else {
+                                $MoisPrevisionneleEnclave = $entityManager->getRepository(MoisPrevisionnelleEnclave::class)->find($idMoisDeProjection); 
+                                $dataCrenasMoisProcetionAdmission = new DataCrenasMoisProjectionAdmission();
+                                $dataCrenasMoisProcetionAdmission->setMoisPrevisionnelleEnclave($MoisPrevisionneleEnclave);
+                            }
+                            
+                        } 
+                        
+                        $dataCrenasMoisProcetionAdmission->setDataCrenas($dataCrenasEnity);
+                        $dataCrenasMoisProcetionAdmission->setDataMoisAdmissionCRENASAnneePrecedent($dataMoisAdmissionCRENASAnneePrecedent);
+                        $dataCrenasMoisProcetionAdmission->setDataMoisAdmissionProjeteAnneePrecedent($dataMoisAdmissionProjeteAnneePrecedent);
+                        $dataCrenasMoisProcetionAdmission->setDataMoisProjectionAnneePrevisionnelle($dataMoisProjectionAnneePrevisionnelle);
+                        
+                        $entityManager->persist($dataCrenasMoisProcetionAdmission);
+                        $entityManager->flush();
+    
+                    }
+                }
+             
+               // dd($dataGroupe, $lstMoisProjectionAnneePrevisionnelle, $allMoisPrevisionnelle);
+            } else {
+                if(isset($dataMoisProjection) && is_array($dataMoisProjection) && count($dataMoisProjection) > 0) {
+                    for ($i=0; $i < count($dataMoisProjection); $i++) {
+                        $idMoisDeProjection = $dataMoisProjection[$i]["idMoisProjection"];
+    
+                        $incr = $i+1;
+    
+                        $dataMoisAdmissionCRENASAnneePrecedent = (float) $request->request->get('moisAdmissionCRENASAnneePrecedent'.$incr);
+                        $dataMoisAdmissionProjeteAnneePrecedent = (float) $request->request->get('moisAdmissionProjeteAnneePrecedent'.$incr);
+                        $dataMoisProjectionAnneePrevisionnelle = (float) $request->request->get('moisProjectionAnneePrevisionnelle'.$incr);
+    
+                        if ($isUserHavingDataCrenas == 1) { // Edit an entity
+                            // Prendre data à partir de l'ID dataCrenasId et l'ID moisProjectionsAdmissions
+                            $valueDataCrenasMoisProcetionAdmission = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisProjectionAdmissionByCrenasIdAndMoisProjection($DataCrenasId, $idMoisDeProjection);
+                            $dataCrenasMoisProcetionAdmission =  $entityManager->getRepository(DataCrenasMoisProjectionAdmission::class)->find($valueDataCrenasMoisProcetionAdmission["id"]);
+                        } else {
+                            $MoisProjectionAdmission = $entityManager->getRepository(MoisProjectionsAdmissions::class)->find($idMoisDeProjection); 
+                            $dataCrenasMoisProcetionAdmission = new DataCrenasMoisProjectionAdmission();
+                            $dataCrenasMoisProcetionAdmission->setMoisProjectionsAdmissions($MoisProjectionAdmission);
+                        } 
+                        
+                        $dataCrenasMoisProcetionAdmission->setDataCrenas($dataCrenasEnity);
+                        $dataCrenasMoisProcetionAdmission->setDataMoisAdmissionCRENASAnneePrecedent($dataMoisAdmissionCRENASAnneePrecedent);
+                        $dataCrenasMoisProcetionAdmission->setDataMoisAdmissionProjeteAnneePrecedent($dataMoisAdmissionProjeteAnneePrecedent);
+                        $dataCrenasMoisProcetionAdmission->setDataMoisProjectionAnneePrevisionnelle($dataMoisProjectionAnneePrevisionnelle);
+                        
+                        $entityManager->persist($dataCrenasMoisProcetionAdmission);
+                        $entityManager->flush();
+    
+                    }
                 }
             }
+           
+            // Gestion enclave
+            
             $this->addFlash('success', '<strong>Enregistrement des donnée CRENAS avec succès</strong><br/>');
             // Redirect to the homepage or any other route
             return $this->redirectToRoute('app_accueil');
@@ -442,6 +575,7 @@ class CrenasController extends AbstractController
             // Obtenir les informations concernant les données crenas enregistrer
             $lstDataCrenasGroupe = array();
             $arrDataCrenasGroupe =  $this->_dataCrenaService->findDataCrenasByGroupe($groupId); 
+          
             if($arrDataCrenasGroupe != null && is_array($arrDataCrenasGroupe) && count($arrDataCrenasGroupe) > 0) {  
                 foreach ($arrDataCrenasGroupe as $dataCrenasGroupe) {
                     if (isset($dataCrenasGroupe) && is_array($dataCrenasGroupe) && count($dataCrenasGroupe)>0) {

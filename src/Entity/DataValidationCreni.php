@@ -69,7 +69,7 @@ class DataValidationCreni
     private ?float $DataMois06ProjectionValidated = null;
 
     #[ORM\ManyToOne(inversedBy: 'dataValidationCrenis')]
-    #[ORM\JoinColumn(nullable: true, name: 'data_crena_id')]
+    #[ORM\JoinColumn(nullable: true, name: 'data_creni_id')]
     private ?DataCreni $DataCreni = null;
 
     #[ORM\ManyToOne(inversedBy: 'dataValidationCrenis')]

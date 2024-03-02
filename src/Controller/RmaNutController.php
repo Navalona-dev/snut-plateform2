@@ -100,7 +100,7 @@ class RmaNutController extends AbstractController
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
-            $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"]);
+            $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
 
@@ -533,7 +533,7 @@ class RmaNutController extends AbstractController
                 $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
                 $dataRegion = $this->_regionService->findById($rmaNut["regionId"]);
                 $idProvince = $dataRegion->getProvince()->getId();
-                $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $idProvince);
+                $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $idProvince, $rmaNut["districtId"]);
                 $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
                 $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataGroupe["idGroupe"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
 
@@ -690,7 +690,7 @@ class RmaNutController extends AbstractController
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserId($responsableId);
-
+         
             /* ---------------------------- DATA CRENAS ---------------------------- */
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataDistrict["groupeId"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
@@ -700,7 +700,7 @@ class RmaNutController extends AbstractController
                     $lstMoisProjectionAnneePrevisionnelle[] = $dataMoisProjection[$i]["MoisProjectionAnneePrevisionnelle"];
                 }
             }
-
+         
             $arrDataCrenasUser =  $this->_dataCrenaService->findDataCrenasByUserId($responsableId); 
             $isUserHavingDataValidationCrenas = false;
             $isUserHavingDataCrenas = false;
@@ -715,7 +715,7 @@ class RmaNutController extends AbstractController
                 $valueDataMoisProjection = [];
                 $lstValueValidatedDataMonth = [];
             }
-
+          
             $lstValueMoisProjectionAnneePrevisionnelle = array();
             if (isset($valueDataMoisProjection) && count($valueDataMoisProjection) > 0) {
                 for ($i = 0; $i < count($valueDataMoisProjection); $i++) {
@@ -742,7 +742,7 @@ class RmaNutController extends AbstractController
                 $dataCreniMoisProjetionAdmission = [];
                 $dataValueValidatedMonthCreni = [];
             }
-
+           
 
             $fileNameRmaNut = $dataDistrict["newFileName"];
 
@@ -846,7 +846,7 @@ class RmaNutController extends AbstractController
  
                 $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
                 $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
-                $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"]);
+                $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser["idDistrict"]);
 
                 $valeurCalculTheoriqueATPE = null;
                 $valeurCalculTheoriqueAMOX = null;

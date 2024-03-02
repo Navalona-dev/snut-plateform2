@@ -32,8 +32,14 @@ class AdminGroupeController extends AbstractController
         $provinceIds = $request->get('provinceIds');
         $zone = $request->get('zone');
         
-        $districts = $districtRepository->getAllDistrictsByProvinces($provinceIds, $zone);
-       
+        $newZone = $zone;
+
+        if ($zone == "" || $zone == null) {
+            $newZone = null;
+        }
+
+        $districts = $districtRepository->getAllDistrictsByProvinces($provinceIds, $newZone);
+      
         return new JsonResponse($districts);
     }
 

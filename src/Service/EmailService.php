@@ -47,7 +47,7 @@ class EmailService
      * @param twig $view
      * @param string $subject
      */
-    public function sendEmail($from, $to, $subject = 'Email from oatf-matac', $template = '', $data = [], $options = array(), $cc = array()):bool
+    public function sendEmail($from, $to, $subject = 'Email from snut-plaform', $template = '', $data = [], $options = array(), $cc = array()):bool
     {
         $this->message
                     ->setSubject($subject)

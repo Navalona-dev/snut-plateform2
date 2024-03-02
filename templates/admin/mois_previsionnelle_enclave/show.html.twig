@@ -1,0 +1,26 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}MoisPrevisionnelleEnclave{% endblock %}
+
+{% block body %}
+    <h1>Mois Previsionnelle Enclave</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ mois_previsionnelle_enclave.id }}</td>
+            </tr>
+            <tr>
+                <th>Mois</th>
+                <td>{{ mois_previsionnelle_enclave.mois }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_mois_previsionnelle_enclave_index') }}">back to list</a>
+
+    <a href="{{ path('app_mois_previsionnelle_enclave_edit', {'id': mois_previsionnelle_enclave.id}) }}">edit</a>
+
+    {{ include('admin/mois_previsionnelle_enclave/_delete_form.html.twig') }}
+{% endblock %}

@@ -35,11 +35,19 @@ class Groupe
     #[ORM\Column(length: 255, nullable: true, name: 'zone')]
     private ?string $zone = null;
 
+    #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: MoisPrevisionnelleEnclave::class)]
+    private Collection $moisPrevisionnelleEnclaves;
+
+    #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: DataCrenas::class)]
+    private Collection $dataCrenas;
+
     public function __construct()
     {
         $this->Provinces = new ArrayCollection();
         $this->moisProjectionsAdmissions = new ArrayCollection();
         $this->districts = new ArrayCollection();
+        $this->moisPrevisionnelleEnclaves = new ArrayCollection();
+        $this->dataCrenas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,6 +170,66 @@ class Groupe
     public function setZone(?string $zone): static
     {
         $this->zone = $zone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MoisPrevisionnelleEnclave>
+     */
+    public function getMoisPrevisionnelleEnclaves(): Collection
+    {
+        return $this->moisPrevisionnelleEnclaves;
+    }
+
+    public function addMoisPrevisionnelleEnclafe(MoisPrevisionnelleEnclave $moisPrevisionnelleEnclafe): static
+    {
+        if (!$this->moisPrevisionnelleEnclaves->contains($moisPrevisionnelleEnclafe)) {
+            $this->moisPrevisionnelleEnclaves->add($moisPrevisionnelleEnclafe);
+            $moisPrevisionnelleEnclafe->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMoisPrevisionnelleEnclafe(MoisPrevisionnelleEnclave $moisPrevisionnelleEnclafe): static
+    {
+        if ($this->moisPrevisionnelleEnclaves->removeElement($moisPrevisionnelleEnclafe)) {
+            // set the owning side to null (unless already changed)
+            if ($moisPrevisionnelleEnclafe->getGroupe() === $this) {
+                $moisPrevisionnelleEnclafe->setGroupe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DataCrenas>
+     */
+    public function getDataCrenas(): Collection
+    {
+        return $this->dataCrenas;
+    }
+
+    public function addDataCrena(DataCrenas $dataCrena): static
+    {
+        if (!$this->dataCrenas->contains($dataCrena)) {
+            $this->dataCrenas->add($dataCrena);
+            $dataCrena->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDataCrena(DataCrenas $dataCrena): static
+    {
+        if ($this->dataCrenas->removeElement($dataCrena)) {
+            // set the owning side to null (unless already changed)
+            if ($dataCrena->getGroupe() === $this) {
+                $dataCrena->setGroupe(null);
+            }
+        }
 
         return $this;
     }

@@ -35,9 +35,17 @@ class DistrictRepository extends ServiceEntityRepository
             ;
         }
 
-        if (!empty($zone)) {
-            $queryBuilder->andWhere('type =:zone')
+        if (!empty($zone) && $zone != null) {
+            if ($zone != "non_enclave") {
+                $queryBuilder->andWhere('type =:zone')
                         ->setParameter('zone', $zone);
+            } else {
+                $queryBuilder->andWhere('type =:zone or type is null')
+                        ->setParameter('zone', 'non_enclave');
+            }
+        } else {
+            $queryBuilder->andWhere('type =:zone or type is null')
+                        ->setParameter('zone', 'non_enclave');
         }
 
         $queryBuilder->groupBy('d.id')

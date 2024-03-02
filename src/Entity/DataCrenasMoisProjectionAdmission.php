@@ -31,6 +31,10 @@ class DataCrenasMoisProjectionAdmission
     #[ORM\JoinColumn(nullable: true, name: 'mois_projections_admissions_id')]
     private ?MoisProjectionsAdmissions $MoisProjectionsAdmissions = null;
 
+    #[ORM\ManyToOne(inversedBy: 'dataCrenasMoisProjectionAdmissions')]
+    #[ORM\JoinColumn(nullable: true, name: 'moisPrevisionnelleEnclave_id')]
+    private ?MoisPrevisionnelleEnclave $moisPrevisionnelleEnclave = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +96,18 @@ class DataCrenasMoisProjectionAdmission
     public function setMoisProjectionsAdmissions(?MoisProjectionsAdmissions $MoisProjectionsAdmissions): static
     {
         $this->MoisProjectionsAdmissions = $MoisProjectionsAdmissions;
+
+        return $this;
+    }
+
+    public function getMoisPrevisionnelleEnclave(): ?MoisPrevisionnelleEnclave
+    {
+        return $this->moisPrevisionnelleEnclave;
+    }
+
+    public function setMoisPrevisionnelleEnclave(?MoisPrevisionnelleEnclave $moisPrevisionnelleEnclave): static
+    {
+        $this->moisPrevisionnelleEnclave = $moisPrevisionnelleEnclave;
 
         return $this;
     }
