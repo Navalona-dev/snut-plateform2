@@ -75,6 +75,8 @@ class RmaNutFinder
                 if ($isNotNullCommande) {
                     $nombreRMANuts = $this->getNombreRmaNutFromRegion($regionId, $currentCommande);
                     $resultLstRegionRMANut[$i]["nombreRMANuts"] = $nombreRMANuts;
+                } else {
+                    $resultLstRegionRMANut[$i]["nombreRMANuts"] = 0;
                 }
                 
             }
