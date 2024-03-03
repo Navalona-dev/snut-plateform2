@@ -29,6 +29,7 @@ use App\Finder\RmaNutFinder;
 use App\Finder\StockDataFinder;
 use App\Finder\QuantitiesProductRiskExpiryFinder;
 use App\Finder\MessageFinder;
+use App\Repository\CommandeTrimestrielleRepository;
 use App\Repository\RmaNutRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
@@ -1031,14 +1032,16 @@ class AccueilController extends AbstractController
     }
 
     #[Route('/supervisor/rmaNut', name: 'app_accueil_sp_rmanut')]
-    public function showRMANutForSupervisor()
+    public function showRMANutForSupervisor(CommandeTrimestrielleRepository $commandeTrimestrielleRepository)
     {
         $user = $this->getUser();
         if ($user) {
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
+            $currentCommande = $commandeTrimestrielleRepository->findOneBy(['isActive' => true]);
+            
             if ($this->isGranted('ROLE_REGIONAL_SUPERVISOR')) {
-                $lstRegionRMANut = $this->_rmaNutService->findAllRegionRmaNut($dataUser["idRegion"]);
+                $lstRegionRMANut = $this->_rmaNutService->findAllRegionRmaNut($dataUser["idRegion"], $currentCommande);
             } else {
                 $lstRegionRMANut = $this->_rmaNutService->findAllRegionRmaNut();
             }
@@ -1214,7 +1217,7 @@ class AccueilController extends AbstractController
                     }
                 }
             }
-
+           
             return $this->render('supervisor/supervisorCentralCrenas.html.twig', [
                 "mnuActive" => "GroupeCrenas",
                 "dataUser" => $dataUser,

@@ -40,7 +40,7 @@ class RmaNutFinder
         return $resultLstRMANut;
     }
 
-    public function findAllRegionRmaNut($prmRegionId = "")
+    public function findAllRegionRmaNut($prmRegionId = "", $currentCommande = null)
     {
         $queryBuilder = $this->em->createQueryBuilder();
 
@@ -65,24 +65,32 @@ class RmaNutFinder
 
         $query = $queryBuilder->getQuery();
         $resultLstRegionRMANut = $query->getArrayResult();
+        $isNotNullCommande = false;
+        if (null != $currentCommande) {
+            $isNotNullCommande = true;
+        }
         if (isset($resultLstRegionRMANut) && is_array($resultLstRegionRMANut) && count($resultLstRegionRMANut) > 0) {
             for ($i = 0; $i < count($resultLstRegionRMANut); $i++) {
                 $regionId = $resultLstRegionRMANut[$i]["regionId"];
-                $nombreRMANuts = $this->getNombreRmaNutFromRegion($regionId);
-                $resultLstRegionRMANut[$i]["nombreRMANuts"] = $nombreRMANuts;
+                if ($isNotNullCommande) {
+                    $nombreRMANuts = $this->getNombreRmaNutFromRegion($regionId, $currentCommande);
+                    $resultLstRegionRMANut[$i]["nombreRMANuts"] = $nombreRMANuts;
+                }
+                
             }
         }
         return $resultLstRegionRMANut;
     }
 
-    public function getNombreRmaNutFromRegion($prmRegionId)
+    public function getNombreRmaNutFromRegion($prmRegionId = null, $currentCommande = null)
     {
         $query = $this->em->createQuery("
             SELECT 
                 COUNT(rn.id) AS nombreRMANuts
-            FROM App:RmaNut rn  WHERE rn.Region = :prmRegionId
+            FROM App:RmaNut rn  WHERE rn.Region = :prmRegionId and rn.CommandeTrimestrielle =:prmCurrentCommande
         ")
-            ->setParameter('prmRegionId', $prmRegionId);
+            ->setParameter('prmRegionId', $prmRegionId)
+            ->setParameter('prmCurrentCommande', $currentCommande);
         $resultLstRegionCreni = $query->getArrayResult()[0]["nombreRMANuts"];
         return $resultLstRegionCreni;
     }
