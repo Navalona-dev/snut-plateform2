@@ -15,6 +15,7 @@ use App\Finder\ProduitFinder;
 use App\Finder\PvrdFinder;
 use App\Finder\PvrdProduitFinder;
 use App\Finder\UserFinder;
+use App\Repository\CommandeTrimestrielleRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface; 
 use Doctrine\DBAL\Logging\EchoSQLLogger;
@@ -95,7 +96,7 @@ class PvrdController extends AbstractController
     }
 
     #[Route('/pvrd/save', name: 'app_pvrd_save')]
-    public function save(Request $request, EntityManagerInterface $entityManager): Response 
+    public function save(Request $request, EntityManagerInterface $entityManager, CommandeTrimestrielleRepository $commandeTrimestrielleRepository): Response 
     {
         $user = $this->getUser();
         if ($user) { 
@@ -149,8 +150,9 @@ class PvrdController extends AbstractController
 
                     $District = $entityManager->getRepository(District::class)->find($dataUser["idDistrict"]);
                     $Region = $entityManager->getRepository(Region::class)->find($dataUser["idRegion"]);
-
+                    $currentCommande = $commandeTrimestrielleRepository->findOneBy(['isActive' => true]);
                     $pvrd = new Pvrd();
+                    $pvrd->setCommandeTrimestrielle($currentCommande);
                     $pvrd->setResponsableDistrict($user);
                     $pvrd->setSite($Site);
                     $pvrd->setDateReception($DateReception);

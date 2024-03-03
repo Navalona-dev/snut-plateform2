@@ -59,6 +59,10 @@ class Pvrd
     #[ORM\JoinColumn(name: 'region_id')]
     private ?Region $Region = null;
 
+    #[ORM\ManyToOne(inversedBy: 'pvrds')]
+    #[ORM\JoinColumn(nullable: true, name: 'commandeTrimestrielle_id')]
+    private ?CommandeTrimestrielle $commandeTrimestrielle = null;
+
     public function __construct()
     {
         $this->pvrdProduits = new ArrayCollection();
@@ -239,6 +243,18 @@ class Pvrd
     public function setRegion(?Region $Region): static
     {
         $this->Region = $Region;
+
+        return $this;
+    }
+
+    public function getCommandeTrimestrielle(): ?CommandeTrimestrielle
+    {
+        return $this->commandeTrimestrielle;
+    }
+
+    public function setCommandeTrimestrielle(?CommandeTrimestrielle $commandeTrimestrielle): static
+    {
+        $this->commandeTrimestrielle = $commandeTrimestrielle;
 
         return $this;
     }

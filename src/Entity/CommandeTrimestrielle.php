@@ -42,10 +42,14 @@ class CommandeTrimestrielle
     #[ORM\JoinColumn(name: 'annee_previsionnelle_id')]
     private ?AnneePrevisionnelle $AnneePrevisionnelle = null;
 
+    #[ORM\OneToMany(mappedBy: 'commandeTrimestrielle', targetEntity: Pvrd::class)]
+    private Collection $pvrds;
+
     public function __construct()
     {
         $this->moisProjectionsAdmissions = new ArrayCollection();
         $this->rmaNuts = new ArrayCollection();
+        $this->pvrds = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -186,6 +190,36 @@ class CommandeTrimestrielle
     public function setAnneePrevisionnelle(?AnneePrevisionnelle $AnneePrevisionnelle): static
     {
         $this->AnneePrevisionnelle = $AnneePrevisionnelle;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pvrd>
+     */
+    public function getPvrds(): Collection
+    {
+        return $this->pvrds;
+    }
+
+    public function addPvrd(Pvrd $pvrd): static
+    {
+        if (!$this->pvrds->contains($pvrd)) {
+            $this->pvrds->add($pvrd);
+            $pvrd->setCommandeTrimestrielle($this);
+        }
+
+        return $this;
+    }
+
+    public function removePvrd(Pvrd $pvrd): static
+    {
+        if ($this->pvrds->removeElement($pvrd)) {
+            // set the owning side to null (unless already changed)
+            if ($pvrd->getCommandeTrimestrielle() === $this) {
+                $pvrd->setCommandeTrimestrielle(null);
+            }
+        }
 
         return $this;
     }
