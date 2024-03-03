@@ -39,6 +39,10 @@ $(function() {
         const lstMoisProjectionAnneePrevisionnelle = $("#lstMoisProjectionAnneePrevisionnelle").val();
         const moisProjectionAnneePrevisionnelleArray = lstMoisProjectionAnneePrevisionnelle.split(', ');
         var startColumnProjectionAnneePrevisionnelle = startColumnAdmissionProjeteAnneePrecedent + moisProjectionAnneePrevisionnelleArray.length + 2;
+        if (moisProjectionAnneePrevisionnelleArray.length == 6) {
+            startColumnProjectionAnneePrevisionnelle = startColumnProjectionAnneePrevisionnelle - 3;
+        }
+        
         addDataColumn(worksheet, startColumnProjectionAnneePrevisionnelle, 'Projections du nombre d\'admissions', moisProjectionAnneePrevisionnelleArray);
 
         /* ----------------------------------------- Résultat ----------------------------------------- */
