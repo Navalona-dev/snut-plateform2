@@ -69,6 +69,7 @@ class RmaNutFinder
         if (null != $currentCommande) {
             $isNotNullCommande = true;
         }
+     
         if (isset($resultLstRegionRMANut) && is_array($resultLstRegionRMANut) && count($resultLstRegionRMANut) > 0) {
             for ($i = 0; $i < count($resultLstRegionRMANut); $i++) {
                 $regionId = $resultLstRegionRMANut[$i]["regionId"];
@@ -76,7 +77,8 @@ class RmaNutFinder
                     $nombreRMANuts = $this->getNombreRmaNutFromRegion($regionId, $currentCommande);
                     $resultLstRegionRMANut[$i]["nombreRMANuts"] = $nombreRMANuts;
                 } else {
-                    $resultLstRegionRMANut[$i]["nombreRMANuts"] = 0;
+                    $nombreRMANuts = $this->getNombreRmaNutFromRegion($regionId);
+                    $resultLstRegionRMANut[$i]["nombreRMANuts"] = $nombreRMANuts;
                 }
                 
             }
@@ -86,7 +88,8 @@ class RmaNutFinder
 
     public function getNombreRmaNutFromRegion($prmRegionId = null, $currentCommande = null)
     {
-        $query = $this->em->createQuery("
+        if (null != $currentCommande) {
+            $query = $this->em->createQuery("
             SELECT 
                 COUNT(rn.id) AS nombreRMANuts
             FROM App:RmaNut rn  WHERE rn.Region = :prmRegionId and rn.CommandeTrimestrielle =:prmCurrentCommande
@@ -94,6 +97,16 @@ class RmaNutFinder
             ->setParameter('prmRegionId', $prmRegionId)
             ->setParameter('prmCurrentCommande', $currentCommande);
         $resultLstRegionCreni = $query->getArrayResult()[0]["nombreRMANuts"];
+        } else {
+            $query = $this->em->createQuery("
+            SELECT 
+                COUNT(rn.id) AS nombreRMANuts
+            FROM App:RmaNut rn  WHERE rn.Region = :prmRegionId
+        ")
+            ->setParameter('prmRegionId', $prmRegionId);
+        $resultLstRegionCreni = $query->getArrayResult()[0]["nombreRMANuts"];
+        }
+        
         return $resultLstRegionCreni;
     }
 
