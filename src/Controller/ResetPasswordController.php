@@ -195,7 +195,7 @@ class ResetPasswordController extends AbstractController
         $mail->CharSet = 'UTF-8'; // Maintenir 'UTF-8'
         //$mail->SMTPAutoTLS = false;
 
-        $mail->setFrom("snutplateform@zohomail.com", 'RLFThierry');
+        $mail->setFrom("snutplateform@zohomail.com", 'SNUT PLATEFORME');
         $mail->addAddress($user->getEmail());
         $mail->Subject = $subject;
         $mail->msgHTML($htmlContent);
