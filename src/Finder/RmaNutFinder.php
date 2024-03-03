@@ -40,7 +40,7 @@ class RmaNutFinder
         return $resultLstRMANut;
     }
 
-    public function findAllRegionRmaNut($prmRegionId = "", $currentCommande = null)
+    public function findAllRegionRmaNut($prmRegionId = null, $currentCommande = null)
     {
         $queryBuilder = $this->em->createQueryBuilder();
 
@@ -55,7 +55,7 @@ class RmaNutFinder
         ->from('App:Region', 'r')
         ->leftJoin('App:District', 'd', 'WITH', 'd.region = r.id');
 
-        if (!empty($prmRegionId)) {
+        if (null != $prmRegionId) {
             $queryBuilder->andWhere('r.id = :prmRegionId')
                 ->setParameter('prmRegionId', $prmRegionId);
         }
@@ -76,10 +76,10 @@ class RmaNutFinder
                 if ($isNotNullCommande) {
                     $nombreRMANuts = $this->getNombreRmaNutFromRegion($regionId, $currentCommande);
                     $resultLstRegionRMANut[$i]["nombreRMANuts"] = $nombreRMANuts;
-                } else {
+                } /*else {
                     $nombreRMANuts = $this->getNombreRmaNutFromRegion($regionId);
                     $resultLstRegionRMANut[$i]["nombreRMANuts"] = $nombreRMANuts;
-                }
+                }*/
                 
             }
         }

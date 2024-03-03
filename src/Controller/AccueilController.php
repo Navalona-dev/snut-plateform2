@@ -1043,7 +1043,7 @@ class AccueilController extends AbstractController
             if ($this->isGranted('ROLE_REGIONAL_SUPERVISOR')) {
                 $lstRegionRMANut = $this->_rmaNutService->findAllRegionRmaNut($dataUser["idRegion"], $currentCommande);
             } else {
-                $lstRegionRMANut = $this->_rmaNutService->findAllRegionRmaNut();
+                $lstRegionRMANut = $this->_rmaNutService->findAllRegionRmaNut(null, $currentCommande);
             }
             return $this->render('supervisor/supervisorCentralRegionRmaNut.html.twig', [
                 "mnuActive" => "RMANut",
