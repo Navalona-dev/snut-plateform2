@@ -1058,16 +1058,17 @@ class AccueilController extends AbstractController
     }
 
     #[Route('/supervisor/pvrd', name: 'app_accueil_sp_pvrd')]
-    public function showPvrdForSupervisor()
+    public function showPvrdForSupervisor(CommandeTrimestrielleRepository $commandeTrimestrielleRepository)
     {
         $user = $this->getUser();
         if ($user) {
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
+            $currentCommande = $commandeTrimestrielleRepository->findOneBy(['isActive' => true]);
             if ($this->isGranted('ROLE_REGIONAL_SUPERVISOR')) {
-                $lstRegionPvrd = $this->_pvrdService->findAllRegionPvrd($dataUser["idRegion"]);
+                $lstRegionPvrd = $this->_pvrdService->findAllRegionPvrd($dataUser["idRegion"], $currentCommande);
             } else {
-                $lstRegionPvrd = $this->_pvrdService->findAllRegionPvrd();
+                $lstRegionPvrd = $this->_pvrdService->findAllRegionPvrd(null, $currentCommande);
             }
             return $this->render('supervisor/supervisorCentralRegionPvrd.html.twig', [
                 "mnuActive" => "Pvrd",

@@ -103,7 +103,7 @@ Class PvrdFinder
 
     }
 
-    public function findAllRegionPvrd($prmRegionId = "")
+    public function findAllRegionPvrd($prmRegionId = null, $currentCommande = null)
     {
         $queryBuilder = $this->em->createQueryBuilder();
 
@@ -116,7 +116,7 @@ Class PvrdFinder
         ->from('App:Region', 'r')
         ->leftJoin('App:District', 'd', 'WITH', 'd.region = r.id');
     
-        if (!empty($prmRegionId)) {
+        if (null != $prmRegionId) {
             $queryBuilder->andWhere('r.id = :prmRegionId')
                 ->setParameter('prmRegionId', $prmRegionId);
         }
@@ -126,25 +126,45 @@ Class PvrdFinder
     
         $query = $queryBuilder->getQuery();
         $resultLstRegionPvrd = $query->getArrayResult();
+
+        $isNotNullCommande = false;
+        if (null != $currentCommande) {
+            $isNotNullCommande = true;
+        }
+
         if (isset($resultLstRegionPvrd) && is_array($resultLstRegionPvrd) && count($resultLstRegionPvrd) > 0) {
             for ($i = 0; $i < count($resultLstRegionPvrd); $i++) {
                 $regionId = $resultLstRegionPvrd[$i]["regionId"];
-                $nombrePvrds = $this->getNombrePvrdFromRegion($regionId);
-                $resultLstRegionPvrd[$i]["nombrePvrds"] = $nombrePvrds;
+                if ($isNotNullCommande) {
+                    $nombrePvrds = $this->getNombrePvrdFromRegion($regionId, $currentCommande);
+                    $resultLstRegionPvrd[$i]["nombrePvrds"] = $nombrePvrds;
+                }
             }
         }
         return $resultLstRegionPvrd;
     }
 
-    public function getNombrePvrdFromRegion($prmRegionId)
+    public function getNombrePvrdFromRegion($prmRegionId = null, $currentCommande = null)
     {
-        $query = $this->em->createQuery("
+        if (null != $currentCommande) {
+            $query = $this->em->createQuery("
+            SELECT 
+                COUNT(pv.id) AS nombrePvrds
+            FROM App:Pvrd pv  WHERE pv.Region = :prmRegionId and rn.CommandeTrimestrielle =:prmCurrentCommande
+        ")
+            ->setParameter('prmRegionId', $prmRegionId)
+            ->setParameter('prmCurrentCommande', $currentCommande);
+        $resultLstRegionCreni = $query->getArrayResult()[0]["nombrePvrds"];
+        } else {
+            $query = $this->em->createQuery("
             SELECT 
                 COUNT(pv.id) AS nombrePvrds
             FROM App:Pvrd pv  WHERE pv.Region = :prmRegionId
         ")
             ->setParameter('prmRegionId', $prmRegionId);
         $resultLstRegionCreni = $query->getArrayResult()[0]["nombrePvrds"];
+        }
+        
         return $resultLstRegionCreni;
     }
 
