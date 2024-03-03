@@ -150,7 +150,7 @@ Class PvrdFinder
             $query = $this->em->createQuery("
             SELECT 
                 COUNT(pv.id) AS nombrePvrds
-            FROM App:Pvrd pv  WHERE pv.Region = :prmRegionId and pv.CommandeTrimestrielle =:prmCurrentCommande
+            FROM App:Pvrd pv  WHERE pv.Region = :prmRegionId and pv.commandeTrimestrielle =:prmCurrentCommande
         ")
             ->setParameter('prmRegionId', $prmRegionId)
             ->setParameter('prmCurrentCommande', $currentCommande);
