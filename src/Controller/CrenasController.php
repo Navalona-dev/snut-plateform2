@@ -16,6 +16,7 @@ use App\Finder\GroupeFinder;
 use App\Finder\MoisProjectionAdmissionFinder;
 use App\Finder\RmaNutFinder;
 use App\Finder\UserFinder;
+use App\Repository\GroupeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -217,7 +218,7 @@ class CrenasController extends AbstractController
     }
 
     #[Route('/crenas/save', name: 'app_crenas_save', methods: ['GET', 'POST'])]
-    public function save(Request $request, EntityManagerInterface $entityManager, Security $security): Response
+    public function save(Request $request, EntityManagerInterface $entityManager, Security $security, GroupeRepository $groupeRepository): Response
     {
         if ($request->isMethod('POST')) {  
             $totalCRENASAnneePrecedent = (float) $request->request->get('totalCRENASAnneePrecedent');
@@ -305,6 +306,11 @@ class CrenasController extends AbstractController
                 $user = $this->getUser();
                 $dataCrenasEnity->setUser($user);
             } 
+            $GroupeId = (int) $request->request->get('GroupeId');
+            $groupeEntity = $groupeRepository->find($GroupeId);
+            if ($groupeEntity) {
+                $dataCrenasEnity->setGroupe($groupeEntity);
+            }
             
             $dataCrenasEnity->setTotalCRENASAnneePrecedent($totalCRENASAnneePrecedent);
             $dataCrenasEnity->setTotalProjeteAnneePrecedent($totalProjeteAnneePrecedent);
