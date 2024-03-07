@@ -174,7 +174,7 @@ class ResetPasswordController extends AbstractController
         $scheme = $request->getScheme();
         $host = $request->getHost();
 
-        $mail = new PHPMailer();
+        //$mail = new PHPMailer();
         $subject = "SNUT-PLATEFORME : REINITIALISATION DE MOT DE PASSE";
        // $subject = mb_convert_encoding($subject, 'UTF-8');
         $urlReset = $this->generateUrl('app_reset_password', ['token' => $resetToken->getToken()]); 
