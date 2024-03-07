@@ -7,7 +7,7 @@ class EmailService
 {
     protected $mailer;
     protected $host = 'smtp.zoho.com';//mail.nogevents.com //localhost configuration local
-    protected $smtpPort = '1025';//465 // configuration local
+    protected $smtpPort = 465;//465 // configuration local
     protected $encryption = 'ssl';//ssl // configuration local
     protected $username = "snutplateform@zohomail.com";
     protected $password = "ghrtksme34tjf";
