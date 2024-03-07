@@ -36,9 +36,6 @@ class EmailService
         $this->mailer->Password = $this->password;//'ghrtksme34tjf'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
         $this->mailer->CharSet = 'UTF-8'; // Maintenir 'UTF-8'
         //$this->mailer->SMTPAutoTLS = false;
-
-        $this->mailer->setFrom($this->from, 'SNUT PLATEFORME');
-
         return $this;
     }
 
@@ -53,7 +50,7 @@ class EmailService
     public function sendEmail($to, $subject = 'Email from snut-plaform', $template = '', $data, $options = array(), $cc = array())
     {
         $subject = mb_convert_encoding($subject, 'UTF-8');
-
+        $this->mailer->setFrom($this->from, 'SNUT PLATEFORME');
         $this->mailer->addAddress($to);
         $this->mailer->Subject = $subject;
         $this->mailer->msgHTML($data);

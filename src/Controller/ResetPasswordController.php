@@ -170,24 +170,44 @@ class ResetPasswordController extends AbstractController
         ;
 
         $mailer->send($email);*/
-
+        
         $scheme = $request->getScheme();
         $host = $request->getHost();
 
+        $mail = new PHPMailer();
         $subject = "SNUT-PLATEFORME : REINITIALISATION DE MOT DE PASSE";
         $subject = mb_convert_encoding($subject, 'UTF-8');
         $urlReset = $this->generateUrl('app_reset_password', ['token' => $resetToken->getToken()]); 
         $htmlContent = '
-        Bonjour <b> "'.$user->getNom().'" </b>,<br/><br/>
-        Pour réinitialiser votre mot de passe dans la plateforme, veuillez cliquer sur le lien ci-dessous : <br/>
-        <a href="' . $scheme.'://' .$host.$urlReset . '">Réinitialiser mon mot de passe</a> <br/>
-        Ce lien expirera le <b> demain</b>. <br/> <br/>
-        Cordialement, <br/>
-        Ceci est un mail automatique, ne pas répondre'; 
+            Bonjour <b> "'.$user->getNom().'" </b>,<br/><br/>
+            Pour réinitialiser votre mot de passe dans la plateforme, veuillez cliquer sur le lien ci-dessous : <br/>
+            <a href="' . $scheme.'://' .$host.$urlReset . '">Réinitialiser mon mot de passe</a> <br/>
+            Ce lien expirera le <b> demain</b>. <br/> <br/>
+            Cordialement, <br/>
+            Ceci est un mail automatique, ne pas répondre'; 
         
-        $emailService->sendEmail($user->getEmail(), $subject, '', $htmlContent);
-       
+        //$emailService->sendEmail($user->getEmail(), $subject, '', $htmlContent);  
+        /*$mail->isSMTP(); 
+        $mail->Host = 'smtp.zoho.com'; //"smtp.zoho.com"; //"smtp.mailgun.org";
+        $mail->Port = 465;
+        $mail->SMTPSecure = 'ssl';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'snutplateform@zohomail.com';//'snutplateform@zohomail.com'; //'postmaster@mailgun.ibonia.mg'; // Remplacez par votre nom d'utilisateur Mailgun
+        $mail->Password = 'ghrtksme34tjf';//'ghrtksme34tjf'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
+        $mail->CharSet = 'UTF-8'; // Maintenir 'UTF-8'
+        //$mail->SMTPAutoTLS = false;
+
+        $mail->setFrom("snutplateform@zohomail.com", 'SNUT PLATEFORME');
+        $mail->addAddress($user->getEmail());
+        $mail->Subject = $subject;
+        $mail->msgHTML($htmlContent);
         
+        if (!$mail->send()) {
+            echo "Mailer Error: " . $mail->ErrorInfo;
+        } else {
+            echo "Message sent!";
+        }*/
+
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);
 
