@@ -186,7 +186,7 @@ class ResetPasswordController extends AbstractController
             Cordialement, <br/>
             Ceci est un mail automatique, ne pas répondre'; 
         
-        $emailService->sendEmail($user->getEmail(), $subject, '', $htmlContent);  
+        $emailService->sendEmail($user->getEmail(), $subject, $htmlContent);  
         /*$mail->isSMTP(); 
         $mail->Host = 'smtp.zoho.com'; //"smtp.zoho.com"; //"smtp.mailgun.org";
         $mail->Port = 465;
