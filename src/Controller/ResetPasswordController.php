@@ -187,7 +187,7 @@ class ResetPasswordController extends AbstractController
             Ceci est un mail automatique, ne pas répondre'; 
         
         //$emailService->sendEmail($user->getEmail(), $subject, '', $htmlContent);  
-        /*$mail->isSMTP(); 
+        $mail->isSMTP(); 
         $mail->Host = 'smtp.zoho.com'; //"smtp.zoho.com"; //"smtp.mailgun.org";
         $mail->Port = 465;
         $mail->SMTPSecure = 'ssl';
@@ -206,7 +206,7 @@ class ResetPasswordController extends AbstractController
             echo "Mailer Error: " . $mail->ErrorInfo;
         } else {
             echo "Message sent!";
-        }*/
+        }
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);

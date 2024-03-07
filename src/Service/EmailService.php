@@ -47,7 +47,7 @@ class EmailService
      * @param twig $view
      * @param string $subject
      */
-    public function sendEmail($to, $subject = 'Email from snut-plaform', $template = '', $data, $options = array(), $cc = array())
+    public function sendEmail($to, $subject = 'Email from snut-plaform', $data, $options = array(), $cc = array())
     {
         $subject = mb_convert_encoding($subject, 'UTF-8');
         $this->mailer->setFrom($this->from, 'SNUT PLATEFORME');
