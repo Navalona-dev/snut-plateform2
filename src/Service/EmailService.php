@@ -1,12 +1,17 @@
 <?php
 namespace App\Service;
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 class EmailService
 {
     protected $mailer;
-    protected $host = 'localhost';//mail.nogevents.com //localhost configuration local
+    protected $host = 'smtp.zoho.com';//mail.nogevents.com //localhost configuration local
     protected $smtpPort = '1025';//465 // configuration local
-    protected $encryption = null;//ssl // configuration local
+    protected $encryption = 'ssl';//ssl // configuration local
+    protected $username = "snutplateform@zohomail.com";
+    protected $password = "ghrtksme34tjf";
+    protected $from = "snutplateform@zohomail.com";
     protected $templating;
     protected $transport;
     protected $message;
@@ -18,24 +23,22 @@ class EmailService
      * @param object $service
      * @return $this
      */
-    public function __construct(\Twig\Environment $templating) {
+    public function __construct() {
 
-        $this->transport = new \Swift_SmtpTransport($this->host, $this->smtpPort, $this->encryption);
-        //$this->transport->setUsername('matac@nogevents.com');   // Supprimer si c'est local
-        //$this->transport->setPassword('Ups@.]h.dwFk'); // Supprimer si c'est local
-        $this->mailer = new \Swift_Mailer($this->transport);;
-        $this->templating = $templating;
-        $this->message = new \Swift_Message();
-        /**
-         * Eviter erreur socket_client   // Supprimer si c'est local
-         */
-        /*$options = array(
-            "ssl" => array(
-                "verify_peer"      => false,
-                "verify_peer_name" => false,
-            ),
-        );
-        $this->transport->setStreamOptions($options);*/
+        $this->mailer = new PHPMailer();
+   
+        $this->mailer->isSMTP(); 
+        $this->mailer->Host = $this->host; //"smtp.zoho.com"; //"smtp.mailgun.org";
+        $this->mailer->Port = $this->smtpPort;
+        $this->mailer->SMTPSecure = $this->encryption;
+        $this->mailer->SMTPAuth = true;
+        $this->mailer->Username = $this->encryption;//'snutplateform@zohomail.com'; //'postmaster@mailgun.ibonia.mg'; // Remplacez par votre nom d'utilisateur Mailgun
+        $this->mailer->Password = $this->password;//'ghrtksme34tjf'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
+        $this->mailer->CharSet = 'UTF-8'; // Maintenir 'UTF-8'
+        //$this->mailer->SMTPAutoTLS = false;
+
+        $this->mailer->setFrom($this->from, 'SNUT PLATEFORME');
+
         return $this;
     }
 
@@ -47,9 +50,20 @@ class EmailService
      * @param twig $view
      * @param string $subject
      */
-    public function sendEmail($from, $to, $subject = 'Email from snut-plaform', $template = '', $data = [], $options = array(), $cc = array()):bool
+    public function sendEmail($to, $subject = 'Email from snut-plaform', $template = '', $data, $options = array(), $cc = array())
     {
-        $this->message
+        $subject = mb_convert_encoding($subject, 'UTF-8');
+
+        $this->mailer->addAddress($to);
+        $this->mailer->Subject = $subject;
+        $this->mailer->msgHTML($data);
+        
+        if (!$this->mailer->send()) {
+            echo "Mailer Error: " . $this->mailer->ErrorInfo;
+        } else {
+            echo "Message sent!";
+        }
+        /*$this->message
                     ->setSubject($subject)
                     ->setFrom($from)
                     ->setTo($to)
@@ -84,9 +98,9 @@ class EmailService
             if(isset($options['readReceiptTo'])){
                 $this->message->setReadReceiptTo($options['readReceiptTo']);
             }
-        }
+        }*/
 
-       return $this->mailer->send($this->message);
+       //return $this->mailer->send($this->message);
     }
 
 }
