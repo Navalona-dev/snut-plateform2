@@ -32,7 +32,7 @@ class EmailService
         $this->mailer->Port = $this->smtpPort;
         $this->mailer->SMTPSecure = $this->encryption;
         $this->mailer->SMTPAuth = true;
-        $this->mailer->Username = $this->encryption;//'snutplateform@zohomail.com'; //'postmaster@mailgun.ibonia.mg'; // Remplacez par votre nom d'utilisateur Mailgun
+        $this->mailer->Username = $this->username;//'snutplateform@zohomail.com'; //'postmaster@mailgun.ibonia.mg'; // Remplacez par votre nom d'utilisateur Mailgun
         $this->mailer->Password = $this->password;//'ghrtksme34tjf'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
         $this->mailer->CharSet = 'UTF-8'; // Maintenir 'UTF-8'
         //$this->mailer->SMTPAutoTLS = false;
@@ -63,44 +63,6 @@ class EmailService
         } else {
             echo "Message sent!";
         }
-        /*$this->message
-                    ->setSubject($subject)
-                    ->setFrom($from)
-                    ->setTo($to)
-                    ->setBody($this->templating->render(
-                        $template,
-                        $data
-                    ),
-                    'text/html');
-        // Copies
-        if(count($cc) > 0){
-            $this->message->setCc($cc);
-        }
-
-        if(count($options) > 0){
-            // Piece joints
-            if(isset($options['file'])){
-                if(is_array($options['file']) && sizeof($options['file'])>=1){
-                    foreach ($options['file'] as $key => $value) {
-                        $this->message->attach(\Swift_Attachment::fromPath($value,$options['type'][$key]));
-                    }
-                }else{
-                    if(!is_array($options['file'])){
-                        $this->message->attach(\Swift_Attachment::fromPath($options['file'],$options['type']));
-                    }else{
-                        foreach($options['file'] as $v){
-                            $this->message->attach(\Swift_Attachment::fromPath($v,$options['type']));
-                        }
-                    }
-                }
-            }
-            // Accuse de reception
-            if(isset($options['readReceiptTo'])){
-                $this->message->setReadReceiptTo($options['readReceiptTo']);
-            }
-        }*/
-
-       //return $this->mailer->send($this->message);
     }
 
 }
