@@ -176,7 +176,7 @@ class ResetPasswordController extends AbstractController
 
         $mail = new PHPMailer();
         $subject = "SNUT-PLATEFORME : REINITIALISATION DE MOT DE PASSE";
-        $subject = mb_convert_encoding($subject, 'UTF-8');
+       // $subject = mb_convert_encoding($subject, 'UTF-8');
         $urlReset = $this->generateUrl('app_reset_password', ['token' => $resetToken->getToken()]); 
         $htmlContent = '
             Bonjour <b> "'.$user->getNom().'" </b>,<br/><br/>
@@ -186,8 +186,8 @@ class ResetPasswordController extends AbstractController
             Cordialement, <br/>
             Ceci est un mail automatique, ne pas répondre'; 
         
-        //$emailService->sendEmail($user->getEmail(), $subject, '', $htmlContent);  
-        $mail->isSMTP(); 
+        $emailService->sendEmail($user->getEmail(), $subject, '', $htmlContent);  
+        /*$mail->isSMTP(); 
         $mail->Host = 'smtp.zoho.com'; //"smtp.zoho.com"; //"smtp.mailgun.org";
         $mail->Port = 465;
         $mail->SMTPSecure = 'ssl';
@@ -206,7 +206,7 @@ class ResetPasswordController extends AbstractController
             echo "Mailer Error: " . $mail->ErrorInfo;
         } else {
             echo "Message sent!";
-        }
+        }*/
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);
