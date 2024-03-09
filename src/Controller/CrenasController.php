@@ -76,10 +76,7 @@ class CrenasController extends AbstractController
                 ]); 
             } else {
                 if ($dataGroupe != null) {
-                    $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId, $dataGroupe['idGroupe']);  
-                    $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
-                    $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
-                
+                    $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId, $dataGroupe['idGroupe']);    
                     $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataGroupe["idGroupe"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
                     $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
 
@@ -306,7 +303,7 @@ class CrenasController extends AbstractController
                 $user = $this->getUser();
                 $dataCrenasEnity->setUser($user);
             }
-            
+
             $GroupeId = (int) $request->request->get('GroupeId');
             $groupeEntity = $groupeRepository->find($GroupeId);
             if ($groupeEntity) {
