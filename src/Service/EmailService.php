@@ -52,6 +52,7 @@ class EmailService
         $subject = mb_convert_encoding($subject, 'UTF-8');
         $this->mailer->setFrom($this->from, 'SNUT PLATEFORME');
         $this->mailer->addAddress($to);
+        
         /*foreach ($tos as $to => $nom) {
             $this->mailer->addAddress($to, $nom);
         }*/
@@ -63,8 +64,6 @@ class EmailService
         } else {
             echo "Message sent!";
         }
-
-        dd($this->mailer->ErrorInfo);
     }
 
 }
