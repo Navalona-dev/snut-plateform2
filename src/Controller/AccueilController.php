@@ -31,6 +31,7 @@ use App\Finder\QuantitiesProductRiskExpiryFinder;
 use App\Finder\MessageFinder;
 use App\Repository\CommandeTrimestrielleRepository;
 use App\Repository\RmaNutRepository;
+use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -245,7 +246,9 @@ class AccueilController extends AbstractController
             } else {
                 $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
                 $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
-                $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId);
+                $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+                $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+                $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId, $dataGroupe['idGroupe']);
                 $dataCreni = $this->_dataCreniService->findDataCreniByUserId($userId);
                 $isUserHavingDataCrenas = false;
                 if (isset($dataCrenas) && is_array($dataCrenas) && count($dataCrenas) > 0) {
