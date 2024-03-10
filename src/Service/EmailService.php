@@ -43,7 +43,7 @@ class EmailService
             'allow_self_signed' => true
             ]
             ];
-        $this->mailer->SMTPDebug = 3;
+        //$this->mailer->SMTPDebug = 3;
         return $this;
     }
 
