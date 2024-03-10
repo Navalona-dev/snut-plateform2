@@ -36,6 +36,13 @@ class EmailService
         $this->mailer->Password = $this->password;//'ghrtksme34tjf'; //'2a797add93d8b8add0eaec73a40c7daa'; // Remplacez par votre mot de passe Mailgun
         $this->mailer->CharSet = 'UTF-8'; // Maintenir 'UTF-8'
         //$this->mailer->SMTPAutoTLS = false;
+        $this->mailer->SMTPOptions = [
+            'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true
+            ]
+            ];
         return $this;
     }
 
