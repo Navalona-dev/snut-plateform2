@@ -68,7 +68,6 @@ class EmailService
         $this->mailer->Subject = $subject;
         $this->mailer->msgHTML($data);
         if (!$this->mailer->send()) {
-            dd($this->mailer->ErrorInfo);
             echo "Mailer Error: " . $this->mailer->ErrorInfo;
         } else {
             echo "Message sent!";
