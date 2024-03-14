@@ -480,7 +480,7 @@ class AccueilController extends AbstractController
     }
 
     #[Route('/sendmessage/{role}', name: 'app_dashboard1_retroinfo', methods: ['GET', 'POST'])]
-    public function sendmessage(Request $request, EntityManagerInterface $entityManager): Response
+    public function sendmessage(Request $request, EntityManagerInterface $entityManager, EmailService $emailService): Response
     {
         $user = $this->getUser();
         if ($user) {
@@ -497,7 +497,7 @@ class AccueilController extends AbstractController
                 $txtTextMessage = $request->request->get('txtTextMessage');
                 // $piecesJointeMessage = null;
                 $piecesJointeMessage = $request->files->get('piecesJointeMessage');
-
+                $uploadDestinationFile = null;
                 $newFilename = "";
                 if ($piecesJointeMessage instanceof UploadedFile) {
                     $extensionOriginalFilename = pathinfo($piecesJointeMessage->getClientOriginalName(), PATHINFO_EXTENSION);
@@ -508,17 +508,20 @@ class AccueilController extends AbstractController
                     $mappingConfig = $this->getParameter('vich_uploader.mappings')['uploads_retroinfo'];
                     // Accédez au répertoire de destination depuis la configuration
                     $uploadDestination = $mappingConfig['upload_destination'];
-
+                     
                     $piecesJointeMessage->move(
                         $uploadDestination, // Le répertoire de destination configuré dans VichUploader
                         $newFilename
                     );
+                    $uploadDestinationFile = $uploadDestination.'/'.$newFilename;
                 }
 
                 $AllCentralSupervisors = $this->_userService->findAllCentralSupervisors();
                 $AllRegionalSupervisors = $this->_userService->findAllRegionalSupervisors();
                 $AllDistrictAgents = $this->_userService->findAllDistrictAgents();
                 // Persister le message
+               
+                $tabEmailToSend = [];
                 if ($isAllCentral) {
                     foreach ($AllCentralSupervisors as $centralSupervisor) {
                         if ($centralSupervisor['idUser'] != $user->getId()) {
@@ -538,6 +541,9 @@ class AccueilController extends AbstractController
                                 $piecejoint->setFileName($newFilename);
                                 $entityManager->persist($piecejoint);
                                 $entityManager->flush();
+                            }
+                            if (null != $centralSupervisor['emailUser'] && !in_array($centralSupervisor['emailUser'], $tabEmailToSend)) {
+                                array_push($tabEmailToSend, $centralSupervisor['emailUser']);
                             }
                         }
                     }
@@ -563,6 +569,9 @@ class AccueilController extends AbstractController
                                 $entityManager->persist($piecejoint);
                                 $entityManager->flush();
                             }
+                            if (null != $regionalSupervisor['emailUser'] && !in_array($regionalSupervisor['emailUser'], $tabEmailToSend)) {
+                                array_push($tabEmailToSend, $regionalSupervisor['emailUser']);
+                            }
                         }
                     }
                     $this->addFlash('success', '<strong>Message envoyé</strong><br/>');
@@ -587,10 +596,17 @@ class AccueilController extends AbstractController
                                 $entityManager->persist($piecejoint);
                                 $entityManager->flush();
                             }
+
+                            if (null != $districtAgent['emailUser'] && !in_array($districtAgent['emailUser'], $tabEmailToSend)) {
+                                array_push($tabEmailToSend, $districtAgent['emailUser']);
+                            }
                         }
                     }
                     $this->addFlash('success', '<strong>Message envoyé</strong><br/>');
                 }
+
+                $tabSelectiveEmailToSend = [];
+                
                 if (!empty($selectCentral)) {
                     $recipient = $entityManager->getRepository(User::class)->find((int)$selectCentral);
                     $message = new Message();
@@ -608,6 +624,9 @@ class AccueilController extends AbstractController
                         $piecejoint->setFileName($newFilename);
                         $entityManager->persist($piecejoint);
                         $entityManager->flush();
+                    }
+                    if (null != $recipient->getEmail() && !in_array($recipient->getEmail(), $tabSelectiveEmailToSend)) {
+                        array_push($tabSelectiveEmailToSend, $recipient->getEmail());
                     }
                     $this->addFlash('success', '<strong>Message envoyé</strong><br/>');
                 }
@@ -629,6 +648,9 @@ class AccueilController extends AbstractController
                         $entityManager->persist($piecejoint);
                         $entityManager->flush();
                     }
+                    if (null != $recipient->getEmail() && !in_array($recipient->getEmail(), $tabSelectiveEmailToSend)) {
+                        array_push($tabSelectiveEmailToSend, $recipient->getEmail());
+                    }
                     $this->addFlash('success', '<strong>Message envoyé</strong><br/>');
                 }
                 if (!empty($selectRnr)) {
@@ -648,10 +670,18 @@ class AccueilController extends AbstractController
                         $entityManager->persist($piecejoint);
                         $entityManager->flush();
                     }
+                    if (null != $recipient->getEmail() && !in_array($recipient->getEmail(), $tabSelectiveEmailToSend)) {
+                        array_push($tabSelectiveEmailToSend, $recipient->getEmail());
+                    }
                     $this->addFlash('success', '<strong>Message envoyé</strong><br/>');
                 }
 
-
+                //Send mail
+                $tabMailAdress = array_merge($tabEmailToSend, $tabSelectiveEmailToSend);
+                $senderName = $user->getNom() ." ".$user->getPrenoms();
+               
+                $emailService->sendEmail($tabMailAdress, "Message retro information envoyer par ".$senderName, $txtTextMessage, $uploadDestinationFile);
+                //End send mail
                 // var_dump(" isAllRNR " . $isAllRNR, 
                 // "isAllRND " . $isAllRND, "selectRnr " . $selectRnr, "selectRnd " . $selectRnd, "txtTextMessage " . $txtTextMessage
                 // , "piecesJointeMessage " . $piecesJointeMessage);

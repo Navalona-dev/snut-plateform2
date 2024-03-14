@@ -55,16 +55,23 @@ class EmailService
      * @param twig $view
      * @param string $subject
      */
-    public function sendEmail($to , $subject = 'Email from snut-plaform', $data = null, $options = array(), $cc = array())
+    public function sendEmail($tos = [], $subject = 'Email from snut-plaform', $data = null, $attachament = null , $options = array(), $cc = array())
     {
         $subject = mb_convert_encoding($subject, 'UTF-8');
         $this->mailer->setFrom($this->from, 'SNUT PLATEFORME');
-        $this->mailer->addAddress($to);
+        //$this->mailer->addAddress($to);
         
-        /*foreach ($tos as $to => $nom) {
-            $this->mailer->addAddress($to, $nom);
-        }*/
+        //$tos = ['nnavalona@gmail.com', 'ssahondraa@gmail.com'];
+        if (count($tos) > 0) {
+            foreach ($tos as $to) {
+                $this->mailer->addAddress($to);
+            }
+        }
         
+        if ($attachament != null) {
+            $this->mailer->addAttachment($attachament);
+        }
+
         $this->mailer->Subject = $subject;
         $this->mailer->msgHTML($data);
         if (!$this->mailer->send()) {
