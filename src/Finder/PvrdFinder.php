@@ -14,6 +14,41 @@ Class PvrdFinder
         $this->em = $em;
     }
 
+    public function findDataPvrdCommandeTrimestrielle($idPvrd = null)
+    {
+        if (null != $idPvrd) {
+            $query = $this->em->createQuery(
+                'SELECT 
+                    pv.id AS IdPvrd, 
+                    pv.Site AS Site,
+                    pv.DateReception AS DateReception,
+                    pv.DatePvrd AS DatePvrd,
+                    pv.DateTeleversement AS DateTeleversement,
+                    pv.NumeroBonLivraison AS NumeroBonLivraison,
+                    pv.Fournisseur AS Fournisseur,
+                    pv.UploadedDateTime AS UploadedDateTime,
+                    pv.NewFileName AS NewFileName,
+                    d.id AS IdDistrict,
+                    d.Nom As NomDistrict,
+                    r.id AS IdRegion,
+                    r.Nom AS NomRegion
+                 FROM App:Pvrd pv
+                 INNER JOIN pv.ResponsableDistrict u 
+                 INNER JOIN pv.District d
+                 INNER JOIN pv.Region r
+                 WHERE pv.id =:idPvrd'
+            )
+
+            ->setParameter('idPvrd', $idPvrd);
+        } 
+        
+        //->setParameter('prmCommandeTrimestrielle', $prmCommandeTrimestrielle)
+        $query->setMaxResults(1);
+
+        $resultDataCommandeTrimestrielle = $query->getOneOrNullResult();
+        return $resultDataCommandeTrimestrielle;
+    }
+
     public function findDataPvrdByUserCommandeTrimestrielle($prmUserId, $prmCommandeTrimestrielle, $idPvrd = null)
     {
         if (null != $idPvrd) {
@@ -232,9 +267,10 @@ Class PvrdFinder
         return $resultLstPvrd;
     }
 
-    public function findListPvrdByRegion($prmRegionId)
+    public function findListPvrdByRegion($prmRegionId, $currentCommande = null)
     {
-        $query = $this->em->createQuery("SELECT 
+        if (null == $currentCommande) {
+            $query = $this->em->createQuery("SELECT 
                                             r.id AS regionId,
                                             r.Nom AS regionNom,
                                             d.id AS districtId,
@@ -259,6 +295,35 @@ Class PvrdFinder
                                         LEFT JOIN App:User u WITH pv.ResponsableDistrict = u.id
                                         WHERE d.region = :prmRegionId")
                     ->setParameter('prmRegionId', $prmRegionId);
+        } else {
+            $query = $this->em->createQuery("SELECT 
+                                            r.id AS regionId,
+                                            r.Nom AS regionNom,
+                                            d.id AS districtId,
+                                            d.Nom AS districtNom,
+                                            pv.id AS IdPvrd, 
+                                            pv.Site AS Site,
+                                            pv.DateReception AS DateReception, 
+                                            pv.DatePvrd AS DatePvrd,
+                                            pv.DateTeleversement AS DateTeleversement,
+                                            pv.NumeroBonLivraison AS NumeroBonLivraison,
+                                            pv.Fournisseur AS Fournisseur,
+                                            pv.UploadedDateTime AS UploadedDateTime,
+                                            pv.NewFileName AS NewFileName,
+                                            u.id As idUser,
+                                            u.Nom AS nomUser,
+                                            u.Prenoms AS prenomUser,
+                                            u.Telephone AS telephoneUser,
+                                            u.email AS email 
+                                        FROM App:District d  
+                                        LEFT JOIN d.region r 
+                                        LEFT JOIN App:Pvrd pv WITH pv.District = d.id
+                                        LEFT JOIN App:User u WITH pv.ResponsableDistrict = u.id
+                                        WHERE d.region = :prmRegionId and pv.commandeTrimestrielle = :prmIdCurrentCommande")
+                    ->setParameter('prmRegionId', $prmRegionId)
+                    ->setParameter('prmIdCurrentCommande', $currentCommande);
+        }
+        
 
         try {
             $resultLstPvrd = $query->getArrayResult(); 

@@ -172,6 +172,7 @@ class PvrdController extends AbstractController
                     $lstDesignation = $_POST['designation']; 
                     $lstQuantiteBl = $_POST['quantiteBl'];
                     $lstQuantiteRecue = $_POST['quantiteRecue'];
+                    $lstQuantiteEcart = $_POST['quantiteEcart'];
                     $lstPeriode = $_POST['periode'];
  
                     // Assurez-vous que les trois tableaux ont la même longueur
@@ -243,13 +244,14 @@ class PvrdController extends AbstractController
     }
 
     #[Route('/supervisor/pvrd/region/{regionId}', name: 'app_sp_pvrd_region')]
-    public function listePvrdRegion($regionId, EntityManagerInterface $entityManager)
+    public function listePvrdRegion($regionId, EntityManagerInterface $entityManager, CommandeTrimestrielleRepository $commandeTrimestrielleRepository)
     {
         $user = $this->getUser();
         if ($user) {
+            $currentCommande = $commandeTrimestrielleRepository->findOneBy(['isActive' => true]);
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
-            $lstPvrdRegion = $this->_pvrd_service->findListPvrdByRegion($regionId);
+            $lstPvrdRegion = $this->_pvrd_service->findListPvrdByRegion($regionId, $currentCommande->getId());
             $Region = $entityManager->getRepository(Region::class)->find($regionId);
             if (!$Region) {
                 throw $this->createNotFoundException('La région n\'existe pas.');
@@ -257,7 +259,7 @@ class PvrdController extends AbstractController
             // Obtenez le nombre total de districts dans la région
             $numberOfDistricts = $Region->getDistricts()->count();
             $districtsDataPvrd = $this->_pvrd_service->getDistrictsDataPvrdByRegion($regionId);
-
+          
             return $this->render('supervisor/supervisorCentralPvrdRegion.html.twig', [
                 "mnuActive" => "Pvrd",
                 "dataUser" => $dataUser,
@@ -280,7 +282,29 @@ class PvrdController extends AbstractController
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             $dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($responsableDistrict, 1, null);
+         
             $dataPvrdProduit = $this->_pvrd_produit_service->findDataPvrdProduitByIdPvrd($dataPvrd["IdPvrd"]); 
+            return $this->render('supervisor/supervisorCentralPvrdDistrict.html.twig', [
+                "mnuActive" => "Pvrd",
+                "dataUser" => $dataUser,
+                "dataPvrd" => $dataPvrd,
+                "dataPvrdProduit" => $dataPvrdProduit
+            ]);
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+    }
+
+    #[Route('/supervisor/pvrd/detail/{id}', name: 'app_supervisor_pvrd_detail')]
+    public function pvrdDistrictDetail(Pvrd $pvrd)
+    {
+        $user = $this->getUser();
+        if ($user) {
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+            $dataPvrd = $this->_pvrd_service->findDataPvrdCommandeTrimestrielle($pvrd->getId());
+           // dd($dataPvrd);
+            $dataPvrdProduit = $this->_pvrd_produit_service->findDataPvrdProduitByIdPvrd($pvrd->getId()); 
             return $this->render('supervisor/supervisorCentralPvrdDistrict.html.twig', [
                 "mnuActive" => "Pvrd",
                 "dataUser" => $dataUser,

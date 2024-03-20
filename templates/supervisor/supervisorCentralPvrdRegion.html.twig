@@ -37,9 +37,13 @@
                                 <tr>
                                     <td class="textTblLeft" {% if district.nomUser|trim is empty %} style="color: #c71c22" {% endif %}>
                                         {{ district.districtNom }} <br/> 
-                                        {% if district.nomUser|trim is not empty %}
+                                        {# {% if district.nomUser|trim is not empty %}
                                             <a href="{{ path('app_supervisor_pvrd_detail_district', {'responsableDistrict': district.idUser}) }}"> Visualiser détail</a>
+                                        {% endif %} #}
+                                        {% if district.IdPvrd is defined and district.IdPvrd is not empty %}
+                                            <a href="{{ path('app_supervisor_pvrd_detail', {'id': district.IdPvrd}) }}"> Visualiser détail</a>
                                         {% endif %}
+                                        
                                     </td>
                                     <td class="textTblLeft">{% if district.nomUser|trim is not empty %} {{ district.nomUser }} {{ district.prenomUser }} <br/> <span style="font-size: 12px;">{{ district.telephoneUser }} <br/><b>Email: {{ district.email }} </b> </span>{% endif %}</td> 
                                     <td class="textTblLeft">{% if district.nomUser|trim is not empty %} {{ district.DateReception|date('d-m-Y') }} {% endif %}</td>

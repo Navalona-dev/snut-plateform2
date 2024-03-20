@@ -86,13 +86,19 @@
                             <label class="form-label" for="quantiteBl_1">Quantité sur BL </label>
                         </td>
                         <td>
-                            <input type="number" required="required" name="quantiteBl[]" id="quantiteBl_1" class="form-control inputTblCenterWidth100">
+                            <input type="number" oninput="return setEcart(1)" required="required" name="quantiteBl[]" id="quantiteBl_1" class="form-control inputTblCenterWidth100">
                         </td>
                         <td class="titleTblRightBold">
                             <label class="form-label" for="quantiteRecue_1">Quantité recue </label>
                         </td>
                         <td>
-                            <input type="number" required="required" name="quantiteRecue[]" id="quantiteRecue_1" class="form-control inputTblCenterWidth100">
+                            <input type="number" oninput="return setEcart(1)" required="required" name="quantiteRecue[]" id="quantiteRecue_1" class="form-control inputTblCenterWidth100">
+                        </td>
+                        <td class="titleTblRightBold">
+                            <label class="form-label" for="quantiteEcart_1">Ecart </label>
+                        </td>
+                        <td>
+                            <input type="number" readOnly name="quantiteEcart[]" id="quantiteEcart_1" class="form-control inputTblCenterWidth100">
                         </td>
                         <td>
                             <button type="button"  class="btn btn-danger removeField">Supprimer</button>
@@ -213,13 +219,19 @@
                             <label class="form-label" for="quantiteBl_${fieldIndex}">Quantité sur BL </label>
                         </td>
                         <td>
-                            <input type="number" name="quantiteBl[]" required="required" id="quantiteBl_${fieldIndex}" class="form-control inputTblCenterWidth100">
+                            <input type="number" oninput="return setEcart(${fieldIndex})" name="quantiteBl[]" required="required" id="quantiteBl_${fieldIndex}" class="form-control inputTblCenterWidth100">
                         </td>
                         <td class="titleTblRightBold">
                             <label class="form-label" for="quantiteRecue_${fieldIndex}">Quantité recue </label>
                         </td>
                         <td>
-                            <input type="number" name="quantiteRecue[]" required="required" id="quantiteRecue_${fieldIndex}" class="form-control inputTblCenterWidth100">
+                            <input type="number" oninput="return setEcart(${fieldIndex})" name="quantiteRecue[]" required="required" id="quantiteRecue_${fieldIndex}" class="form-control inputTblCenterWidth100">
+                        </td>
+                         <td class="titleTblRightBold">
+                            <label class="form-label" for="quantiteEcart_${fieldIndex}">Ecart </label>
+                        </td>
+                        <td>
+                            <input type="number" readOnly name="quantiteEcart[]" id="quantiteEcart_${fieldIndex}" class="form-control inputTblCenterWidth100">
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger removeField">Supprimer</button>
@@ -238,6 +250,18 @@
             $('#submitBtn').on('submit', function(event) {
                 event.preventDefault(); 
             });
+
         });
+
+        function setEcart(index) {
+            var qttBl = $("#quantiteBl_"+index).val();
+            var qttRec = $("#quantiteRecue_"+index).val();
+            console.log(qttBl, qttRec);
+            if (qttBl != undefined && qttBl != null && qttRec != undefined && qttRec != null) {
+                $("#quantiteEcart_"+index).val(parseInt(qttRec) - parseInt(qttBl));
+            }
+            
+            
+        }
     </script> 
 {% endblock %}
