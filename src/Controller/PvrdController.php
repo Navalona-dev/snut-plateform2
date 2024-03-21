@@ -251,7 +251,7 @@ class PvrdController extends AbstractController
             $currentCommande = $commandeTrimestrielleRepository->findOneBy(['isActive' => true]);
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
-            $lstPvrdRegion = $this->_pvrd_service->findListPvrdByRegion($regionId, $currentCommande->getId());
+            $lstPvrdRegion = $this->_pvrd_service->findListPvrdByRegion($regionId);
             $Region = $entityManager->getRepository(Region::class)->find($regionId);
             if (!$Region) {
                 throw $this->createNotFoundException('La région n\'existe pas.');
