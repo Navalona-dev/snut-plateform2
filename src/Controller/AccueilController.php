@@ -248,16 +248,22 @@ class AccueilController extends AbstractController
                 $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
                 $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
                 $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
-                $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId, $dataGroupe['idGroupe']);
-                $dataCreni = $this->_dataCreniService->findDataCreniByUserId($userId);
-                $isUserHavingDataCrenas = false;
-                if (isset($dataCrenas) && is_array($dataCrenas) && count($dataCrenas) > 0) {
-                    $isUserHavingDataCrenas = true;
-                }
                 $isUserHavingDataCreni = false;
-                if (isset($dataCreni) && is_array($dataCreni) && count($dataCreni) > 0) {
-                    $isUserHavingDataCreni = true;
+                $isUserHavingDataCrenas = false;
+                if (null != $dataGroupe) {
+                    $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId, $dataGroupe['idGroupe']);
+                    $dataCreni = $this->_dataCreniService->findDataCreniByUserId($userId);
+                  
+                    if (isset($dataCrenas) && is_array($dataCrenas) && count($dataCrenas) > 0) {
+                        $isUserHavingDataCrenas = true;
+                    }
+                   
+                    if (isset($dataCreni) && is_array($dataCreni) && count($dataCreni) > 0) {
+                        $isUserHavingDataCreni = true;
+                    }
                 }
+              
+                
                 $dataPvrd = $this->_pvrdService->findDataPvrdByUserCommandeTrimestrielle($userId, 1, null);
 
                 return $this->render('home.html.twig', [

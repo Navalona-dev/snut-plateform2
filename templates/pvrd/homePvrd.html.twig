@@ -7,6 +7,14 @@
     <div class="row">
         <h2>Procès - Verbal de Récéption Définitive (PVRD) </h2>
     </div>
+    {% if app.session.flashbag.has('success') %} 
+                        {% for flashMessage in app.flashes('success') %}
+                        
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i> {{ flashMessage|raw }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
     {% if (dataPvrd is null ) %}
         <form id="dynamicForm" method="post" action="{{ path('app_pvrd_save') }}" enctype="multipart/form-data">
             <div class="row">

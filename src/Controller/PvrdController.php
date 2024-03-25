@@ -103,7 +103,6 @@ class PvrdController extends AbstractController
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             if ($request->isMethod('POST')) {
-
                 $Site = $request->request->get('Site');
                 $DateReception = $request->request->get('DateReception');
                 $DateReception = DateTime::createFromFormat('Y-m-d', $DateReception);
@@ -126,12 +125,14 @@ class PvrdController extends AbstractController
                     // Vérifiez l'extension du fichier (assurez-vous d'ajuster les extensions autorisées selon vos besoins).
                     $allowedExtensions = ['jpg', 'png', 'doc', 'docx'];
                     $extensionOriginalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+                 
                     if (!in_array($extensionOriginalFilename, $allowedExtensions)) {
                         // Redirigez l'utilisateur avec un message d'erreur en cas d'extension non autorisée.
                         $this->addFlash('error', '<strong>Erreur de fichier téléverser</strong><br/> Le format accepté est le format <b>Image</b> au format <b>.jpg</b> ou <b>.png</b> .');
                         return $this->redirectToRoute('app_pvrd');
                     }
-
+                   
+                   
                     // Générez un nom de fichier unique en utilisant le format souhaité.
                     // PVRD_DISTRICT_PERIODE_DATETELEVERSEMENT_NOM
                     $NomUser = preg_replace('/[^a-zA-Z0-9_]/', '', $dataUser["nomUser"]);
@@ -205,6 +206,7 @@ class PvrdController extends AbstractController
                     $dataPeriode2 = $this->_commandeSemestrielle->findDataCommandeSemestrielle();
                     $dataPeriode = [$dataPeriode1, $dataPeriode2]; 
                     $dataProduit = $this->_produit->findAllProduct();
+                    $this->addFlash('success', '<strong>Enregistrement des PVRD avec succès</strong><br/>');
                 } 
  
                 return $this->redirectToRoute('app_pvrd');
