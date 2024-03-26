@@ -228,6 +228,39 @@ class RmaNutFinder
         return $resultLstRMANut;
     }
 
+    public function getInfoDistrictWithRmaNutByUserIdAndRmaNutId($prmUserId, $rmaNutId)
+    {
+        $query = $this->em->createQuery("SELECT 
+                        r.id AS regionId,
+                        r.Nom AS regionNom,
+                        d.id AS districtId,
+                        d.Nom AS districtNom, 
+                        u.Nom AS nomUser,
+                        u.Prenoms AS prenomUser,
+                        u.Telephone AS telephoneUser,
+                        u.email AS email,
+                        p.id AS provinceId,
+                        p.NomFR AS provinceNom,
+                        g.id AS groupeId,
+                        g.Nom AS groupeNom,
+                        rn.id AS rmaNutId,
+                        rn.newFileName AS newFileName, 
+                        rn.originalFileName AS originalFileName,
+                        rn.uploadedDate AS uploadedDate
+                    FROM App:District d  
+                    INNER JOIN App:User u WITH u.District = d.id
+                    INNER JOIN App:Region r WITH d.region = r.id  
+                    INNER JOIN App:Province p WITH r MEMBER OF p.regions
+                    INNER JOIN App:Groupe g WITH p MEMBER OF g.Provinces
+                    INNER JOIN App:RmaNut rn WITH rn.District = d.id
+                    WHERE u.id = :prmUserId and rn.id = :rmaNutId")
+            ->setParameter('prmUserId', $prmUserId)
+            ->setParameter('rmaNutId', $rmaNutId);
+        $resultDistrict = $query->getArrayResult()[0];
+       
+        return $resultDistrict;
+    }
+
     public function getInfoDistrictWithRmaNutByUserId($prmUserId)
     {
         $query = $this->em->createQuery("SELECT 
@@ -256,6 +289,7 @@ class RmaNutFinder
                     WHERE u.id = :prmUserId")
             ->setParameter('prmUserId', $prmUserId);
         $resultDistrict = $query->getArrayResult()[0];
+       
         return $resultDistrict;
     }
 

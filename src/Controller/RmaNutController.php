@@ -285,7 +285,7 @@ class RmaNutController extends AbstractController
             // Obtenez le nombre total de districts dans la région
             $numberOfDistricts = $Region->getDistricts()->count();
             $districtsDataRmaNut = $this->_rmaNutService->getDistrictsDataRmaNutByRegion($regionId);
-
+         
             return $this->render('supervisor/supervisorCentralRmaNutRegion.html.twig', [
                 "mnuActive" => "RMANut",
                 "dataUser" => $dataUser,
@@ -681,16 +681,17 @@ class RmaNutController extends AbstractController
         }
     }
 
-    #[Route('/rmanut/extract/historic/{responsableId}', name: 'app_rmanut_extract_historic_responsable_district')]
-    public function extractHistoricData($responsableId)
+    #[Route('/rmanut/extract/historic/{responsableId}/{rmanutId}', name: 'app_rmanut_extract_historic_responsable_district')]
+    public function extractHistoricData($responsableId, $rmanutId)
     {
         // Récupérez l'utilisateur actuellement connecté (vous pouvez utiliser le système de sécurité de Symfony pour cela).
         $user = $this->getUser();
         if ($user) {
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
-            $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserId($responsableId);
-         
+            //$dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserId($responsableId);
+            $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutId($responsableId, $rmanutId);
+           
             /* ---------------------------- DATA CRENAS ---------------------------- */
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataDistrict["groupeId"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
@@ -722,7 +723,7 @@ class RmaNutController extends AbstractController
                     $lstValueMoisProjectionAnneePrevisionnelle[$arrDataCrenasUser["id"]][] = $valueDataMoisProjection[$i]["DataMoisProjectionAnneePrevisionnelle"];
                 }
             } 
-
+         
             /* ---------------------------- DATA CRENI ---------------------------- */
             $arrDataCreniUser = $this->_dataCreniService->findDataCreniByUserId($responsableId);
             $dataCommandeSemestrielle = $this->_commandeSemestrielleService->findDataCommandeSemestrielle();
@@ -748,17 +749,19 @@ class RmaNutController extends AbstractController
 
             // Récupérer le chemin vers le fichier
             $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/RMANut/' . $fileNameRmaNut;
+           
             // Vérifier si le fichier existe 
             if (file_exists($filePath)) {
-
+               
                 try {
+                    
                     $reader = ReaderEntityFactory::createXLSXReader();
                     $reader->open($filePath);
                 } catch (\Box\Spout\Common\Exception\IOException | \Exception $e) {
-
+                   
                     // Vous pouvez enregistrer l'erreur dans un journal (logs)
                     $this->logger->info('Erreur lors de l\'ouverture du fichier Excel : ' . $e->getMessage());
-
+                    
                     return $this->render('error/custom_error.html.twig', [
                         "mnuActive" => "RMANut",
                         'errorTitle' => "Erreur lors de l'ouverture du fichier Excel",
@@ -782,7 +785,7 @@ class RmaNutController extends AbstractController
                         break;
                     }
                 }
-
+              
                 // Vérifiez si l'onglet spécifié a été trouvé
                 if ($selectedSheetCRENAS !== null) {
                     $currentRow = 1;
@@ -812,6 +815,7 @@ class RmaNutController extends AbstractController
 
                 $selectedSheetNameCRENI = 'CANEVAS SDSP';
                 $selectedSheetCRENI = null;
+            
                 foreach ($sheetIterator as $sheet) {
                     if ($sheet->getName() === $selectedSheetNameCRENI) {
                         $selectedSheetCRENI = $sheet;
@@ -869,7 +873,7 @@ class RmaNutController extends AbstractController
                         $valeurCalculTheoriqueCarnetRapport = $dataAnneePrevisionnelle["ValeurCalculTheoriqueCarnetRapport02"];
                     }
                 }
-
+                
                 return $this->render('supervisor/supervisorCentralRmaNutHistoric.html.twig', [
                     "mnuActive" => "RMANut",
                     "responsableId" => $responsableId,
