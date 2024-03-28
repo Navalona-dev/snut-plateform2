@@ -103,6 +103,7 @@ class PvrdController extends AbstractController
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             if ($request->isMethod('POST')) {
+                
                 $Site = $request->request->get('Site');
                 $DateReception = $request->request->get('DateReception');
                 $DateReception = DateTime::createFromFormat('Y-m-d', $DateReception);
@@ -118,12 +119,12 @@ class PvrdController extends AbstractController
                 $Fournisseur = $request->request->get('Fournisseur'); 
 
                 
-                 
+             
                 $file = $request->files->get('pvrd_file'); // Assurez-vous que 'pvrd_file' correspond au nom de votre champ de téléversement dans le formulaire.
-                
+               
                 if ($file instanceof UploadedFile) {
                     // Vérifiez l'extension du fichier (assurez-vous d'ajuster les extensions autorisées selon vos besoins).
-                    $allowedExtensions = ['jpg', 'png', 'doc', 'docx'];
+                    $allowedExtensions = ['jpg', 'png', 'doc', 'docx', 'pdf'];
                     $extensionOriginalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
                  
                     if (!in_array($extensionOriginalFilename, $allowedExtensions)) {
@@ -131,7 +132,6 @@ class PvrdController extends AbstractController
                         $this->addFlash('error', '<strong>Erreur de fichier téléverser</strong><br/> Le format accepté est le format <b>Image</b> au format <b>.jpg</b> ou <b>.png</b> .');
                         return $this->redirectToRoute('app_pvrd');
                     }
-                   
                    
                     // Générez un nom de fichier unique en utilisant le format souhaité.
                     // PVRD_DISTRICT_PERIODE_DATETELEVERSEMENT_NOM
