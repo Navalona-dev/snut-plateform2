@@ -116,6 +116,7 @@
                 <tbody>
                     {% for dataCreni in lstDataCreniRegion %} 
                         {% set valueDataCreniMoisProjetionAdmission = dataCreniMoisProjetionAdmission[dataCreni.id] %}
+                            {% if valueDataCreniMoisProjetionAdmission is not null %}
                         <tr>
                             <td class="fixeTd titleTblLeftrBoldBlue">{{ dataCreni.nomDistrict }} <br/>({{ dataCreni.nomUser }} {{ dataCreni.prenomUser }}) </td> 
                             <td class="textTblCenter">
@@ -350,6 +351,7 @@
                                 {{ dataCreni.sduSyringeFeeding50ml }}
                             </td>
                         </tr>
+                            {% endif %}
                     {% endfor %}
                 </tbody>
             </table>
