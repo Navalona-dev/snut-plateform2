@@ -31,6 +31,7 @@
         <td class="textTblCenterBoldPink">Total</td> 
     </tr>
     {% endif %}
+    {% if dataCreniMoisProjetionAdmission is not null %}
     <tr>
         <td class="textTblCenter">
             <input type="text" class="DataMoisAdmissionCreniPrecedent inputTblCenterWidth50" name="DataMois01AdmissionCreniPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois01AdmissionCreniPrecedent }} {% endif %}" required="required">
@@ -102,4 +103,5 @@
             <input type="text" id="ResultatDifferenceAdmissionProchainPrecedent" name="ResultatDifferenceAdmissionProchainPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreni.ResultatDifferenceAdmissionProchainPrecedent }} {% endif %}" class="inputTblCenterWidth50 readonly-field" readonly  required="required"/>
         </td>
     </tr>
+    {% endif %}
 </table>
