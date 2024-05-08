@@ -6,6 +6,7 @@
         <td class="titleTblCenterBoldGreen" colspan="7">Projections du nombre d'admissions <br/>pour le prochain semestre</td>
         <td class="titleTblCenterBoldGreen" rowspan="2">Résultat</td>
     </tr>
+    {% if dataMoisProjection is not null %}
     <tr>  
         <td class="textTblCenter">{{ dataMoisProjection.Mois01AdmissionCreniPrecedent }}</td>
         <td class="textTblCenter">{{ dataMoisProjection.Mois02AdmissionCreniPrecedent }}</td>
@@ -29,6 +30,7 @@
         <td class="textTblCenter">{{ dataMoisProjection.Mois06ProjectionAnneePrevisionnelle }}</td>
         <td class="textTblCenterBoldPink">Total</td> 
     </tr>
+    {% endif %}
     <tr>
         <td class="textTblCenter">
             <input type="text" class="DataMoisAdmissionCreniPrecedent inputTblCenterWidth50" name="DataMois01AdmissionCreniPrecedent"  value="{% if isUserHavingDataCreni is defined and isUserHavingDataCreni == true %} {{ dataCreniMoisProjetionAdmission.DataMois01AdmissionCreniPrecedent }} {% endif %}" required="required">
