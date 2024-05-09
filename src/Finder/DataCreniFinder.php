@@ -63,7 +63,7 @@ Class DataCreniFinder
         return $resultLstRegionCreni;
     }
 
-    public function findDataCreniByUserId($prmUserId)
+    public function findDataCreniByUserId($prmUserId, $currentCommande = null)
     { 
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder 
@@ -121,8 +121,9 @@ Class DataCreniFinder
             ->leftJoin('u.Region', 'r')
             ->leftJoin('u.District', 'd')
             ->leftJoin('u.Province', 'p')
-            ->andWhere('u.id = :userId') 
-            ->setParameter('userId', $prmUserId); 
+            ->andWhere('u.id = :userId and dc.commandeSemetrielle = :currentCommande') 
+            ->setParameter('userId', $prmUserId)
+            ->setParameter('currentCommande', $currentCommande);
         $result = $queryBuilder->getQuery()->getArrayResult(); 
         $resultDataGroup = null;
         if (is_array($result) && count($result) > 0) {

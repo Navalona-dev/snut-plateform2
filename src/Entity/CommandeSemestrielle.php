@@ -39,9 +39,13 @@ class CommandeSemestrielle
     #[ORM\JoinColumn(nullable: true, name: 'annee_previsionnelle_id')]
     private ?AnneePrevisionnelle $AnneePrevisionnelle = null;
 
+    #[ORM\OneToMany(mappedBy: 'commandeSemetrielle', targetEntity: DataCreni::class)]
+    private Collection $dataCrenis;
+
     public function __construct()
     {
         $this->creniMoisProjectionsAdmissions = new ArrayCollection();
+        $this->dataCrenis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -152,6 +156,36 @@ class CommandeSemestrielle
     public function setAnneePrevisionnelle(?AnneePrevisionnelle $AnneePrevisionnelle): static
     {
         $this->AnneePrevisionnelle = $AnneePrevisionnelle;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DataCreni>
+     */
+    public function getDataCrenis(): Collection
+    {
+        return $this->dataCrenis;
+    }
+
+    public function addDataCreni(DataCreni $dataCreni): static
+    {
+        if (!$this->dataCrenis->contains($dataCreni)) {
+            $this->dataCrenis->add($dataCreni);
+            $dataCreni->setCommandeSemetrielle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDataCreni(DataCreni $dataCreni): static
+    {
+        if ($this->dataCrenis->removeElement($dataCreni)) {
+            // set the owning side to null (unless already changed)
+            if ($dataCreni->getCommandeSemetrielle() === $this) {
+                $dataCreni->setCommandeSemetrielle(null);
+            }
+        }
 
         return $this;
     }

@@ -16,6 +16,7 @@ use App\Finder\DataValidationCreniFinder;
 use App\Finder\GroupeFinder;
 use App\Finder\RmaNutFinder;
 use App\Finder\UserFinder;
+use App\Repository\CommandeSemestrielleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -53,7 +54,7 @@ class CreniController extends AbstractController
     }
     
     #[Route('/creni', name: 'app_creni')]
-    public function index(Security $security): Response
+    public function index(Security $security, EntityManagerInterface $entityManager, CommandeSemestrielleRepository $commandeSemestrielleRepository): Response
     {
          // Vérifie si un utilisateur est connecté
          $user = $security->getUser(); 
@@ -80,13 +81,124 @@ class CreniController extends AbstractController
                 ]); 
             } else {
 
-                $dataCreni = $this->_dataCreniService->findDataCreniByUserId($userId); 
+                $dataCreni = $this->_dataCreniService->findDataCreniByUserId($userId, $dataCommandeSemestrielle['idCommandeSemestrielle']); 
+             
+               
                 $dataCreniMoisProjetionAdmission = null;
                 if (isset($dataCreni) && is_array($dataCreni) && count($dataCreni) > 0) {
                     $isUserHavingDataCreni = true;
-                    $dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($dataCreni["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                    $dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndCommande($dataCreni["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                } else {
+                    // creation data creni
+                    $dataCreniEnity = new DataCreni();
+                    $user = $this->getUser();
+                    $dataCreniEnity->setUser($user);
+                    if (null != $dataCommandeSemestrielle["idCommandeSemestrielle"]) {
+                        $commandeSemestrielle = $commandeSemestrielleRepository->find($dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                        $dataCreniEnity->setCommandeSemetrielle($commandeSemestrielle);
+                    }
+
+                    $dataCreniEnity->setTotalAdmissionCreniSemestrePrecedent(0);
+                    $dataCreniEnity->setTotalAdmissionCreniProjetePrecedent(0);
+                    $dataCreniEnity->setResultatDifferenceAdmissionPrecedent(0);
+                    $dataCreniEnity->setTotalAdmissionCreniProjeterProchain(0);
+                    $dataCreniEnity->setResultatDifferenceAdmissionProchainPrecedent(0);
+
+                    $dataCreniEnity->setF75Boites(0);
+                    $dataCreniEnity->setF100Boites(0);
+                    $dataCreniEnity->setReSoMalSachet(0);
+                    $dataCreniEnity->setPnSachet(0);
+                    $dataCreniEnity->setFicheSuiviCreni(0);
+                    $dataCreniEnity->setFicheSuiviIntensif(0);
+                    $dataCreniEnity->setKitMedicamentsCreni10Patients(0); 
+                    $dataCreniEnity->setRegistreCreni(0);
+                    $dataCreniEnity->setCarnetRapportMensuelCreni(0);
+
+                    $dataCreniEnity->setKitCreniAmoxici(0);
+                    $dataCreniEnity->setKitCreniNystatin(0);
+                    $dataCreniEnity->setKitCreniFluconazole(0);
+                    $dataCreniEnity->setKitCreniCiprofloxacin(0);
+                    $dataCreniEnity->setKitCreniAmpicillinpdr(0);
+                    $dataCreniEnity->setKitCreniGentamicininj(0);
+                    $dataCreniEnity->setKitCreniSod(0);
+                    $dataCreniEnity->setKitCreniGlucoseInj(0);
+                    $dataCreniEnity->setKitCreniGlucoseHypertonInj(0);
+                    $dataCreniEnity->setKitCreniFurosemideinj(0);
+                    $dataCreniEnity->setKitCreniChlorhexidine(0);
+                    $dataCreniEnity->setKitCreniMiconazole(0);
+                    $dataCreniEnity->setKitCreniTetracyclineeyeointment(0);
+                    $dataCreniEnity->setKitCreniTubeFeeding(0);
+                    $dataCreniEnity->setKitCreniTubeFeedingCH05(0);
+                    $dataCreniEnity->setKitCreniSyringeDisp2ml(0);
+                    $dataCreniEnity->setKitCreniSyringeDisp10ml(0);
+                    $dataCreniEnity->setKitCreniSyringeDisp20ml(0);
+                    $dataCreniEnity->setKitCreniSyringeDisp50ml(0);
+
+                    $dataCreniEnity->setSduF75Boites(0);
+                    $dataCreniEnity->setSduF100Boites(0);
+                    $dataCreniEnity->setSduReSoMal(0);
+                    $dataCreniEnity->setSduPnSachet(0);
+                    $dataCreniEnity->setSduFicheSuiviCreni(0);
+                    $dataCreniEnity->setSduFicheSuiviIntensif(0);
+                    $dataCreniEnity->setSduAmoxiciPdr(0);
+                    $dataCreniEnity->setSduNystatinOral(0);
+                    $dataCreniEnity->setSduFluconazole50mg(0);
+                    $dataCreniEnity->setSduAmpicillinpdrInj500mg(0);
+                    $dataCreniEnity->setSduGentamicininj40mg(0);
+                    $dataCreniEnity->setSduSodLactatInj500ml(0);
+                    $dataCreniEnity->setSduGlucoseInj500ml(0);
+                    $dataCreniEnity->setSduGlucoseHyperton50ml(0);
+                    $dataCreniEnity->setSduFurosemideinj10mg(0);
+                    $dataCreniEnity->setSduChlorhexidineConSol(0);
+                    $dataCreniEnity->setSduMiconazoleNitrate(0);
+                    $dataCreniEnity->setSduTetracyclineeyeointment(0);
+                    $dataCreniEnity->setSduTubeFeedingCH08(0);
+                    $dataCreniEnity->setSduTubeFeedingCH05(0);
+                    $dataCreniEnity->setSduSyringeDisp2ml(0);
+                    $dataCreniEnity->setSduSyringeDisp10ml(0);
+                    $dataCreniEnity->setSduSyringeDisp20ml(0);
+                    $dataCreniEnity->setSduSyringeFeeding50ml(0);
+                    $dataCreniEnity->setSduCiprofloxacin250mg(0); 
+
+                    $entityManager->persist($dataCreniEnity);
+                   // $entityManager->flush(); 
+
+                    $dataCreniMoisProjection = $this->_creniMoisProjectionAdmissionService->findDataMoisProjection($dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                   
+                    $CreniMoisProjectionAdmission = $entityManager->getRepository(CreniMoisProjectionsAdmissions::class)->find($dataCreniMoisProjection["idCreniMoisProjection"]); 
+
+                    $dataCreniMoisProcetionAdmission = new DataCreniMoisProjectionAdmission();
+                    $dataCreniMoisProcetionAdmission->setCreniMoisProjectionsAdmissions($CreniMoisProjectionAdmission);
+                    $dataCreniMoisProcetionAdmission->setDataCreni($dataCreniEnity);
+
+                    $dataCreniMoisProcetionAdmission->setDataMois01AdmissionCreniPrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois02AdmissionCreniPrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois03AdmissionCreniPrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois04AdmissionCreniPrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois05AdmissionCreniPrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois06AdmissionCreniPrecedent(0);
+        
+                    $dataCreniMoisProcetionAdmission->setDataMois01AdmissionProjeteAnneePrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois02AdmissionProjeteAnneePrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois03AdmissionProjeteAnneePrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois04AdmissionProjeteAnneePrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois05AdmissionProjeteAnneePrecedent(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois06AdmissionProjeteAnneePrecedent(0);
+        
+                    $dataCreniMoisProcetionAdmission->setDataMois01ProjectionAnneePrevisionnelle(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois02ProjectionAnneePrevisionnelle(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois03ProjectionAnneePrevisionnelle(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois04ProjectionAnneePrevisionnelle(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois05ProjectionAnneePrevisionnelle(0);
+                    $dataCreniMoisProcetionAdmission->setDataMois06ProjectionAnneePrevisionnelle(0);
+
+                    $entityManager->persist($dataCreniMoisProcetionAdmission);
+                    $entityManager->flush(); 
+                    $dataCreni = $dataCreniEnity;
+                    $dataCreniMoisProjetionAdmission = $dataCreniMoisProcetionAdmission;
+                    $isUserHavingDataCreni = true;
                 }
-                 
+                //dd($dataCreni, $dataCreniMoisProjetionAdmission);
                 return $this->render('creni/homeCreni.html.twig', [
                     "dataUser" => $dataUser,
                     "dataRMANut" => $dataRMANut,
@@ -104,9 +216,11 @@ class CreniController extends AbstractController
     }
 
     #[Route('/creni/save', name: 'app_creni_save', methods: ['GET', 'POST'])]
-    public function save(Request $request, EntityManagerInterface $entityManager): Response
+    public function save(Request $request, EntityManagerInterface $entityManager, CommandeSemestrielleRepository $commandeSemestrielleRepository): Response
     {
         if ($request->isMethod('POST')) {
+            $DataCommandeSemestrielleId = (int) $request->request->get('DataCommandeSemestrielleId'); 
+            $commandeSemestrielle = $commandeSemestrielleRepository->find($DataCommandeSemestrielleId);
             $totalAdmissionCreniSemestrePrecedent = (float) $request->request->get('totalAdmissionCreniSemestrePrecedent');
             $totalAdmissionCreniProjetePrecedent = (float) $request->request->get('totalAdmissionCreniProjetePrecedent');
             $ResultatDifferenceAdmissionPrecedent = (float) $request->request->get('ResultatDifferenceAdmissionPrecedent');
@@ -183,6 +297,10 @@ class CreniController extends AbstractController
                 $dataCreniEnity = new DataCreni();
                 $user = $this->getUser();
                 $dataCreniEnity->setUser($user);
+                if (null != $DataCommandeSemestrielleId) {
+                    $dataCreniEnity->setCommandeSemetrielle($commandeSemestrielle);
+                }
+                
             } 
 
             $dataCreniEnity->setTotalAdmissionCreniSemestrePrecedent($totalAdmissionCreniSemestrePrecedent);
@@ -274,13 +392,14 @@ class CreniController extends AbstractController
             $DataMois06ProjectionAnneePrevisionnelle = (float) $request->request->get('DataMois06ProjectionAnneePrevisionnelle');
 
 
-            $DataCommandeSemestrielleId = (int) $request->request->get('DataCommandeSemestrielleId'); 
+            
             $dataCreniMoisProjection = $this->_creniMoisProjectionAdmissionService->findDataMoisProjection($DataCommandeSemestrielleId);
             
             $CreniMoisProjectionAdmission = $entityManager->getRepository(CreniMoisProjectionsAdmissions::class)->find($dataCreniMoisProjection["idCreniMoisProjection"]); 
 
             if ($isUserHavingDataCreni == 1) {  
-                $valueDataCrenasMoisProcetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($DataCreniId, $DataCommandeSemestrielleId);
+                //$valueDataCrenasMoisProcetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($DataCreniId, $DataCommandeSemestrielleId);
+                $valueDataCrenasMoisProcetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndCommande($DataCreniId, $DataCommandeSemestrielleId);
                 $dataCreniMoisProcetionAdmission =  $entityManager->getRepository(DataCreniMoisProjectionAdmission::class)->find($valueDataCrenasMoisProcetionAdmission["id"]);
             } else {
                 $dataCreniMoisProcetionAdmission = new DataCreniMoisProjectionAdmission();
@@ -418,7 +537,7 @@ class CreniController extends AbstractController
             $districtsDataCreni = array();
             $dataCommandeSemestrielle = $this->_commandeSemestrielleService->findDataCommandeSemestrielle(); 
             $dataMoisProjection = $this->_creniMoisProjectionAdmissionService->findDataMoisProjection($dataCommandeSemestrielle["idCommandeSemestrielle"]);
-            
+           
             // Obtenir les informations concernant les données creni enregistrer 
             $lstDataCreniRegion = array();
             $arrDataCreniRegion = $this->_dataCreniService->findDataCreniByRegionId($regionId);
@@ -431,7 +550,9 @@ class CreniController extends AbstractController
             $dataCreniMoisProjetionAdmission = null;
             if (isset($lstDataCreniRegion) && is_array($lstDataCreniRegion) && count($lstDataCreniRegion) > 0) {
                 for ($i=0; $i < count($lstDataCreniRegion); $i++) { 
-                    $dataCreniMoisProjetionAdmission[$lstDataCreniRegion[$i]["id"]] = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($lstDataCreniRegion[$i]["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                    
+                    $dataCreniMoisProjetionAdmission[$lstDataCreniRegion[$i]["id"]] = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndCommande($lstDataCreniRegion[$i]["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                    //$dataCreniMoisProjetionAdmission[$lstDataCreniRegion[$i]["id"]] = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($lstDataCreniRegion[$i]["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
                 }
             }  
           
@@ -480,7 +601,8 @@ class CreniController extends AbstractController
             $dataCreniMoisProjetionAdmission = null;
             if (isset($lstDataCreniRegion) && is_array($lstDataCreniRegion) && count($lstDataCreniRegion) > 0) {
                 for ($i=0; $i < count($lstDataCreniRegion); $i++) { 
-                    $dataCreniMoisProjetionAdmission[$lstDataCreniRegion[$i]["id"]] = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($lstDataCreniRegion[$i]["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                    $dataCreniMoisProjetionAdmission[$lstDataCreniRegion[$i]["id"]] = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndCommande($lstDataCreniRegion[$i]["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                    //$dataCreniMoisProjetionAdmission[$lstDataCreniRegion[$i]["id"]] = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($lstDataCreniRegion[$i]["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
                 }
             }
 

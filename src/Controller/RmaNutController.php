@@ -338,7 +338,8 @@ class RmaNutController extends AbstractController
             $dataCreniMoisProjetionAdmission = null;
             if (isset($lstDataCreniRegion) && is_array($lstDataCreniRegion) && count($lstDataCreniRegion) > 0) {
                 for ($i = 0; $i < count($lstDataCreniRegion); $i++) {
-                    $dataCreniMoisProjetionAdmission[$lstDataCreniRegion[$i]["id"]] = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($lstDataCreniRegion[$i]["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                    $dataCreniMoisProjetionAdmission[$lstDataCreniRegion[$i]["id"]] = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndCommande($lstDataCreniRegion[$i]["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                    //$dataCreniMoisProjetionAdmission[$lstDataCreniRegion[$i]["id"]] = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($lstDataCreniRegion[$i]["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
                 }
             }
 
@@ -734,7 +735,8 @@ class RmaNutController extends AbstractController
             $arrDataCreniUser = $this->_dataCreniService->findDataCreniByUserId($responsableId);
             if (isset($arrDataCreniUser) && is_array($arrDataCreniUser) && count($arrDataCreniUser) > 0) {
                 $isUserHavingDataCreni = true;
-                $dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($arrDataCreniUser["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                $dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndCommande($arrDataCreniUser["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                //$dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($arrDataCreniUser["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
                 $dataValueValidatedMonthCreni = $this->_dataValidationCreniService->findDataValidationCreniByCreniId($arrDataCreniUser["id"]);
                 if (isset($dataValueValidatedMonthCreni) && is_array($dataValueValidatedMonthCreni) && count($dataValueValidatedMonthCreni) > 0) {
                     $isUserHavingDataValidationCreni = true;
@@ -958,7 +960,8 @@ class RmaNutController extends AbstractController
             $dataMoisProjection = $this->_creniMoisProjectionAdmissionService->findDataMoisProjection($dataCommandeSemestrielle["idCommandeSemestrielle"]);
             $arrDataCreniUser = $this->_dataCreniService->findDataCreniByUserId($responsableId);
             if (isset($arrDataCreniUser) && is_array($arrDataCreniUser) && count($arrDataCreniUser) > 0) {
-                $dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($arrDataCreniUser["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                $dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndCommande($arrDataCreniUser["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                //$dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($arrDataCreniUser["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
             } else {
                 $dataCreniMoisProjetionAdmission = [];
             }

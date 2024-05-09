@@ -200,6 +200,9 @@ class DataCreni
     #[ORM\OneToMany(mappedBy: 'DataCreni', targetEntity: DataValidationCreni::class)]
     private Collection $dataValidationCrenis;
 
+    #[ORM\ManyToOne(inversedBy: 'dataCrenis')]
+    private ?CommandeSemestrielle $commandeSemetrielle = null;
+
     public function __construct()
     {
         $this->dataCreniMoisProjectionAdmissions = new ArrayCollection();
@@ -975,6 +978,18 @@ class DataCreni
                 $dataValidationCreni->setDataCreni(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCommandeSemetrielle(): ?CommandeSemestrielle
+    {
+        return $this->commandeSemetrielle;
+    }
+
+    public function setCommandeSemetrielle(?CommandeSemestrielle $commandeSemetrielle): static
+    {
+        $this->commandeSemetrielle = $commandeSemetrielle;
 
         return $this;
     }
