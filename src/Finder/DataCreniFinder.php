@@ -14,7 +14,7 @@ Class DataCreniFinder
         $this->em = $em; 
     }
 
-    public function findAllRegionCreni($prmRegionId = "")
+    public function findAllRegionCreni($prmRegionId = "", $currentCommande = null)
     {
         $queryBuilder = $this->em->createQueryBuilder();
 
@@ -42,23 +42,24 @@ Class DataCreniFinder
         if (isset($resultLstRegionCreni) && is_array($resultLstRegionCreni) && count($resultLstRegionCreni) > 0) {
             for ($i=0; $i < count($resultLstRegionCreni); $i++) {
                 $regionId = $resultLstRegionCreni[$i]["regionId"];
-                $nombreCrenis = $this->getNombreCreniFromRegion($regionId);
+                $nombreCrenis = $this->getNombreCreniFromRegion($regionId, $currentCommande);
                 $resultLstRegionCreni[$i]["nombreDeCrenis"] = $nombreCrenis;
             }
         } 
         return $resultLstRegionCreni; 
     }
 
-    public function getNombreCreniFromRegion($prmRegionId)
+    public function getNombreCreniFromRegion($prmRegionId, $currentCommande = null)
     {
         $query = $this->em->createQuery("
             SELECT 
                 COUNT(dc.id) AS nombreCrenis 
             FROM App:DataCreni dc 
             INNER JOIN App:User u WITH u.id = dc.User 
-            WHERE u.Region = :prmRegionId
+            WHERE u.Region = :prmRegionId and dc.commandeSemetrielle = :currentCommande
         ") 
-        ->setParameter('prmRegionId', $prmRegionId);
+        ->setParameter('prmRegionId', $prmRegionId)
+        ->setParameter('currentCommande', $currentCommande);
         $resultLstRegionCreni = $query->getArrayResult()[0]["nombreCrenis"];
         return $resultLstRegionCreni;
     }
@@ -132,7 +133,7 @@ Class DataCreniFinder
         return $resultDataGroup;
     }
 
-    public function findDataCreniByRegionId($prmRegionId)
+    public function findDataCreniByRegionId($prmRegionId, $currentCommande = null)
     {
         $queryBuilder = $this->em->createQueryBuilder();
         $queryBuilder 
@@ -192,8 +193,9 @@ Class DataCreniFinder
             ->leftJoin('u.Region', 'r')
             ->leftJoin('u.District', 'd')
             ->leftJoin('u.Province', 'p')
-            ->andWhere('r.id = :prmRegionId')  
-            ->setParameter('prmRegionId', $prmRegionId);
+            ->andWhere('r.id = :prmRegionId and dc.commandeSemetrielle = :currentCommande')  
+            ->setParameter('prmRegionId', $prmRegionId)
+            ->setParameter('currentCommande', $currentCommande);
         $result = $queryBuilder->getQuery()->getArrayResult(); 
         $resultDataCreniRegion = null;
         if (is_array($result) && count($result) > 0) {

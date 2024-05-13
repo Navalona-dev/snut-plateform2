@@ -1283,10 +1283,11 @@ class AccueilController extends AbstractController
         if ($user) {
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
+            $dataCommandeSemestrielle = $this->_commandeSemestrielleService->findDataCommandeSemestrielle();
             if ($this->isGranted('ROLE_REGIONAL_SUPERVISOR')) {
-                $lstRegionCreni = $this->_dataCreniService->findAllRegionCreni($dataUser["idRegion"]);
+                $lstRegionCreni = $this->_dataCreniService->findAllRegionCreni($dataUser["idRegion"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
             } else {
-                $lstRegionCreni = $this->_dataCreniService->findAllRegionCreni();
+                $lstRegionCreni = $this->_dataCreniService->findAllRegionCreni("", $dataCommandeSemestrielle["idCommandeSemestrielle"]);
             }
 
             return $this->render('supervisor/supervisorCentralRegionCreni.html.twig', [
@@ -1320,10 +1321,10 @@ class AccueilController extends AbstractController
             $districtsDataCreni = array();
             $dataCommandeSemestrielle = $this->_commandeSemestrielleService->findDataCommandeSemestrielle();
             $dataMoisProjection = $this->_creniMoisProjectionAdmissionService->findDataMoisProjection($dataCommandeSemestrielle["idCommandeSemestrielle"]);
-
+          
             // Obtenir les informations concernant les données creni enregistrer 
             $lstDataCreniRegion = array();
-            $arrDataCreniRegion = $this->_dataCreniService->findDataCreniByRegionId($regionId);
+            $arrDataCreniRegion = $this->_dataCreniService->findDataCreniByRegionId($regionId, $dataCommandeSemestrielle["idCommandeSemestrielle"]);
             if ($arrDataCreniRegion != null && is_array($arrDataCreniRegion) && count($arrDataCreniRegion) > 0) {
                 foreach ($arrDataCreniRegion as $dataCreniRegion) {
                     $lstDataCreniRegion[] = $dataCreniRegion;
