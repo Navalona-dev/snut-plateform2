@@ -66,6 +66,26 @@ class CrenasController extends AbstractController
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
             $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+            // Groupe commande
+            $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+            $groupeCommande = null;
+            $nomGroupeCommande = null;
+            if (count($infoGroupeCommande) > 0) {
+                
+                foreach ($infoGroupeCommande as $key => $value) {
+                    if (in_array((string) $dataUser['idDistrict'], explode(',', $value['districts']))) {
+                        $groupeCommande = $value['idGroupe'];
+                        $nomGroupeCommande = $value['nomGroupe'];
+                        break;
+                    }
+                }
+            }
+            if (null != $groupeCommande) {
+                $dataGroupe['idGroupe'] = $groupeCommande;
+                $dataGroupe['nomGroupe'] = $nomGroupeCommande;
+            }
+            // Groupe commande
+            //dd($dataUser, $dataGroupe, $groupeCommande, $infoGroupeCommande);
             $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
                
             if ($dataRMANut == NULL) {
@@ -402,6 +422,25 @@ class CrenasController extends AbstractController
             $dataUser = $this->_userService->findDataUser($userId);
             $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
             $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+            // Groupe commande
+            $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($DataCommandeTrimestrielleId);
+            $groupeCommande = null;
+            $nomGroupeCommande = null;
+            if (count($infoGroupeCommande) > 0) {
+                
+                foreach ($infoGroupeCommande as $key => $value) {
+                    if (in_array((string) $dataUser['idDistrict'], explode(',', $value['districts']))) {
+                        $groupeCommande = $value['idGroupe'];
+                        $nomGroupeCommande = $value['nomGroupe'];
+                        break;
+                    }
+                }
+            }
+            if (null != $groupeCommande) {
+                $dataGroupe['idGroupe'] = $groupeCommande;
+                $dataGroupe['nomGroupe'] = $nomGroupeCommande;
+            }
+            // Groupe commande
             if ($dataGroupe['type'] != null && $dataGroupe['type'] != "" && $dataGroupe['type'] == "enclave") {
                 $allMoisPrevisionnelle = $this->_moisProjectionAdmissionService->findDataMoisPrevisionnelleProjection($dataGroupe['idGroupe']);
                 $tabMoisProjection = [];

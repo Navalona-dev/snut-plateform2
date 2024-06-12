@@ -248,6 +248,25 @@ class AccueilController extends AbstractController
                 $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
                 $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
                 $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+                // Groupe commande
+                $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+                $groupeCommande = null;
+                $nomGroupeCommande = null;
+                if (count($infoGroupeCommande) > 0) {
+                    
+                    foreach ($infoGroupeCommande as $key => $value) {
+                        if (in_array((string) $dataUser['idDistrict'], explode(',', $value['districts']))) {
+                            $groupeCommande = $value['idGroupe'];
+                            $nomGroupeCommande = $value['nomGroupe'];
+                            break;
+                        }
+                    }
+                }
+                if (null != $groupeCommande) {
+                    $dataGroupe['idGroupe'] = $groupeCommande;
+                    $dataGroupe['nomGroupe'] = $nomGroupeCommande;
+                }
+                // Groupe commande
                 $isUserHavingDataCreni = false;
                 $isUserHavingDataCrenas = false;
                 if (null != $dataGroupe) {

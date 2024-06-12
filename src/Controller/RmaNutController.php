@@ -99,9 +99,29 @@ class RmaNutController extends AbstractController
         if ($user) {
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
+            $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
             $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
-            $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
+            // Groupe commande
+            $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+            $groupeCommande = null;
+            $nomGroupeCommande = null;
+            if (count($infoGroupeCommande) > 0) {
+                
+                foreach ($infoGroupeCommande as $key => $value) {
+                    if (in_array((string) $dataUser['idDistrict'], explode(',', $value['districts']))) {
+                        $groupeCommande = $value['idGroupe'];
+                        $nomGroupeCommande = $value['nomGroupe'];
+                        break;
+                    }
+                }
+            }
+            if (null != $groupeCommande) {
+                $dataGroupe['idGroupe'] = $groupeCommande;
+                $dataGroupe['nomGroupe'] = $nomGroupeCommande;
+            }
+            // Groupe commande
+           
             $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
 
             return $this->render('rmanut/homeRmaNut.html.twig', [
@@ -536,6 +556,25 @@ class RmaNutController extends AbstractController
                 $idProvince = $dataRegion->getProvince()->getId();
                 $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $idProvince, $rmaNut["districtId"]);
                 $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
+                // Groupe commande
+                $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+                $groupeCommande = null;
+                $nomGroupeCommande = null;
+                if (count($infoGroupeCommande) > 0) {
+                    
+                    foreach ($infoGroupeCommande as $key => $value) {
+                        if (in_array((string) $dataUser['idDistrict'], explode(',', $value['districts']))) {
+                            $groupeCommande = $value['idGroupe'];
+                            $nomGroupeCommande = $value['nomGroupe'];
+                            break;
+                        }
+                    }
+                }
+                if (null != $groupeCommande) {
+                    $dataGroupe['idGroupe'] = $groupeCommande;
+                    $dataGroupe['nomGroupe'] = $nomGroupeCommande;
+                }
+                // Groupe commande
                 $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataGroupe["idGroupe"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
 
                 $lstMoisProjectionAnneePrevisionnelle = array();
@@ -853,7 +892,26 @@ class RmaNutController extends AbstractController
                 $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
                 $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
                 $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser["idDistrict"]);
-
+                // Groupe commande
+                $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+                $groupeCommande = null;
+                $nomGroupeCommande = null;
+                if (count($infoGroupeCommande) > 0) {
+                    
+                    foreach ($infoGroupeCommande as $key => $value) {
+                        if (in_array((string) $dataUser['idDistrict'], explode(',', $value['districts']))) {
+                            $groupeCommande = $value['idGroupe'];
+                            $nomGroupeCommande = $value['nomGroupe'];
+                            break;
+                        }
+                    }
+                }
+                if (null != $groupeCommande) {
+                    $dataGroupe['idGroupe'] = $groupeCommande;
+                    $dataGroupe['nomGroupe'] = $nomGroupeCommande;
+                }
+                // Groupe commande
+                
                 $valeurCalculTheoriqueATPE = null;
                 $valeurCalculTheoriqueAMOX = null;
                 $valeurCalculTheoriqueFichePatient = null;
