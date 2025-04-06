@@ -1,0 +1,90 @@
+<div class="card-body">
+<div class="table-responsive table-wrapper"> 
+    <table class="table table-bordered table-fixed-header" id="dataTableGroupeCrenas" width="100%" cellspacing="0">
+        <thead>
+            <tr> 
+                <th class="textTblCenterBoldPink">Groupe</th>
+                <th class="textTblCenterBoldPink">Provinces</th> 
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th class="textTblCenterBoldPink">Groupe</th>
+                <th class="textTblCenterBoldPink">Provinces</th>
+            </tr> 
+        </tfoot>
+        <tbody>
+            {% for key, groupe in lstGroupData %}
+                <tr>
+                    <td class="titleTblCenterBoldGreen">{{ key }}</td>
+                    <td>
+                        <ul class="no-decoration">
+                            {% for element in groupe %}
+                                {# <li><a href="{{ path('app_accueil_sp_crenas_in_groupe', {'groupId': element.idGroupe}) }}">{{ element.provinceNomFR }}</a></li> #}
+                                <li><a href="{{ path('app_accueil_sp_crenas_in_groupe', {'groupId': element.idGroupe}) }}">{{ element.provinces }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+<script>
+$(function() {
+    $('#dataTableRMANut, #dataTableGroupeCrenas, #dataTableCRENAS, #dataTableRegionCreni, #dataTableCreniRegion, #dataTableRMANutRegion, #tableDashboard, #dataTablePvrd, #dataTablePvrdRegion').DataTable({
+        fixedColumns: {
+            leftColumns: 3, // Fixer les trois premières colonnes
+        },
+        dom: 'Blfrtip',
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tout"]],
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: 'Export Excel',
+                exportOptions: {
+                    columns: ':visible' // Exporter toutes les colonnes visibles
+                },
+                customize: function(xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    $('tr', sheet).each(function(index, row) {
+                        // Modifiez les propriétés de la ligne ici si nécessaire
+                        // Cette boucle parcourt toutes les lignes du fichier Excel
+                    });
+                }
+            }
+        ],
+        initComplete: function() { 
+            $('.dataTables_length').after($('.dt-buttons')); // Placer le bouton excel après l'élément de longueur
+            $('.dataTables_filter').after($('.dt-buttons')); // Placer le bouton excel après l'élément de recherche
+        },
+        "language": {
+            "decimal": ",",
+            "thousands": ".",
+            "sEmptyTable": "Aucune donnée disponible dans le tableau",
+            "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+            "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrée",
+            "sInfoFiltered": "(filtré à partir de _MAX_ entrées au total)",
+            "sInfoPostFix": "",
+            "sInfoThousands": " ",
+            "sLengthMenu": "Afficher _MENU_ entrées",
+            "sLoadingRecords": "Chargement...",
+            "sProcessing": "Traitement...",
+            "sSearch": "Rechercher :",
+            "sZeroRecords": "Aucun enregistrement correspondant trouvé",
+            "oPaginate": {
+                "sFirst": "Premier",
+                "sLast": "Dernier",
+                "sNext": "Suivant",
+                "sPrevious": "Précédent"
+            },
+            "oAria": {
+                "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+            }
+        }
+    });
+});
+
+</script>  

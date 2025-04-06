@@ -54,13 +54,16 @@ class PvrdController extends AbstractController
             $dataProduit = $this->_produit->findAllProduct();
             $dataPeriode1 = $this->_commandeTrimestrielle->findDataCommandeTrimestrielle();
             $dataPeriode2 = $this->_commandeSemestrielle->findDataCommandeSemestrielle();
-            $dataPeriode = [$dataPeriode1, $dataPeriode2]; 
+           
+            //$dataPeriode = [$dataPeriode1, $dataPeriode2]; 
+            array_push($dataPeriode1,$dataPeriode2 );
+            //dd($dataPeriode1, $dataPeriode);
             //$dataPvrd = $this->_pvrd_service->findDataPvrdByUserCommandeTrimestrielle($userId, 1);
             return $this->render('pvrd/homePvrd.html.twig', [
                 'controller_name' => 'PvrdController',
                 "dataUser" => $dataUser,
                 "dataProduit" => $dataProduit,
-                "dataPeriode" => $dataPeriode,
+                "dataPeriode" => $dataPeriode1,
                 "dataPvrd" => null
             ]);
         } else {

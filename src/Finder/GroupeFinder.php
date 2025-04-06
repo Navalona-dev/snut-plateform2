@@ -33,6 +33,22 @@ Class GroupeFinder
         return $resultDataGroup;
     }
 
+    public function find($prmGroupeId)
+    {
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder 
+            ->select('g'
+                )
+            ->from('App:Groupe', 'g')
+            ->andWhere('g.id = :prmGroupeId') 
+            ->setParameter('prmGroupeId', $prmGroupeId); 
+        $resultDataGroup = $queryBuilder->getQuery()->getResult(); 
+        if (count($resultDataGroup) > 0) {
+            return $resultDataGroup[0];
+        }
+        return $resultDataGroup;
+    }
+
     public function findByRegionId($prmRegionId)
     {
         $query = $this->em->createQuery("

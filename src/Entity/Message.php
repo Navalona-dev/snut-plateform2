@@ -29,7 +29,7 @@ class Message
     #[ORM\Column(type: Types::DATE_MUTABLE, name: 'date')]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(length: 255, nullable: true, name: 'text_message')]
+    #[ORM\Column(type: "text", nullable: true, name: 'text_message')]
     private ?string $textMessage = null;
 
     #[ORM\Column(nullable: true, name: 'is_deleted_per_sender')]

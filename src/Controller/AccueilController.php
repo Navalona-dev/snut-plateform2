@@ -245,54 +245,84 @@ class AccueilController extends AbstractController
                 ]);
             } else {
                 $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
-                $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
                 $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
                 $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
-                // Groupe commande
-                $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
-                $groupeCommande = null;
-                $nomGroupeCommande = null;
-                if (count($infoGroupeCommande) > 0) {
-                    
-                    foreach ($infoGroupeCommande as $key => $value) {
-                        if (in_array((string) $dataUser['idDistrict'], explode(',', $value['districts']))) {
-                            $groupeCommande = $value['idGroupe'];
-                            $nomGroupeCommande = $value['nomGroupe'];
-                            break;
-                        }
-                    }
-                }
-                if (null != $groupeCommande) {
-                    $dataGroupe['idGroupe'] = $groupeCommande;
-                    $dataGroupe['nomGroupe'] = $nomGroupeCommande;
-                }
-                // Groupe commande
-                $isUserHavingDataCreni = false;
-                $isUserHavingDataCrenas = false;
-                if (null != $dataGroupe) {
-                    $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId, $dataGroupe['idGroupe']);
-                    $dataCreni = $this->_dataCreniService->findDataCreniByUserId($userId);
-                  
-                    if (isset($dataCrenas) && is_array($dataCrenas) && count($dataCrenas) > 0) {
-                        $isUserHavingDataCrenas = true;
-                    }
-                   
-                    if (isset($dataCreni) && is_array($dataCreni) && count($dataCreni) > 0) {
-                        $isUserHavingDataCreni = true;
-                    }
-                }
-              
+             
                 
-                $dataPvrd = $this->_pvrdService->findDataPvrdByUserCommandeTrimestrielle($userId, 1, null);
+                // Find one by mois projection pour recuperer l'id du commande trimetrielle correspondant au groupe
+                if (null != $dataGroupe) {
+                    $infoCommandeGroupe = $this->_moisProjectionAdmissionService->findCommandeByGroupe($dataGroupe['idGroupe']);
+                    $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($infoCommandeGroupe) {
+                        if (count($infoCommandeGroupe) > 0) {
+                            $idCommandeCurrent = $infoCommandeGroupe[0]['idCommandeTrimestrielle'];
+                        }
+                        return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $idCommandeCurrent;
+                    });
+                    if (count($infoCommandeGroupe) > 0) {
+                        $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+                    }
+                
+                        $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+                        
+                        $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+                        $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+                        // Groupe commande
+                        $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+                        $groupeCommande = null;
+                        $nomGroupeCommande = null;
+                        if (count($infoGroupeCommande) > 0) {
+                            
+                            foreach ($infoGroupeCommande as $key => $value) {
+                                if (in_array((string) $dataUser['idDistrict'], explode(',', $value['districts']))) {
+                                    $groupeCommande = $value['idGroupe'];
+                                    $nomGroupeCommande = $value['nomGroupe'];
+                                    break;
+                                }
+                            }
+                        }
+                        if (null != $groupeCommande) {
+                            $dataGroupe['idGroupe'] = $groupeCommande;
+                            $dataGroupe['nomGroupe'] = $nomGroupeCommande;
+                        }
+                        // Groupe commande
+                        $isUserHavingDataCreni = false;
+                        $isUserHavingDataCrenas = false;
+                        if (null != $dataGroupe) {
+                            $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId, $dataGroupe['idGroupe']);
+                            $dataCreni = $this->_dataCreniService->findDataCreniByUserId($userId);
+                        
+                            if (isset($dataCrenas) && is_array($dataCrenas) && count($dataCrenas) > 0) {
+                                $isUserHavingDataCrenas = true;
+                            }
+                        
+                            if (isset($dataCreni) && is_array($dataCreni) && count($dataCreni) > 0) {
+                                $isUserHavingDataCreni = true;
+                            }
+                        }
+                    
+                        
+                        $dataPvrd = $this->_pvrdService->findDataPvrdByUserCommandeTrimestrielle($userId, 1, null);
 
+                        return $this->render('home.html.twig', [
+                            'controller_name' => 'RmaNutController',
+                            "dataUser" => $dataUser,
+                            "dataPvrd" => $dataPvrd,
+                            "dataRMANut" => $dataRMANut,
+                            "isUserHavingDataCrenas" => $isUserHavingDataCrenas,
+                            "isUserHavingDataCreni" => $isUserHavingDataCreni
+                        ]);
+                }
+                $dataPvrd = $this->_pvrdService->findDataPvrdByUserCommandeTrimestrielle($userId, 1, null);
                 return $this->render('home.html.twig', [
                     'controller_name' => 'RmaNutController',
                     "dataUser" => $dataUser,
                     "dataPvrd" => $dataPvrd,
-                    "dataRMANut" => $dataRMANut,
-                    "isUserHavingDataCrenas" => $isUserHavingDataCrenas,
-                    "isUserHavingDataCreni" => $isUserHavingDataCreni
+                    "dataRMANut" => null,
+                    "isUserHavingDataCrenas" => false,
+                    "isUserHavingDataCreni" => false
                 ]);
+            
+               
             }
         } else {
             return $this->render('home.html.twig', [
@@ -338,9 +368,11 @@ class AccueilController extends AbstractController
                 $tauxRapportage = ($rapportsAttendus > 0) ? round(($rapportsParvenus / $rapportsAttendus) * 100, 2) : 0;
 
                 // Obtenez les dates de début et de fin de la commande trimestrielle
-                $commandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
-                $dateDebut = $commandeTrimestrielle['dateDebutCommande'];
-                $dateFin = $commandeTrimestrielle['dateFinCommande'];
+                //$commandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
+                $commandeTrimestrielle = $this->_commandeTrimestrielleService->findAllDataCommandeTrimestrielle();
+                //dd($commandeTrimestrielle);
+                $dateDebut = $commandeTrimestrielle[0]['dateDebutCommande'];
+                $dateFin = $commandeTrimestrielle[0]['dateFinCommande'];
 
                 // Obtenez les RmaNut téléversés entre les deux dates dans la commande trimestrielle
                 $rmaNutsTeleverses = $this->_rmaNutService->findRmaNutsBetweenDates($dateDebut, $dateFin);
@@ -364,7 +396,8 @@ class AccueilController extends AbstractController
                     "RapportAttendus" => $rapportsAttendus,
                     "RapportParvenus" => $rapportsParvenus,
                     "TauxRapportage" => $tauxRapportage,
-                    "TauxProptitude" => $tauxProptitude
+                    "TauxProptitude" => $tauxProptitude,
+                    "allCommandeTrimestrielle" => $commandeTrimestrielle
                 ]);
             } else {
                 return $this->render('home.html.twig', [
@@ -1147,10 +1180,12 @@ class AccueilController extends AbstractController
         if ($user) {
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
-            $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+            //$dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+            $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAllAnneePrevisionnelle();
+            //dd($dataAnneePrevisionnelle);
             //$lstGroupe = $this->_groupeService->findAllDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"]);
             //$lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser['idRegion']);
-            $lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle["IdAnneePrevisionnelle"]);
+            $lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle[0]["IdAnneePrevisionnelle"]);
            
             $lstGroupData = [];
             if (isset($lstGroupe) && is_array($lstGroupe) && count($lstGroupe) > 0) {
@@ -1161,8 +1196,46 @@ class AccueilController extends AbstractController
             return $this->render('supervisor/supervisorCentralGroupeCrenas.html.twig', [
                 "mnuActive" => "GroupeCrenas",
                 "dataUser" => $dataUser,
-                "lstGroupData" => $lstGroupData
+                "lstGroupData" => $lstGroupData,
+                "dataAnneePrevisionnelle" => $dataAnneePrevisionnelle
             ]);
+        } else {
+            return $this->render('home.html.twig', [
+                'controller_name' => 'AccueilController',
+            ]);
+        }
+    }
+
+    #[Route('/supervisor/groupe/ajax', name: 'app_accueil_sp_groupe_ajax')]
+    public function showGroupeCrenasForSupervisorAjax(Request $request)
+    {
+        $user = $this->getUser();
+        $anneeId = $request->request->get('annee');
+        if ($user) {
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+            //$dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+            //$dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAllAnneePrevisionnelle();
+            //dd($dataAnneePrevisionnelle);
+            //$lstGroupe = $this->_groupeService->findAllDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"]);
+            //$lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser['idRegion']);
+            $lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($anneeId);
+           
+            $lstGroupData = [];
+            if (isset($lstGroupe) && is_array($lstGroupe) && count($lstGroupe) > 0) {
+                for ($i = 0; $i < count($lstGroupe); $i++) {
+                    $lstGroupData[$lstGroupe[$i]["nomGroupe"]][] = $lstGroupe[$i];
+                }
+            }
+           
+          
+            $data["html"] = $this->renderView('supervisor/supervisorCentralGroupeCrenasAjax.html.twig', [
+                "mnuActive" => "GroupeCrenas",
+                "dataUser" => $dataUser,
+                "lstGroupData" => $lstGroupData,
+                //"dataAnneePrevisionnelle" => $dataAnneePrevisionnelle
+            ]);
+            return new JsonResponse($data);
         } else {
             return $this->render('home.html.twig', [
                 'controller_name' => 'AccueilController',
@@ -1216,11 +1289,29 @@ class AccueilController extends AbstractController
             //$arrDataCrenasGroupe =  $this->_dataCrenaService->findDataCrenasByGroupe($groupId);
             
            // dd($arrDataCrenasGroupe);
-            //dd($groupId, $dataUser, $arrDataCrenasGroupe);
+            //dd($groupId, $dataUser, $arrDataCrenasGroupe, $dataGroupe);
            
 
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
-            $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($groupId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+
+            // multiple commande
+            $infoCommandeGroupe = $this->_moisProjectionAdmissionService->findCommandeByGroupe($groupId);
+dd($dataCommandeTrimestrielle, $infoCommandeGroupe);
+            $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($infoCommandeGroupe) {
+                if (count($infoCommandeGroupe) > 0) {
+                    $idCommandeCurrent = $infoCommandeGroupe[0]['idCommandeTrimestrielle'];
+                }
+                return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $idCommandeCurrent;
+            });
+
+           
+            
+            if (count($infoCommandeGroupe) > 0 && count($filteredLines) > 0) {
+                $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+            }
+            
+            // End multiple commande
+            $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($groupId, $infoCommandeGroupe[0]['idCommandeTrimestrielle']);
 
             $lstMoisAdmissionCRENASAnneePrecedent = array();
             $lstMoisAdmissionProjeteAnneePrecedent = array();

@@ -66,9 +66,65 @@ class CrenasController extends AbstractController
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
             $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+            
+            if (null == $dataGroupe) {
+
+                $dataUser['isEligibleForCrenas'] = false;
+                $dataUser['isDistrictIsInGroup'] = false;
+                return $this->render('crenas/homeCrenas.html.twig', [
+                    "isUserHavingDataCrenas" => false,
+                    'controller_name' => 'CrenasController',
+                    "dataUser" => $dataUser,
+                    "dataRMANut" => [],
+                    "dataGroupe" => null,
+                    "dataMoisProjection" => [],
+                    "dataAnneePrevisionnelle" => $dataAnneePrevisionnelle,
+                    "dataCommandeTrimestrielle" => $dataCommandeTrimestrielle,
+                    "dataCrenas" => [],
+                    "lstMoisAdmissionCRENASAnneePrecedent" => [], 
+                    "lstMoisAdmissionProjeteAnneePrecedent" => [], 
+                    "lstMoisProjectionAnneePrevisionnelle" => [],
+                    "lstValueMoisAdmissionCRENASAnneePrecedent" => [], 
+                    "lstValueMoisAdmissionProjeteAnneePrecedent" => [], 
+                    "lstValueMoisProjectionAnneePrevisionnelle" => [],
+                    "valeurCalculTheoriqueATPE" => [], 
+                    "valeurCalculTheoriqueAMOX" => [], 
+                    "valeurCalculTheoriqueFichePatient" => [], 
+                    "valeurCalculTheoriqueRegistre" => [], 
+                    "valeurCalculTheoriqueCarnetRapport" => []
+                ]);
+            }
+            // Find one by mois projection pour recuperer l'id du commande trimetrielle correspondant au groupe
+            $infoCommandeGroupe = $this->_moisProjectionAdmissionService->findCommandeByGroupe($dataGroupe['idGroupe']);
+          
+            /*$idCommandeCurrent = $dataCommandeTrimestrielle['idCommandeTrimestrielle'];
+
+            if (count($infoCommandeGroupe) > 0) {
+                $idCommandeCurrent = $infoCommandeGroupe[0]['idCommandeTrimestrielle'];
+                $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($infoCommandeGroupe[0]['idCommandeTrimestrielle']);
+            } else {
+                $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+            }*/
+            
+
+             // Find one by mois projection pour recuperer l'id du commande trimetrielle correspondant au groupe
+             //$infoCommandeGroupe = $this->_moisProjectionAdmissionService->findCommandeByGroupe($dataGroupe['idGroupe']);
+             $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($infoCommandeGroupe) {
+                 if (count($infoCommandeGroupe) > 0) {
+                     $idCommandeCurrent = $infoCommandeGroupe[0]['idCommandeTrimestrielle'];
+                 }
+                 return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $idCommandeCurrent;
+             });
+            // dd($infoCommandeGroupe, $dataGroupe);
+             if (count($infoCommandeGroupe) > 0) {
+                 $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+             }
+
+            
             // Groupe commande
-            $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
-            $groupeCommande = null;
+            //$infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+            //dd($infoGroupeCommande, $dataCommandeTrimestrielle, $dataGroupe, $infoCommandeGroupe);
+            /*$groupeCommande = null;
             $nomGroupeCommande = null;
             if (count($infoGroupeCommande) > 0) {
                 
@@ -79,13 +135,13 @@ class CrenasController extends AbstractController
                         break;
                     }
                 }
-            }
-            if (null != $groupeCommande) {
-                $dataGroupe['idGroupe'] = $groupeCommande;
-                $dataGroupe['nomGroupe'] = $nomGroupeCommande;
+            }*/
+            if (null != $dataCommandeTrimestrielle) {
+                $dataGroupe['idCommande'] = $dataCommandeTrimestrielle['idCommandeTrimestrielle'];
+                $dataGroupe['nomCommande'] = $dataCommandeTrimestrielle['nomCommande'];
             }
             // Groupe commande
-            //dd($dataUser, $dataGroupe, $groupeCommande, $infoGroupeCommande);
+           
             $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
                
             if ($dataRMANut == NULL) {
@@ -98,8 +154,8 @@ class CrenasController extends AbstractController
                 if ($dataGroupe != null) {
                     $dataCrenas = $this->_dataCrenaService->findDataCrenasByUserId($userId, $dataGroupe['idGroupe']);    
                     $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataGroupe["idGroupe"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
-                    $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
-
+                    //$dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
+                    //dd($dataMoisProjection, $dataGroupe);
                     $lstMoisAdmissionCRENASAnneePrecedent = array();
                     $lstMoisAdmissionProjeteAnneePrecedent = array();
                     $lstMoisProjectionAnneePrevisionnelle = array();
@@ -153,7 +209,7 @@ class CrenasController extends AbstractController
                     
                         
                     } 
-                
+                  
                     $valeurCalculTheoriqueATPE = null;
                     $valeurCalculTheoriqueAMOX = null;
                     $valeurCalculTheoriqueFichePatient = null;
@@ -174,8 +230,7 @@ class CrenasController extends AbstractController
                             $valeurCalculTheoriqueCarnetRapport = $dataAnneePrevisionnelle["ValeurCalculTheoriqueCarnetRapport02"];
                         }
                     } 
-
-                
+                    
                     //dump("valeurCalculTheoriqueATPE = " . $valeurCalculTheoriqueATPE . " | valeurCalculTheoriqueAMOX = " . $valeurCalculTheoriqueAMOX . " | valeurCalculTheoriqueFichePatient = " . $valeurCalculTheoriqueFichePatient . " | valeurCalculTheoriqueRegistre = " . $valeurCalculTheoriqueRegistre . " | valeurCalculTheoriqueCarnetRapport = " . $valeurCalculTheoriqueCarnetRapport); dd();
 
                 //dd($lstValueMoisProjectionAnneePrevisionnelle,$dataMoisProjection, $dataGroupe, $lstMoisAdmissionCRENASAnneePrecedent, $dataCrenas);

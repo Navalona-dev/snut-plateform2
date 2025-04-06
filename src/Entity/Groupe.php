@@ -41,6 +41,9 @@ class Groupe
     #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: DataCrenas::class)]
     private Collection $dataCrenas;
 
+    #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: RmaNut::class)]
+    private Collection $rmaNuts;
+
     public function __construct()
     {
         $this->Provinces = new ArrayCollection();
@@ -48,6 +51,7 @@ class Groupe
         $this->districts = new ArrayCollection();
         $this->moisPrevisionnelleEnclaves = new ArrayCollection();
         $this->dataCrenas = new ArrayCollection();
+        $this->rmaNuts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -228,6 +232,36 @@ class Groupe
             // set the owning side to null (unless already changed)
             if ($dataCrena->getGroupe() === $this) {
                 $dataCrena->setGroupe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RmaNut>
+     */
+    public function getRmaNuts(): Collection
+    {
+        return $this->rmaNuts;
+    }
+
+    public function addRmaNut(RmaNut $rmaNut): static
+    {
+        if (!$this->rmaNuts->contains($rmaNut)) {
+            $this->rmaNuts->add($rmaNut);
+            $rmaNut->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRmaNut(RmaNut $rmaNut): static
+    {
+        if ($this->rmaNuts->removeElement($rmaNut)) {
+            // set the owning side to null (unless already changed)
+            if ($rmaNut->getGroupe() === $this) {
+                $rmaNut->setGroupe(null);
             }
         }
 

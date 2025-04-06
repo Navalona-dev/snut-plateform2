@@ -40,6 +40,9 @@ class RmaNut
     #[ORM\JoinColumn(nullable: true, name: 'region_id')]
     private ?Region $Region = null;
 
+    #[ORM\ManyToOne(inversedBy: 'rmaNuts')]
+    private ?Groupe $groupe = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -125,6 +128,18 @@ class RmaNut
     public function setRegion(?Region $Region): static
     {
         $this->Region = $Region;
+
+        return $this;
+    }
+
+    public function getGroupe(): ?Groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?Groupe $groupe): static
+    {
+        $this->groupe = $groupe;
 
         return $this;
     }

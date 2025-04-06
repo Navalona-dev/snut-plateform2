@@ -27,6 +27,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use App\Finder\AnneePrevisionelleFinder;
+use App\Finder\MoisProjectionAdmissionFinder;
 
 class CreniController extends AbstractController
 {
@@ -39,8 +41,11 @@ class CreniController extends AbstractController
     private $_dataCreniService;
     private $_dataCreniMoisProjectionAdmissionService;
     private $_dataValidationCreniService;
+    private $_groupeService;
+    private $_anneePrevisionnelleService;
+    private $_moisProjectionAdmissionService;
 
-    public function __construct(UserFinder $user_service_container, RmaNutFinder $rma_nut, GroupeFinder $groupe_container, CommandeTrimestrielleFinder $commande_trimestrielle_container, CommandeSemestrielleFinder $commande_semestrielle_container, CreniMoisProjectionAdmissionFinder $creni_mois_projection_admission_container, DataCreniFinder $data_creni_container,DataValidationCreniFinder $data_validation_creni_container, DataCreniMoisProjectionAdmissionFinder $data_creni_mois_projection_admission_container)
+    public function __construct(UserFinder $user_service_container, RmaNutFinder $rma_nut, GroupeFinder $groupe_container, CommandeTrimestrielleFinder $commande_trimestrielle_container, CommandeSemestrielleFinder $commande_semestrielle_container, CreniMoisProjectionAdmissionFinder $creni_mois_projection_admission_container, DataCreniFinder $data_creni_container,DataValidationCreniFinder $data_validation_creni_container, DataCreniMoisProjectionAdmissionFinder $data_creni_mois_projection_admission_container, AnneePrevisionelleFinder $annee_previonnelle_container, MoisProjectionAdmissionFinder $mois_projection_admission_container)
     {
         $this->_userService = $user_service_container;   
         $this->_rmaNutService = $rma_nut;
@@ -51,6 +56,8 @@ class CreniController extends AbstractController
         $this->_dataCreniService = $data_creni_container;
         $this->_dataCreniMoisProjectionAdmissionService = $data_creni_mois_projection_admission_container;
         $this->_dataValidationCreniService = $data_validation_creni_container;
+        $this->_anneePrevisionnelleService = $annee_previonnelle_container;
+        $this->_moisProjectionAdmissionService = $mois_projection_admission_container;
     }
     
     #[Route('/creni', name: 'app_creni')]
@@ -65,9 +72,40 @@ class CreniController extends AbstractController
 
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataCommandeSemestrielle = $this->_commandeSemestrielleService->findDataCommandeSemestrielle(); 
+            
+            $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+         
+            ///
+            $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+            if (null == $dataGroupe) {
+                $dataUser['isDistrictIsInGroup'] = false;
+                return $this->render('creni/homeCreni.html.twig', [
+                    "dataUser" => $dataUser,
+                    "dataRMANut" => [],
+                    "dataMoisProjection" => null,
+                    "isUserHavingDataCreni" => false, 
+                    "dataCommandeSemestrielle" => $dataCommandeSemestrielle
+                ]); 
+                
+            }
+
+            $infoCommandeGroupe = $this->_moisProjectionAdmissionService->findCommandeByGroupe($dataGroupe['idGroupe']);
+
+            $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($infoCommandeGroupe) {
+                if (count($infoCommandeGroupe) > 0) {
+                    $idCommandeCurrent = $infoCommandeGroupe[0]['idCommandeTrimestrielle'];
+                }
+                return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $idCommandeCurrent;
+            });
+            if (count($infoCommandeGroupe) > 0) {
+                $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+            }
+           
             $dataMoisProjection = $this->_creniMoisProjectionAdmissionService->findDataMoisProjection($dataCommandeSemestrielle["idCommandeSemestrielle"]);
             $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
             
+            ////
+
             // Verifier si l'utilisateur a déjà renseigner son donnée CRENAS
             $isUserHavingDataCreni = false;
 

@@ -5,7 +5,18 @@
 
 {% block body %}
 	<div class="container">
-		<div class="row">
+		{% if notIsInGroupe is defined and notIsInGroupe == true %}
+			<div class="row mt-4">
+			 <div class="card text-white bg-warning mb-3" style="max-width: 40rem;">
+                <div class="card-header">Avertissement</div>
+                <div class="card-body">
+                    <h4 class="card-title">District doit appartient à une groupe</h4>
+                    <p class="card-text">Merci de contacter votre l'administrateur du plateforme.</p>
+                </div>
+            </div>
+			 </div>
+		{% else %}
+				<div class="row">
 			<h2>Téléversement RMA Nut</h2>
 			<div class="row">
 				<div class="alert alert-dismissible alert-primary">
@@ -107,6 +118,7 @@
 				</div>
 			</div>
 		</div>
+		{% endif %}
 		{% if (dataRMANut is not null ) %}
 		<!-- Modal pour la mise à jour du fichier -->
 		<div class="modal fade" id="updateFileModal" tabindex="-1" aria-labelledby="updateFileModalLabel" aria-hidden="true">
@@ -123,6 +135,7 @@
 							<label class="d-block mb-4">
 								<input required name="rmanut_file" id="fileInput" type="file" class="form-control"/>
 								<input type="hidden" name="hidNameFile" value="{{dataRMANut.newFileName}}">
+								<input type="hidden" name="idGroupe" value="{{dataGroupe.idGroupe}}">
 							</label>
 							<div class="mb-3">
 								<button type="submit" id="submitButton" class="btn btn-primary px-3 rounded-3" disabled>

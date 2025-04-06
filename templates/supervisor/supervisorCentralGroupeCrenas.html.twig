@@ -14,8 +14,19 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Liste des groupes</h6>
+            <label for="selectCentral">Selective CGIS NUT</label>
+            <select name="selectCentral" id="selectCentral" class="form-control" onChange = "return getAllGroupeByYear(this.value)">
+                <option value="">Veuillez sélectionner.</option>
+                {% for annee in dataAnneePrevisionnelle %}
+                        <option value="{{ annee.IdAnneePrevisionnelle }}">
+                            {{ annee.Annee }}
+                        </option>
+                 
+                {% endfor %}
+            </select>
         </div>
-        <div class="card-body">
+        <div id="groupeByYear">
+            <div class="card-body">
             <div class="table-responsive table-wrapper"> 
                 <table class="table table-bordered table-fixed-header" id="dataTableGroupeCrenas" width="100%" cellspacing="0">
                     <thead>
@@ -48,8 +59,26 @@
                 </table>
             </div>
         </div>
+        </div>
+        
     </div> 
 
 </div>
-
+<script>
+function getAllGroupeByYear(annee = null) {
+            $.ajax({
+                url: '/supervisor/groupe/ajax',
+                type: 'POST',
+                data: {annee: annee},
+                success: function (response) {
+                    $("#groupeByYear").empty();
+                    $("#groupeByYear").append(response.html);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // Gérer l'erreur (par exemple, afficher un message d'erreur)
+                    alert('Erreur lors de l\'ajout de la produit catégorie.');
+                }
+            });
+    }
+</script>
 {% endblock %}

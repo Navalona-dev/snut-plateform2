@@ -27,9 +27,32 @@ Class CommandeTrimestrielleFinder
              INNER JOIN App:AnneePrevisionnelle a WITH c.AnneePrevisionnelle = a.id
              WHERE c.isActive = 1
              ORDER BY c.id DESC
-        ')
-        ->setMaxResults(1);
-        $resultDataCommandeTrimestrielle = $query->getOneOrNullResult(); 
+        ');
+        //->setMaxResults(1);
+       // $resultDataCommandeTrimestrielle = $query->getOneOrNullResult(); 
+       $resultDataCommandeTrimestrielle = $query->getResult(); 
+        return $resultDataCommandeTrimestrielle;
+    }
+
+
+    public function findAllDataCommandeTrimestrielle()
+    {  
+        $query = $this->em->createQuery(
+            'SELECT c.id AS idCommandeTrimestrielle, 
+                    c.isActive AS isActive,
+                    c.Nom AS nomCommande, 
+                    c.DateDebut AS dateDebutCommande,
+                    c.DateFin AS dateFinCommande,
+                    c.Slug AS Slug,
+                    a.id AS idAnneePrevisionnelle,
+                    a.Annee AS AnneePrevisionnelle
+             FROM App:CommandeTrimestrielle c
+             INNER JOIN App:AnneePrevisionnelle a WITH c.AnneePrevisionnelle = a.id
+             ORDER BY c.id DESC
+        ');
+        //->setMaxResults(1);
+       // $resultDataCommandeTrimestrielle = $query->getOneOrNullResult(); 
+       $resultDataCommandeTrimestrielle = $query->getResult(); 
         return $resultDataCommandeTrimestrielle;
     }
 }

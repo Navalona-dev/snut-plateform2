@@ -14,13 +14,57 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\EmailService;
+use Symfony\Component\Mailer\Messenger\SendEmailMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Mime\Email;
 
 #[Route('/admin/groupe')]
 class AdminGroupeController extends AbstractController
 {
-    #[Route('/', name: 'app_admin_groupe_index')]
-    public function index()
+    private MessageBusInterface $customBus;
+
+    public function __construct(MessageBusInterface $customBus)
     {
+        $this->customBus = $customBus;
+    }
+
+    #[Route('/', name: 'app_admin_groupe_index')]
+    public function index(EmailService $mail)
+    {
+          $data['token'] = "XXXXXXX";
+       // $mail->sendEmail(["nnavalona@gmail.com"], "Bienvenue", "Salut");
+       // dd("ici");
+        /*$title = "test";
+        $context = compact('title');
+        $htmlContent = $this->renderView('reset_password/email_test.html.twig', [
+        ]);
+        $attachments = [
+            "/home/navalona/log.png"
+        ];
+        $cc = "nnavalona@gmail.com";
+        $mail->send(
+            'nnavalona@gmail.com',
+            'ssahondraa@gmail.com',
+            $cc,
+            $title,
+            $htmlContent,
+            $context,
+            $attachments
+
+        );*/
+        //$data['token'] = "XXXXXXX";
+        //$mail->sendEmail(["test.plateformsnut+1@gmail.com"], "Bienvenue", "Salut");
+        //dd("ici");
+        /*$email = (new Email())
+    ->from('nnavalona@gmail.com')
+    ->to('ssahondraa@gmail.com')
+    ->subject('Test Asynchrone')
+    ->text('Test de l’envoi via Messenger.');
+
+$this->customBus->dispatch(new SendEmailMessage($email));*/
+
+        //dd("ici");
         return $this->render('admin/groupe/index.html.twig', [
         'controller_name' => 'AdminUserController',
         ]);

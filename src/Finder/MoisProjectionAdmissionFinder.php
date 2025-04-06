@@ -12,6 +12,27 @@ Class MoisProjectionAdmissionFinder
         $this->em = $em; 
     } 
 
+    public function findCommandeByGroupe($currentGroup = null)
+    { 
+        $queryBuilder = $this->em->createQueryBuilder();
+        $queryBuilder 
+            ->select('m.id AS idMoisProjection, 
+                g.id AS idGroupe,
+                g.Nom AS nomGroupe,
+                c.id AS idCommandeTrimestrielle,
+                GROUP_CONCAT(d.id) as districts
+                ')
+            ->from('App:MoisProjectionsAdmissions', 'm')
+            ->join('m.Groupe', 'g')
+            ->join('g.districts', 'd')
+            ->join('m.CommandeTrimestrielle', 'c')
+            ->where('g.id = :currentGroup') 
+            ->setParameter('currentGroup', $currentGroup)
+            ->groupBy('g.id');
+        $resultDataMoisProjection = $queryBuilder->getQuery()->getArrayResult(); 
+        return $resultDataMoisProjection;
+    }
+
     public function findGroupeByCommande($prmCommandeTrimestrielleId = null)
     { 
         $queryBuilder = $this->em->createQueryBuilder();

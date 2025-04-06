@@ -102,8 +102,20 @@ class RmaNutController extends AbstractController
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
             $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
             $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser['idDistrict']);
+          
             // Groupe commande
-            $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+            if (null == $dataGroupe) {
+                return $this->render('rmanut/homeRmaNut.html.twig', [
+                    'controller_name' => 'RmaNutController',
+                    "dataUser" => $dataUser,
+                    "dataGroupe" => null,
+                    "dataRMANut" => null,
+                    'notIsInGroupe' => true
+                ]);
+                
+            }
+            
+            /*$infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
             $groupeCommande = null;
             $nomGroupeCommande = null;
             if (count($infoGroupeCommande) > 0) {
@@ -115,20 +127,40 @@ class RmaNutController extends AbstractController
                         break;
                     }
                 }
-            }
-            if (null != $groupeCommande) {
-                $dataGroupe['idGroupe'] = $groupeCommande;
-                $dataGroupe['nomGroupe'] = $nomGroupeCommande;
-            }
+            }*/
+           
             // Groupe commande
            
-            $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+            $infoCommandeGroupe = $this->_moisProjectionAdmissionService->findCommandeByGroupe($dataGroupe['idGroupe']);
 
+            $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($infoCommandeGroupe) {
+                if (count($infoCommandeGroupe) > 0) {
+                    $idCommandeCurrent = $infoCommandeGroupe[0]['idCommandeTrimestrielle'];
+                }
+                return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $idCommandeCurrent;
+            });
+            if (count($infoCommandeGroupe) > 0) {
+                $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+            }
+
+            
+
+            $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+            
             return $this->render('rmanut/homeRmaNut.html.twig', [
                 'controller_name' => 'RmaNutController',
                 "dataUser" => $dataUser,
                 "dataGroupe" => $dataGroupe,
                 "dataRMANut" => $dataRMANut
+            ]);
+
+            $dataRMANut = $this->_rmaNutService->findDataRmaNutByUserCommandeTrimestrielle($userId, $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+
+            return $this->render('rmanut/homeRmaNut.html.twig', [
+                'controller_name' => 'RmaNutController',
+                "dataUser" => $dataUser,
+                "dataGroupe" => null,
+                "dataRMANut" => []
             ]);
         } else {
             return $this->redirectToRoute('app_login');
@@ -147,6 +179,9 @@ class RmaNutController extends AbstractController
 
             // Récupérez le fichier téléversé depuis la requête.
             $file = $request->files->get('rmanut_file'); // Assurez-vous que 'rmanut_file' correspond au nom de votre champ de téléversement dans le formulaire.
+            $idGroupe = $request->request->get('idGroupe');
+            $groupe = $this->_groupeService->find($idGroupe);
+          
             if ($file instanceof UploadedFile) {
                 // Vérifiez l'extension du fichier (assurez-vous d'ajuster les extensions autorisées selon vos besoins).
                 $allowedExtensions = ['xlsx', 'xls'];
@@ -189,7 +224,7 @@ class RmaNutController extends AbstractController
                 $rmaNut->setNewFileName($newFilename);
                 $rmaNut->setDistrict($District);
                 $rmaNut->setRegion($Region);
-
+                $rmaNut->setGroupe($groupe);
                 // Persist data to the database using Doctrine
                 $entityManager->persist($rmaNut);
                 $entityManager->flush();
@@ -209,13 +244,16 @@ class RmaNutController extends AbstractController
 
         // Récupérez l'utilisateur actuellement connecté (vous pouvez utiliser le système de sécurité de Symfony pour cela).
         $user = $this->getUser(); // Supposons que cela retourne l'utilisateur actuellement connecté.
-
+        
         if ($user) {
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             // Récupérez le fichier téléversé depuis la requête.
             $file = $request->files->get('rmanut_file');
             $oldName = $request->files->get('hidNameFile');
+            $idGroupe = $request->request->get('idGroupe');
+            $groupe = $this->_groupeService->find($idGroupe);
+         
             if ($file instanceof UploadedFile) {
                 // Vérifiez l'extension du fichier (assurez-vous d'ajuster les extensions autorisées selon vos besoins).
                 $allowedExtensions = ['xlsx', 'xls'];
@@ -273,6 +311,7 @@ class RmaNutController extends AbstractController
                     $rmaNut->setOriginalFileName($file->getClientOriginalName());
                     $rmaNut->setNewFileName($newFilename);
                     $rmaNut->setUploadedBy($user);
+                    $rmaNut->setGroupe($groupe);
                     // Enregistrez les modifications dans la base de données.
                     $entityManager->flush();
                     // Ajoutez un message flash pour indiquer le succès de la mise à jour.
@@ -730,10 +769,34 @@ class RmaNutController extends AbstractController
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             //$dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserId($responsableId);
-            $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutId($responsableId, $rmanutId);
-           
+            $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutIdWithCommande($responsableId, $rmanutId);
+           //dd($dataDistrict);
+
+           if (count($dataDistrict) == 0) {
+            return $this->render('error/custom_error.html.twig', [
+                "mnuActive" => "RMANut",
+                'errorTitle' => "Erreur, fichier non trouvé",
+                'errorMessage' => 'Le fichier Excel : <strong>non trouvé </strong> n\'a pas été trouvé ou <strong> district n\'appartient pas dans une groupe</strong> .',
+                "exception" => "File Not Found"
+            ]);
+           }
             /* ---------------------------- DATA CRENAS ---------------------------- */
-            $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
+            //$dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
+            $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findAllDataCommandeTrimestrielle();
+            
+            // multiple commande
+          
+            //dd($dataDistrict);
+            $idCommande = $dataDistrict["idCommande"];
+            $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($idCommande) {
+                return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $idCommande;
+            });
+            //dd($dataDistrict);
+            if (null != $filteredLines && count($filteredLines) > 0) {
+                $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+            }
+          // dd( $dataCommandeTrimestrielle, $dataDistrict, $filteredLines);
+            // End multiple commande
             $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataDistrict["groupeId"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
             $lstMoisProjectionAnneePrevisionnelle = array();
             if (isset($dataMoisProjection) && count($dataMoisProjection) > 0) {
@@ -888,30 +951,33 @@ class RmaNutController extends AbstractController
                 }
 
                 $reader->close();
- 
+             
                 $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
                 $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
-                $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser["idDistrict"]);
-                // Groupe commande
-                $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
-                $groupeCommande = null;
-                $nomGroupeCommande = null;
-                if (count($infoGroupeCommande) > 0) {
-                    
-                    foreach ($infoGroupeCommande as $key => $value) {
-                        if (in_array((string) $dataUser['idDistrict'], explode(',', $value['districts']))) {
-                            $groupeCommande = $value['idGroupe'];
-                            $nomGroupeCommande = $value['nomGroupe'];
-                            break;
-                        }
-                    }
+                $dataGroupe = [];
+                if (null == $dataUser["provinceId"] && $dataUser["idDistrict"] == null) {
+                } else {
+                    $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser["idDistrict"]);
                 }
-                if (null != $groupeCommande) {
-                    $dataGroupe['idGroupe'] = $groupeCommande;
-                    $dataGroupe['nomGroupe'] = $nomGroupeCommande;
-                }
-                // Groupe commande
+
                 
+                // Groupe commande
+               // $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+             
+                $dataGroupe['idGroupe'] = $dataDistrict['groupeId'];
+                $dataGroupe['nomGroupe'] = $dataDistrict['groupeNom'];
+                
+                $idCommandeCurrent = $dataDistrict['idCommande'];
+                $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($idCommandeCurrent) {
+                    return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $idCommandeCurrent;
+                });
+               // dd($infoCommandeGroupe, $dataGroupe);
+                if (null != $filteredLines && count($filteredLines) > 0) {
+                    $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+                }
+
+                // Groupe commande
+                //dd($dataCommandeTrimestrielle, $dataDistrict, $dataGroupe);
                 $valeurCalculTheoriqueATPE = null;
                 $valeurCalculTheoriqueAMOX = null;
                 $valeurCalculTheoriqueFichePatient = null;
