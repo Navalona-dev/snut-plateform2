@@ -1296,7 +1296,7 @@ class AccueilController extends AbstractController
 
             // multiple commande
             $infoCommandeGroupe = $this->_moisProjectionAdmissionService->findCommandeByGroupe($groupId);
-dd($dataCommandeTrimestrielle, $infoCommandeGroupe);
+//dd($dataCommandeTrimestrielle, $infoCommandeGroupe);
             $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($infoCommandeGroupe) {
                 if (count($infoCommandeGroupe) > 0) {
                     $idCommandeCurrent = $infoCommandeGroupe[0]['idCommandeTrimestrielle'];
