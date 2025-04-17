@@ -114,9 +114,11 @@ Class GroupeFinder
             
             
         $resultDataGroup = $queryBuilder->getQuery()->getArrayResult();
-       
+      
         if (!empty($resultDataGroup)) {
-            $resultDataGroup = $resultDataGroup[0];
+            $keys = array_keys($resultDataGroup);
+            $lastValue = end($keys);
+            $resultDataGroup = $resultDataGroup[$lastValue];
         } else {
             $resultDataGroup = null; // ou une autre valeur par défaut
         }

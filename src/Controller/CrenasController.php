@@ -96,7 +96,7 @@ class CrenasController extends AbstractController
             }
             // Find one by mois projection pour recuperer l'id du commande trimetrielle correspondant au groupe
             $infoCommandeGroupe = $this->_moisProjectionAdmissionService->findCommandeByGroupe($dataGroupe['idGroupe']);
-            dd($infoCommandeGroupe, $dataGroupe);
+           // dd($infoCommandeGroupe, $dataGroupe);
             /*$idCommandeCurrent = $dataCommandeTrimestrielle['idCommandeTrimestrielle'];
 
             if (count($infoCommandeGroupe) > 0) {
