@@ -193,10 +193,25 @@ class RmaNutController extends AbstractController
                 }
 
                 $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
+
+                $infoCommandeGroupe = $this->_moisProjectionAdmissionService->findCommandeByGroupe($idGroupe);
+
+                $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($infoCommandeGroupe) {
+                    if (count($infoCommandeGroupe) > 0) {
+                        $idCommandeCurrent = $infoCommandeGroupe[0]['idCommandeTrimestrielle'];
+                    }
+                    return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $idCommandeCurrent;
+                });
+               // dd($infoCommandeGroupe, $dataGroupe);
+                if (count($infoCommandeGroupe) > 0) {
+                    $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+                }
+
                 // Générez un nom de fichier unique en utilisant le format souhaité.
                 $NomUser = preg_replace('/[^a-zA-Z0-9_]/', '', $dataUser["nomUser"]);
                 $NomDistrict = strtolower($dataUser["nomDistrict"]);
                 $NomCHU = preg_replace('/[^a-zA-Z0-9_]/', '', $dataUser["nomCHU"]);
+      
                 if ($NomCHU == "") {
                     $newFilename = 'RMA_NUT_' . $dataCommandeTrimestrielle["Slug"] . '_' . date('Ymd') . '_'  . $NomUser . '_' . $NomDistrict . '.' . $extensionOriginalFilename;
                 } else {
