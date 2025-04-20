@@ -1123,7 +1123,7 @@ class AccueilController extends AbstractController
     }
 
     #[Route('/supervisor/rmaNut', name: 'app_accueil_sp_rmanut')]
-    public function showRMANutForSupervisor(CommandeTrimestrielleRepository $commandeTrimestrielleRepository)
+    public function showRMANutForSupervisor(CommandeTrimestrielleRepository $commandeTrimestrielleRepository, Request $request)
     {
         $user = $this->getUser();
         if ($user) {
@@ -1131,15 +1131,26 @@ class AccueilController extends AbstractController
             $dataUser = $this->_userService->findDataUser($userId);
             $currentCommande = $commandeTrimestrielleRepository->findOneBy(['isActive' => true]);
             
+            $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findAllDataCommandeTrimestrielle();
+            $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAllAnneePrevisionnelle();
+            $currentCommandeForFilter = $request->request->get('commande_liste');
+            if ($currentCommandeForFilter != null) {
+                $currentCommande = $commandeTrimestrielleRepository->find($currentCommandeForFilter);
+            }
+          
             if ($this->isGranted('ROLE_REGIONAL_SUPERVISOR')) {
                 $lstRegionRMANut = $this->_rmaNutService->findAllRegionRmaNut($dataUser["idRegion"], $currentCommande);
             } else {
                 $lstRegionRMANut = $this->_rmaNutService->findAllRegionRmaNut(null, $currentCommande);
             }
+            
             return $this->render('supervisor/supervisorCentralRegionRmaNut.html.twig', [
                 "mnuActive" => "RMANut",
                 "dataUser" => $dataUser,
-                "lstRegionRMANut" => $lstRegionRMANut
+                "lstRegionRMANut" => $lstRegionRMANut,
+                "dataCommandeTrimestrielle" => $dataCommandeTrimestrielle,
+                "dataAnneePrevisionnelle" => $dataAnneePrevisionnelle,
+                "currentCommande" => $currentCommande
             ]);
         } else {
             return $this->render('home.html.twig', [
@@ -1149,22 +1160,34 @@ class AccueilController extends AbstractController
     }
 
     #[Route('/supervisor/pvrd', name: 'app_accueil_sp_pvrd')]
-    public function showPvrdForSupervisor(CommandeTrimestrielleRepository $commandeTrimestrielleRepository)
+    public function showPvrdForSupervisor(CommandeTrimestrielleRepository $commandeTrimestrielleRepository, Request $request)
     {
         $user = $this->getUser();
         if ($user) {
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             $currentCommande = $commandeTrimestrielleRepository->findOneBy(['isActive' => true]);
+            $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findAllDataCommandeTrimestrielle();
+            $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAllAnneePrevisionnelle();
+
+            $currentCommandeForFilter = $request->request->get('commande_liste');
+            if ($currentCommandeForFilter != null) {
+                $currentCommande = $commandeTrimestrielleRepository->find($currentCommandeForFilter);
+            }
+           
             if ($this->isGranted('ROLE_REGIONAL_SUPERVISOR')) {
                 $lstRegionPvrd = $this->_pvrdService->findAllRegionPvrd($dataUser["idRegion"], $currentCommande);
             } else {
                 $lstRegionPvrd = $this->_pvrdService->findAllRegionPvrd(null, $currentCommande);
             }
+          
             return $this->render('supervisor/supervisorCentralRegionPvrd.html.twig', [
                 "mnuActive" => "Pvrd",
                 "dataUser" => $dataUser,
-                "lstRegionPvrd" => $lstRegionPvrd
+                "lstRegionPvrd" => $lstRegionPvrd,
+                "dataAnneePrevisionnelle" => $dataAnneePrevisionnelle,
+                "currentCommande" => $currentCommande,
+                "dataCommandeTrimestrielle" => $dataCommandeTrimestrielle,
             ]);
         } else {
             return $this->render('home.html.twig', [
@@ -1186,7 +1209,8 @@ class AccueilController extends AbstractController
             //$lstGroupe = $this->_groupeService->findAllDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"]);
             //$lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser['idRegion']);
             $lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle[0]["IdAnneePrevisionnelle"]);
-           
+            $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findAllDataCommandeTrimestrielle();
+
             $lstGroupData = [];
             if (isset($lstGroupe) && is_array($lstGroupe) && count($lstGroupe) > 0) {
                 for ($i = 0; $i < count($lstGroupe); $i++) {
@@ -1197,7 +1221,43 @@ class AccueilController extends AbstractController
                 "mnuActive" => "GroupeCrenas",
                 "dataUser" => $dataUser,
                 "lstGroupData" => $lstGroupData,
-                "dataAnneePrevisionnelle" => $dataAnneePrevisionnelle
+                "dataAnneePrevisionnelle" => $dataAnneePrevisionnelle,
+                "dataCommandeTrimestrielle" => $dataCommandeTrimestrielle
+            ]);
+        } else {
+            return $this->render('home.html.twig', [
+                'controller_name' => 'AccueilController',
+            ]);
+        }
+    }
+
+    #[Route('/supervisor/groupe/commande/{commandeId}', name: 'app_accueil_sp_groupe_commande')]
+    public function showGroupeCrenasForSupervisorByCommande($commandeId)
+    {
+        $user = $this->getUser();
+        if ($user) {
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+            //$dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+            $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAllAnneePrevisionnelle();
+            //dd($dataAnneePrevisionnelle);
+            //$lstGroupe = $this->_groupeService->findAllDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"]);
+            //$lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser['idRegion']);
+            $lstGroupe = $this->_groupeService->findAllDataGroupeRegionale($dataAnneePrevisionnelle[0]["IdAnneePrevisionnelle"]);
+            $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findAllDataCommandeTrimestrielle();
+
+            $lstGroupData = [];
+            if (isset($lstGroupe) && is_array($lstGroupe) && count($lstGroupe) > 0) {
+                for ($i = 0; $i < count($lstGroupe); $i++) {
+                    $lstGroupData[$lstGroupe[$i]["nomGroupe"]][] = $lstGroupe[$i];
+                }
+            }
+            return $this->render('supervisor/supervisorCentralGroupeCrenas.html.twig', [
+                "mnuActive" => "GroupeCrenas",
+                "dataUser" => $dataUser,
+                "lstGroupData" => $lstGroupData,
+                "dataAnneePrevisionnelle" => $dataAnneePrevisionnelle,
+                "dataCommandeTrimestrielle" => $dataCommandeTrimestrielle
             ]);
         } else {
             return $this->render('home.html.twig', [

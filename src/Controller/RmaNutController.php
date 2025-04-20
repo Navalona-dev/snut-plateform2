@@ -389,6 +389,41 @@ class RmaNutController extends AbstractController
         }
     }
 
+    #[Route('/supervisor/rmanut/region/{regionId}/{commandeId}', name: 'app_sp_rmanut_region_commande')]
+    public function listeRmaNutRegionCommande($regionId, $commandeId, EntityManagerInterface $entityManager)
+    {
+        // Récupérez l'utilisateur actuellement connecté (vous pouvez utiliser le système de sécurité de Symfony pour cela).
+        $user = $this->getUser();
+        if ($user) {
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+           // $lstRMANutRegion = $this->_rmaNutService->findListRMANutByRegion($regionId);
+            $lstRMANutRegion = $this->_rmaNutService->findListRMANutByRegionByCommande($regionId, $commandeId);
+         
+            $Region = $entityManager->getRepository(Region::class)->find($regionId);
+            if (!$Region) {
+                throw $this->createNotFoundException('La région n\'existe pas.');
+            }
+            // Obtenez le nombre total de districts dans la région
+            $numberOfDistricts = $Region->getDistricts()->count();
+            //$districtsDataRmaNut = $this->_rmaNutService->getDistrictsDataRmaNutByRegion($regionId);
+            $districtsDataRmaNut = $this->_rmaNutService->getDistrictsDataRmaNutByRegionByCommande($regionId, $commandeId);
+            
+            return $this->render('supervisor/supervisorCentralRmaNutRegion.html.twig', [
+                "mnuActive" => "RMANut",
+                "dataUser" => $dataUser,
+                "dataRegion" => $Region,
+                "lstRMANutRegion" => $lstRMANutRegion,
+                "numberOfDistrictSendRMANut" => count($lstRMANutRegion),
+                "numberOfDistricts" => $numberOfDistricts,
+                "districtsDataRmaNut" => $districtsDataRmaNut,
+                "commandeId" => $commandeId
+            ]);
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+    }
+
     #[Route('/supervisor/rmanut/region/upload/historique/{regionId}', name: 'app_sp_rmanut_region_export_historic')]
     public function exportExcelHistoricRmaNutRegion($regionId, EntityManagerInterface $entityManager)
     {
@@ -787,6 +822,294 @@ class RmaNutController extends AbstractController
 
             // Retourner le fichier en téléchargement
             return $this->file($tempFilePath, $fileName);
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+    }
+
+    #[Route('/rmanut/extract/historic/{responsableId}/{rmanutId}/{commandeId}', name: 'app_rmanut_extract_historic_responsable_district_commande')]
+    public function extractHistoricDataBYCommande($responsableId, $rmanutId, $commandeId)
+    {
+        // Récupérez l'utilisateur actuellement connecté (vous pouvez utiliser le système de sécurité de Symfony pour cela).
+        $user = $this->getUser();
+        if ($user) {
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+            //$dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserId($responsableId);
+            //$dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutIdWithCommande($responsableId, $rmanutId);
+            $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutIdWithCommandeSelected($responsableId, $rmanutId, $commandeId);
+            
+            $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findAllDataCommandeTrimestrielle();
+           //dd($dataDistrict, $commandeId, $dataCommandeTrimestrielle);
+
+           if (count($dataDistrict) == 0) {
+            return $this->render('error/custom_error.html.twig', [
+                "mnuActive" => "RMANut",
+                'errorTitle' => "Erreur, fichier non trouvé",
+                'errorMessage' => 'Le fichier Excel : <strong>non trouvé </strong> n\'a pas été trouvé ou <strong> district n\'appartient pas dans une groupe</strong> .',
+                "exception" => "File Not Found"
+            ]);
+           }
+            /* ---------------------------- DATA CRENAS ---------------------------- */
+            //$dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
+           
+            
+            // multiple commande
+          
+            //$idCommande = $dataDistrict["idCommande"];
+            $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($commandeId) {
+                return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $commandeId;
+            });
+            //dd($dataDistrict);
+            if (null != $filteredLines && count($filteredLines) > 0) {
+                $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+            }
+          // dd( $dataCommandeTrimestrielle, $dataDistrict, $filteredLines);
+            // End multiple commande
+            $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($dataDistrict["groupeId"], $dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+            $lstMoisProjectionAnneePrevisionnelle = array();
+            if (isset($dataMoisProjection) && count($dataMoisProjection) > 0) {
+                for ($i = 0; $i < count($dataMoisProjection); $i++) {
+                    $lstMoisProjectionAnneePrevisionnelle[] = $dataMoisProjection[$i]["MoisProjectionAnneePrevisionnelle"];
+                }
+            }
+         
+            $arrDataCrenasUser =  $this->_dataCrenaService->findDataCrenasByUserId($responsableId); 
+            $isUserHavingDataValidationCrenas = false;
+            $isUserHavingDataCrenas = false;
+            if (isset($arrDataCrenasUser) && is_array($arrDataCrenasUser) && count($arrDataCrenasUser) > 0) {
+                $isUserHavingDataCrenas = true;
+                $valueDataMoisProjection = $this->_dataCrenasMoisProjectionAdmission->findDataCrenasMoisProjectionAdmissionByCrenasId($arrDataCrenasUser["id"]);
+                $lstValueValidatedDataMonth = $this->_dataValidationCrenasService->findDataValidationCrenasByCrenasId($arrDataCrenasUser["id"]);
+                if (isset($lstValueValidatedDataMonth) && is_array($lstValueValidatedDataMonth) && count($lstValueValidatedDataMonth) > 0) {
+                    $isUserHavingDataValidationCrenas = true;
+                }
+            } else {
+                $valueDataMoisProjection = [];
+                $lstValueValidatedDataMonth = [];
+            }
+          
+            $lstValueMoisProjectionAnneePrevisionnelle = array();
+            if (isset($valueDataMoisProjection) && count($valueDataMoisProjection) > 0) {
+                for ($i = 0; $i < count($valueDataMoisProjection); $i++) {
+                    $lstValueMoisProjectionAnneePrevisionnelle[$arrDataCrenasUser["id"]][] = $valueDataMoisProjection[$i]["DataMoisProjectionAnneePrevisionnelle"];
+                }
+            } 
+         
+            /* ---------------------------- DATA CRENI ---------------------------- */
+            $arrDataCreniUser = $this->_dataCreniService->findDataCreniByUserId($responsableId);
+            $dataCommandeSemestrielle = $this->_commandeSemestrielleService->findDataCommandeSemestrielle();
+            $dataMoisProjection = $this->_creniMoisProjectionAdmissionService->findDataMoisProjection($dataCommandeSemestrielle["idCommandeSemestrielle"]);
+
+            $isUserHavingDataCreni = false;
+            $isUserHavingDataValidationCreni = false;
+            $arrDataCreniUser = $this->_dataCreniService->findDataCreniByUserId($responsableId);
+            if (isset($arrDataCreniUser) && is_array($arrDataCreniUser) && count($arrDataCreniUser) > 0) {
+                $isUserHavingDataCreni = true;
+                $dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndCommande($arrDataCreniUser["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                //$dataCreniMoisProjetionAdmission = $this->_dataCreniMoisProjectionAdmissionService->findDataCreniMoisProjectionAdmissionByCreniIdAndMoisProjection($arrDataCreniUser["id"], $dataCommandeSemestrielle["idCommandeSemestrielle"]);
+                $dataValueValidatedMonthCreni = $this->_dataValidationCreniService->findDataValidationCreniByCreniId($arrDataCreniUser["id"]);
+                if (isset($dataValueValidatedMonthCreni) && is_array($dataValueValidatedMonthCreni) && count($dataValueValidatedMonthCreni) > 0) {
+                    $isUserHavingDataValidationCreni = true;
+                }
+            } else {
+                $dataCreniMoisProjetionAdmission = [];
+                $dataValueValidatedMonthCreni = [];
+            }
+           
+
+            $fileNameRmaNut = $dataDistrict["newFileName"];
+
+            // Récupérer le chemin vers le fichier
+            $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/RMANut/' . $fileNameRmaNut;
+           
+            // Vérifier si le fichier existe 
+            if (file_exists($filePath)) {
+               
+                try {
+                    
+                    $reader = ReaderEntityFactory::createXLSXReader();
+                    $reader->open($filePath);
+                } catch (\Box\Spout\Common\Exception\IOException | \Exception $e) {
+                   
+                    // Vous pouvez enregistrer l'erreur dans un journal (logs)
+                    $this->logger->info('Erreur lors de l\'ouverture du fichier Excel : ' . $e->getMessage());
+                    
+                    return $this->render('error/custom_error.html.twig', [
+                        "mnuActive" => "RMANut",
+                        'errorTitle' => "Erreur lors de l'ouverture du fichier Excel",
+                        'errorMessage' => 'Le fichier Excel : <strong>"' . $fileNameRmaNut . '"</strong> n\'a pas pu être ouvert pour la raison suivante: ',
+                        "exception" => $e
+                    ]);
+                }
+
+                // Obtenez l'itérateur de feuilles
+                $sheetIterator = $reader->getSheetIterator();
+
+                // --------------------------------- CRENAS ---------------------------------
+                $valuesLastCrenas = [];
+                $valuesNowCrenas = [];
+
+                $selectedSheetNameCRENAS = 'COMPILATION CSB';
+                $selectedSheetCRENAS = null;
+                foreach ($sheetIterator as $sheet) {
+                    if ($sheet->getName() === $selectedSheetNameCRENAS) {
+                        $selectedSheetCRENAS = $sheet;
+                        break;
+                    }
+                }
+              
+                // Vérifiez si l'onglet spécifié a été trouvé
+                if ($selectedSheetCRENAS !== null) {
+                    $currentRow = 1;
+                    foreach ($selectedSheetCRENAS->getRowIterator() as $index => $row) {
+                        if ($currentRow >= 22 && $currentRow <= 33) {
+                            // NB: Pour des raisons non encore éclairci $currentRow = 22 à la ligne 28 et $currentRow = 33 à la ligne 39 une décalage de 6 lignes
+                            $columnLastCrenas = $row->getCellAtIndex(13)->getValue();
+                            $columnNowCrenas  = $row->getCellAtIndex(3)->getValue();
+                            $valuesLastCrenas[] = $columnLastCrenas;
+                            $valuesNowCrenas[] = $columnNowCrenas;
+                        }
+                        // Incrémentez le compteur de ligne
+                        $currentRow++;
+                        // Sortez de la boucle si on a atteint la fin de la plage de lignes souhaitée
+                        if ($currentRow > 33) {
+                            break;
+                        }
+                    }
+                } else {
+                    // Faites quelque chose si l'onglet spécifié n'existe pas
+                    throw new \Exception('Sheet not found with the name: ' . $selectedSheetNameCRENAS);
+                }
+
+                // --------------------------------- CRENI ---------------------------------
+                $valuesLastCreni = [];
+                $valuesNowCreni = [];
+
+                $selectedSheetNameCRENI = 'CANEVAS SDSP';
+                $selectedSheetCRENI = null;
+            
+                foreach ($sheetIterator as $sheet) {
+                    if ($sheet->getName() === $selectedSheetNameCRENI) {
+                        $selectedSheetCRENI = $sheet;
+                        break;
+                    }
+                }
+
+                // Vérifiez si l'onglet spécifié a été trouvé
+                if ($selectedSheetCRENI !== null) {
+                    $currentRow = 1;
+                    foreach ($selectedSheetCRENI->getRowIterator() as $index => $row) {
+                        if ($currentRow >= 37 && $currentRow <= 48) {
+                            // NB: Pour des raisons non encore éclairci $currentRow = 45 à la ligne 36 et $currentRow = 56 à la ligne 47 une décalage de 6 lignes
+                            $columnLastCreni = $row->getCellAtIndex(11)->getValue();
+                            $columnNowCreni  = $row->getCellAtIndex(2)->getValue();
+                            $valuesLastCreni[] = $columnLastCreni;
+                            $valuesNowCreni[] = $columnNowCreni;
+                        }
+                        // Incrémentez le compteur de ligne
+                        $currentRow++;
+                        // Sortez de la boucle si on a atteint la fin de la plage de lignes souhaitée
+                        if ($currentRow > 50) {
+                            break;
+                        }
+                    }
+                } else {
+                    // Faites quelque chose si l'onglet spécifié n'existe pas
+                    throw new \Exception('Sheet not found with the name: ' . $selectedSheetNameCRENI);
+                }
+
+                $reader->close();
+             
+                $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findDataCommandeTrimestrielle();
+                $dataAnneePrevisionnelle = $this->_anneePrevisionnelleService->findDataAnneePrevisionnelle();
+                $dataGroupe = [];
+                if (null == $dataUser["provinceId"] && $dataUser["idDistrict"] == null) {
+                } else {
+                    $dataGroupe = $this->_groupeService->findDataGroupe($dataAnneePrevisionnelle["IdAnneePrevisionnelle"], $dataUser["provinceId"], $dataUser["idDistrict"]);
+                }
+
+                
+                // Groupe commande
+               // $infoGroupeCommande = $this->_moisProjectionAdmissionService->findGroupeByCommande($dataCommandeTrimestrielle['idCommandeTrimestrielle']);
+             
+                $dataGroupe['idGroupe'] = $dataDistrict['groupeId'];
+                $dataGroupe['nomGroupe'] = $dataDistrict['groupeNom'];
+                
+                $idCommandeCurrent = $dataDistrict['idCommande'];
+                $filteredLines = array_filter($dataCommandeTrimestrielle, function ($line) use ($idCommandeCurrent) {
+                    return isset($line['idCommandeTrimestrielle']) && $line['idCommandeTrimestrielle'] == $idCommandeCurrent;
+                });
+               // dd($infoCommandeGroupe, $dataGroupe);
+                if (null != $filteredLines && count($filteredLines) > 0) {
+                    $dataCommandeTrimestrielle =  $filteredLines[array_keys($filteredLines)[0]];
+                }
+
+                // Groupe commande
+                //dd($dataCommandeTrimestrielle, $dataDistrict, $dataGroupe);
+                $valeurCalculTheoriqueATPE = null;
+                $valeurCalculTheoriqueAMOX = null;
+                $valeurCalculTheoriqueFichePatient = null;
+                $valeurCalculTheoriqueRegistre = null;
+                $valeurCalculTheoriqueCarnetRapport = null;
+
+                if (isset($dataCommandeTrimestrielle) && $dataCommandeTrimestrielle != NULL) {
+                    if ($dataCommandeTrimestrielle["Slug"] == "T1" && $dataCommandeTrimestrielle["isActive"] == 1) { 
+                        $valeurCalculTheoriqueATPE = $dataAnneePrevisionnelle["ValeurCalculTheoriqueATPE01"];
+                        $valeurCalculTheoriqueAMOX = $dataAnneePrevisionnelle["ValeurCalculTheoriqueAMOX01"];
+                        $valeurCalculTheoriqueFichePatient = $dataAnneePrevisionnelle["ValeurCalculTheoriqueFichePatient01"];
+                        $valeurCalculTheoriqueRegistre = $dataAnneePrevisionnelle["ValeurCalculTheoriqueRegistre01"];
+                        $valeurCalculTheoriqueCarnetRapport = $dataAnneePrevisionnelle["ValeurCalculTheoriqueCarnetRapport01"];
+                    } else {
+                        $valeurCalculTheoriqueATPE = $dataAnneePrevisionnelle["ValeurCalculTheoriqueATPE02"];
+                        $valeurCalculTheoriqueAMOX = $dataAnneePrevisionnelle["ValeurCalculTheoriqueAMOX02"];
+                        $valeurCalculTheoriqueFichePatient = $dataAnneePrevisionnelle["ValeurCalculTheoriqueFichePatient02"];
+                        $valeurCalculTheoriqueRegistre = $dataAnneePrevisionnelle["ValeurCalculTheoriqueRegistre02"];
+                        $valeurCalculTheoriqueCarnetRapport = $dataAnneePrevisionnelle["ValeurCalculTheoriqueCarnetRapport02"];
+                    }
+                }
+               
+                return $this->render('supervisor/supervisorCentralRmaNutHistoric.html.twig', [
+                    "mnuActive" => "RMANut",
+                    "responsableId" => $responsableId,
+                    "dataUser" => $dataUser,
+                    "district" => $dataDistrict,
+                    "valuesLastCrenas" => $valuesLastCrenas,
+                    "valuesNowCrenas" => $valuesNowCrenas,
+                    "valuesLastCreni" => $valuesLastCreni,
+                    "valuesNowCreni" => $valuesNowCreni,
+                    "arrDataCrenasUser" => $arrDataCrenasUser,
+                    "dataCrenas" => $arrDataCrenasUser,
+                    "dataGroupe" => $dataGroupe,
+                    "dataCommandeTrimestrielle" => $dataCommandeTrimestrielle,
+                    "arrDataCreniUser" => $arrDataCreniUser,
+                    "dataCreni" => $arrDataCreniUser,
+                    "dataCommandeSemestrielle" => $dataCommandeSemestrielle,
+                    "dataValueValidatedMonthCreni" => $dataValueValidatedMonthCreni,
+                    "dataMoisProjection" => $dataMoisProjection,
+                    "dataCreniMoisProjetionAdmission" => $dataCreniMoisProjetionAdmission,
+                    "lstMoisProjectionAnneePrevisionnelle" => $lstMoisProjectionAnneePrevisionnelle,
+                    "valueDataMoisProjection" => $valueDataMoisProjection,
+                    "lstValueMoisProjectionAnneePrevisionnelle" => $lstValueMoisProjectionAnneePrevisionnelle,
+                    "lstValueValidatedDataMonth" => $lstValueValidatedDataMonth,
+                    "isUserHavingDataCrenas" => $isUserHavingDataCrenas,
+                    "isUserHavingDataValidationCrenas" => $isUserHavingDataValidationCrenas,
+                    "isUserHavingDataCreni" => $isUserHavingDataCreni,
+                    "isUserHavingDataValidationCreni" => $isUserHavingDataValidationCreni,
+                    "valeurCalculTheoriqueATPE" => $valeurCalculTheoriqueATPE,
+                    "valeurCalculTheoriqueAMOX" => $valeurCalculTheoriqueAMOX,
+                    "valeurCalculTheoriqueFichePatient" => $valeurCalculTheoriqueFichePatient,
+                    "valeurCalculTheoriqueRegistre" => $valeurCalculTheoriqueRegistre,
+                    "valeurCalculTheoriqueCarnetRapport" => $valeurCalculTheoriqueCarnetRapport
+                ]);
+            } else {
+                return $this->render('error/custom_error.html.twig', [
+                    "mnuActive" => "RMANut",
+                    'errorTitle' => "Erreur, fichier non trouvé",
+                    'errorMessage' => 'Le fichier Excel : <strong>"' . $fileNameRmaNut . '"</strong> n\'a pas été trouvé.',
+                    "exception" => "File Not Found"
+                ]);
+            }
         } else {
             return $this->redirectToRoute('app_login');
         }

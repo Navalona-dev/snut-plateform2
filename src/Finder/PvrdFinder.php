@@ -314,12 +314,14 @@ Class PvrdFinder
                                             u.Nom AS nomUser,
                                             u.Prenoms AS prenomUser,
                                             u.Telephone AS telephoneUser,
-                                            u.email AS email 
+                                            u.email AS email,
+                                            com.id AS idCommande
                                         FROM App:District d  
                                         LEFT JOIN d.region r 
                                         LEFT JOIN App:Pvrd pv WITH pv.District = d.id
+                                        LEFT JOIN App:CommandeTrimestrielle com WITH pv.commandeTrimestrielle = com.id 
                                         LEFT JOIN App:User u WITH pv.ResponsableDistrict = u.id
-                                        WHERE d.region = :prmRegionId and pv.commandeTrimestrielle = :prmIdCurrentCommande")
+                                        WHERE d.region = :prmRegionId and com.id = :prmIdCurrentCommande")
                     ->setParameter('prmRegionId', $prmRegionId)
                     ->setParameter('prmIdCurrentCommande', $currentCommande);
         }
@@ -379,6 +381,27 @@ Class PvrdFinder
                     GROUP BY d.id, d.Nom
                 ")
             ->setParameter('prmRegionId', $prmRegionId);
+        $resultLstPvrd = $query->getArrayResult();
+        return $resultLstPvrd;
+    }
+
+    public function getDistrictsDataPvrdByRegionByCommande($prmRegionId, $commande)
+    {
+        $query = $this->em->createQuery("
+                    SELECT 
+                        d.id as districtId, 
+                        d.Nom as districtName,
+                        d.isEligibleForCreni as isEligibleForCreni,
+                        d.isEligibleForCrenas as isEligibleForCrenas,
+                        COUNT(pv.id) as countPvrd
+                    FROM App:District d
+                    LEFT JOIN App:Pvrd pv WITH pv.District = d.id
+                    LEFT JOIN App:CommandeTrimestrielle com WITH com.id = pv.commandeTrimestrielle
+                    WHERE d.region = :prmRegionId and com.id = :prmCommandeId
+                    GROUP BY d.id, d.Nom
+                ")
+            ->setParameter('prmRegionId', $prmRegionId)
+            ->setParameter('prmCommandeId', $commande);
         $resultLstPvrd = $query->getArrayResult();
         return $resultLstPvrd;
     }

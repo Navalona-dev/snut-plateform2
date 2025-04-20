@@ -14,16 +14,42 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Liste des groupes</h6>
-            <label for="selectCentral">Selective CGIS NUT</label>
-            <select name="selectCentral" id="selectCentral" class="form-control" onChange = "return getAllGroupeByYear(this.value)">
-                <option value="">Veuillez sélectionner.</option>
-                {% for annee in dataAnneePrevisionnelle %}
-                        <option value="{{ annee.IdAnneePrevisionnelle }}">
-                            {{ annee.Annee }}
-                        </option>
-                 
-                {% endfor %}
-            </select>
+          
+             <form method="post" action="{{ path('app_accueil_sp_rmanut') }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label for="" class="mb-2">Année</label>
+                        <select name="anne_liste" id="anne_liste" class="form-control form-control-sm chosen-select" onChange = "return getAllGroupeByYear(this.value)">
+                            <option value="">Selectionner année</option>
+                            {% for anne in dataAnneePrevisionnelle %}
+                            <option value="{{anne.IdAnneePrevisionnelle}}">{{anne.Annee}}</option>
+                            {% endfor %} 
+                        </select>
+                    </div>
+                </div>
+                {# <div class="col-md-4">
+                
+                    <div class="form-group mb-3">
+                        <label for="" class="mb-2">Commande</label>
+                        <select name="commande_liste" id="commande_liste" class="form-control form-control-sm chosen-select">
+                            <option value="">Selectionner commande</option>
+                            {% for commande in dataCommandeTrimestrielle %}
+
+                            <option value="{{commande.idCommandeTrimestrielle}}" {% if commande.idCommandeTrimestrielle == currentCommande.id %} selected ="selected" {% endif %}>{{commande.nomCommande}}</option>
+                                
+                            {% endfor %} 
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                     <label for="" class="mb-2">&nbsp;</label>
+                    <div class="form-group mb-3">
+                        <button type="submit" class="btn btn-success">Valider</button>
+                    </div>
+                </div>  #}
+            </div>
+            </form>
         </div>
         <div id="groupeByYear">
             <div class="card-body">

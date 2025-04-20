@@ -157,6 +157,34 @@ class RmaNutFinder
         return $resultLstRMANut;
     }
 
+    public function findListRMANutByRegionByCommande($prmRegionId, $commande = null)
+    {
+        $query = $this->em->createQuery("SELECT 
+                        r.id AS regionId,
+                        r.Nom AS regionNom,
+                        d.id AS districtId,
+                        d.Nom AS districtNom,
+                        rn.id AS rmaNutId,
+                        rn.newFileName AS newFileName, 
+                        rn.originalFileName AS originalFileName,
+                        rn.uploadedDate AS uploadedDate,
+                        u.id As idUser,
+                        u.Nom AS nomUser,
+                        u.Prenoms AS prenomUser,
+                        u.Telephone AS telephoneUser,
+                        u.email AS email
+                    FROM App:District d  
+                    LEFT JOIN d.region r
+                    LEFT JOIN App:RmaNut rn WITH rn.District = d.id
+                    LEFT JOIN App:CommandeTrimestrielle com WITH com.id = rn.CommandeTrimestrielle
+                    LEFT JOIN App:User u WITH rn.uploadedBy = u.id
+                    WHERE d.region = :prmRegionId and com.id = :prmCommandeId")
+            ->setParameter('prmRegionId', $prmRegionId)
+            ->setParameter('prmCommandeId', $commande);
+        $resultLstRMANut = $query->getArrayResult();
+        return $resultLstRMANut;
+    }
+    
     public function findListRMANutByDistrict($prmDistrictId)
     {
         $query = $this->em->createQuery("SELECT 
@@ -228,6 +256,27 @@ class RmaNutFinder
         return $resultLstRMANut;
     }
 
+    public function getDistrictsDataRmaNutByRegionByCommande($prmRegionId, $commande = null)
+    {
+        $query = $this->em->createQuery("
+                    SELECT 
+                        d.id as districtId, 
+                        d.Nom as districtName,
+                        d.isEligibleForCreni as isEligibleForCreni,
+                        d.isEligibleForCrenas as isEligibleForCrenas,
+                        COUNT(rn.id) as countRMANut
+                    FROM App:District d
+                    LEFT JOIN App:RmaNut rn WITH rn.District = d.id
+                    LEFT JOIN App:CommandeTrimestrielle com WITH com.id = rn.CommandeTrimestrielle
+                    WHERE d.region = :prmRegionId and com.id = :prmCommandeId
+                    GROUP BY d.id, d.Nom
+                ")
+            ->setParameter('prmRegionId', $prmRegionId)
+            ->setParameter('prmCommandeId', $commande);
+        $resultLstRMANut = $query->getArrayResult();
+        return $resultLstRMANut;
+    }
+
     public function getInfoDistrictWithRmaNutByUserIdAndRmaNutId($prmUserId, $rmaNutId)
     {
         $query = $this->em->createQuery("SELECT 
@@ -294,6 +343,45 @@ class RmaNutFinder
         $resultDistrict = $query->getArrayResult();
        
         return $resultDistrict;
+    }
+
+    public function getInfoDistrictWithRmaNutByUserIdAndRmaNutIdWithCommandeSelected($prmUserId, $rmaNutId, $commande)
+    {
+        $query = $this->em->createQuery("SELECT 
+                        r.id AS regionId,
+                        r.Nom AS regionNom,
+                        d.id AS districtId,
+                        d.Nom AS districtNom, 
+                        u.Nom AS nomUser,
+                        u.Prenoms AS prenomUser,
+                        u.Telephone AS telephoneUser,
+                        u.email AS email,
+                        p.id AS provinceId,
+                        p.NomFR AS provinceNom,
+                        g.id AS groupeId,
+                        g.Nom AS groupeNom,
+                        rn.id AS rmaNutId,
+                        rn.newFileName AS newFileName, 
+                        rn.originalFileName AS originalFileName,
+                        rn.uploadedDate AS uploadedDate,
+                        cm.id AS idCommande
+                    FROM App:District d  
+                    INNER JOIN App:User u WITH u.District = d.id
+                    INNER JOIN App:Region r WITH d.region = r.id  
+                    INNER JOIN App:Province p WITH r MEMBER OF p.regions
+                    INNER JOIN App:RmaNut rn WITH rn.District = d.id
+                    INNER JOIN App:Groupe g WITH g.id = rn.groupe
+                    INNER JOIN App:CommandeTrimestrielle cm WITH rn.CommandeTrimestrielle = cm.id
+                    WHERE u.id = :prmUserId and rn.id = :rmaNutId and cm.id = :commandeId ")
+            ->setParameter('prmUserId', $prmUserId)
+            ->setParameter('rmaNutId', $rmaNutId)
+            ->setParameter('commandeId', $commande);
+        $resultDistrict = $query->getArrayResult();
+        
+        if (count($resultDistrict) > 0) {
+            return $resultDistrict[0];
+        }
+        return false;
     }
 
     public function getInfoDistrictWithRmaNutByUserId($prmUserId)

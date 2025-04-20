@@ -279,6 +279,40 @@ class PvrdController extends AbstractController
         }
     }
 
+    #[Route('/supervisor/pvrd/region/{regionId}/{commandeId}', name: 'app_sp_pvrd_region_commande')]
+    public function listePvrdRegionByCommande($regionId, $commandeId, EntityManagerInterface $entityManager, CommandeTrimestrielleRepository $commandeTrimestrielleRepository)
+    {
+        $user = $this->getUser();
+        if ($user) {
+            //$currentCommande = $commandeTrimestrielleRepository->findOneBy(['isActive' => true]);
+            $currentCommande = $commandeTrimestrielleRepository->find($commandeId);
+            $userId = $user->getId();
+            $dataUser = $this->_userService->findDataUser($userId);
+            $lstPvrdRegion = $this->_pvrd_service->findListPvrdByRegion($regionId, $commandeId);
+            $Region = $entityManager->getRepository(Region::class)->find($regionId);
+            if (!$Region) {
+                throw $this->createNotFoundException('La région n\'existe pas.');
+            }
+            // Obtenez le nombre total de districts dans la région
+            $numberOfDistricts = $Region->getDistricts()->count();
+            //$districtsDataPvrd = $this->_pvrd_service->getDistrictsDataPvrdByRegion($regionId);
+            $districtsDataPvrd = $this->_pvrd_service->getDistrictsDataPvrdByRegionByCommande($regionId, $commandeId);
+           
+            return $this->render('supervisor/supervisorCentralPvrdRegion.html.twig', [
+                "mnuActive" => "Pvrd",
+                "dataUser" => $dataUser,
+                "dataRegion" => $Region,
+                "lstPvrdRegion" => $lstPvrdRegion,
+                "numberOfDistrictSendPvrd" => count($lstPvrdRegion),
+                "numberOfDistricts" => $numberOfDistricts,
+                "districtsDataPvrd" => $districtsDataPvrd,
+                "currentCommande" => $currentCommande
+            ]);
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+    }
+
     #[Route('/supervisor/pvrd/responsableDistrict/{responsableDistrict}', name: 'app_supervisor_pvrd_detail_district')]
     public function detailPvrdDistrict($responsableDistrict)
     {

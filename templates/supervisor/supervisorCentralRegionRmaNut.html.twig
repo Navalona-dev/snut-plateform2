@@ -14,6 +14,41 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Liste des RMA Nut par région</h6>
+             <form method="post" action="{{ path('app_accueil_sp_rmanut') }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label for="" class="mb-2">Année</label>
+                        <select name="anne_liste" id="anne_liste" class="form-control form-control-sm chosen-select">
+                            <option value="">Selectionner année</option>
+                            {% for anne in dataAnneePrevisionnelle %}
+                            <option value="{{anne.IdAnneePrevisionnelle}}">{{anne.Annee}}</option>
+                            {% endfor %} 
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                
+                    <div class="form-group mb-3">
+                        <label for="" class="mb-2">Commande</label>
+                        <select name="commande_liste" id="commande_liste" class="form-control form-control-sm chosen-select">
+                            <option value="">Selectionner commande</option>
+                            {% for commande in dataCommandeTrimestrielle %}
+
+                            <option value="{{commande.idCommandeTrimestrielle}}" {% if commande.idCommandeTrimestrielle == currentCommande.id %} selected ="selected" {% endif %}>{{commande.nomCommande}}</option>
+                                
+                            {% endfor %} 
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                     <label for="" class="mb-2">&nbsp;</label>
+                    <div class="form-group mb-3">
+                        <button type="submit" class="btn btn-success">Valider</button>
+                    </div>
+                </div> 
+            </div>
+            </form>
         </div>
         <div class="card-body">
             <div class="table-responsive table-wrapper"> 
@@ -46,7 +81,7 @@
                             <tr>
                                 <td>{{ increment }}</td>
                                 <td class="titleTblLeftrBoldBlue">
-                                    <a href="{{ path('app_sp_rmanut_region', {'regionId': region.regionId}) }}"> 
+                                    <a href="{{ path('app_sp_rmanut_region_commande', {'regionId': region.regionId, 'commandeId': currentCommande.id}) }}"> 
                                         {{ region.regionNom }} 
                                     </a> 
                                 </td>
@@ -85,4 +120,11 @@
     </div>
 
 </div> 
+<script>
+
+ $(document).ready(function() {
+    $('.chosen-select').chosen({ width: "100%" });
+ });
+
+</script>
 {% endblock %}
