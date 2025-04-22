@@ -836,13 +836,13 @@ class RmaNutController extends AbstractController
             $userId = $user->getId();
             $dataUser = $this->_userService->findDataUser($userId);
             //$dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserId($responsableId);
-            //$dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutIdWithCommande($responsableId, $rmanutId);
+           // $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutIdWithCommande($responsableId, $rmanutId);
             $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutIdWithCommandeSelected($responsableId, $rmanutId, $commandeId);
-            
+            //dd($dataDistrict, $responsableId, $rmanutId);
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findAllDataCommandeTrimestrielle();
            //dd($dataDistrict, $commandeId, $dataCommandeTrimestrielle);
 
-           if (count($dataDistrict) == 0) {
+           if ($dataDistrict != false && count($dataDistrict) == 0) {
             return $this->render('error/custom_error.html.twig', [
                 "mnuActive" => "RMANut",
                 'errorTitle' => "Erreur, fichier non trouvé",
