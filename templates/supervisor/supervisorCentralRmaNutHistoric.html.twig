@@ -307,6 +307,8 @@
                     <input type="hidden" name="GroupeId" value="{{ dataGroupe['idGroupe']|default("") }}">
                     <input type="hidden" name="DataCommandeTrimestrielleId" value="{{ dataCommandeTrimestrielle['idCommandeTrimestrielle'] }}">
                     <input type="hidden" name="ResponsableId" value="{{ responsableId }}">
+                    <input type="hidden" name="rmanutId" value="{{ rmanutId }}">
+                    <input type="hidden" name="commandeId" value="{{ commandeId }}">
                     <input type="hidden" name="DataCrenasId" value="{% if (dataCrenas is defined and dataCrenas.id is defined ) %} {{ dataCrenas.id }} {% endif %}"> 
                     <input type="hidden" name="isUserHavingDataValidationCrenas" value="{{ isUserHavingDataValidationCrenas }}">
 

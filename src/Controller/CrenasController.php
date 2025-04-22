@@ -620,6 +620,9 @@ class CrenasController extends AbstractController
             $DataCommandeTrimestrielleId = (int) $request->request->get('DataCommandeTrimestrielleId');
             $ResponsableId = (int) $request->request->get('ResponsableId');
             $DataCrenasId = (int) $request->request->get('DataCrenasId');
+            $rmanutId = (int) $request->request->get('rmanutId');
+            $commandeId = (int) $request->request->get('commandeId');
+            
             $dataMoisProjection = $this->_moisProjectionAdmissionService->findDataMoisProjection($GroupeId, $DataCommandeTrimestrielleId);
             if(isset($dataMoisProjection) && is_array($dataMoisProjection) && count($dataMoisProjection) > 0) {
                 for ($i=0; $i < count($dataMoisProjection); $i++) {
@@ -651,8 +654,10 @@ class CrenasController extends AbstractController
                     $entityManager->persist($DataValidationCrenas);
                     $entityManager->flush();
                 }
+                
                 $this->addFlash('success', '<strong>Enregistrement des donnée CRENAS avec succès</strong><br/>');
-                return $this->redirectToRoute('app_rmanut_extract_historic_responsable_district', ['responsableId' => $ResponsableId]);
+                //return $this->redirectToRoute('app_rmanut_extract_historic_responsable_district', ['responsableId' => $ResponsableId, 'rmanutId' => $rmanutId]);
+                return $this->redirectToRoute('app_rmanut_extract_historic_responsable_district_commande', ['responsableId' => $ResponsableId, 'rmanutId' => $rmanutId, 'commandeId' => $commandeId]);
             }
              
         }

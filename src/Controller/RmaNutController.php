@@ -838,7 +838,7 @@ class RmaNutController extends AbstractController
             //$dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserId($responsableId);
            // $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutIdWithCommande($responsableId, $rmanutId);
             $dataDistrict = $this->_rmaNutService->getInfoDistrictWithRmaNutByUserIdAndRmaNutIdWithCommandeSelected($responsableId, $rmanutId, $commandeId);
-            //dd($dataDistrict, $responsableId, $rmanutId);
+           //dd($dataDistrict, $responsableId, $rmanutId, $commandeId);
             $dataCommandeTrimestrielle = $this->_commandeTrimestrielleService->findAllDataCommandeTrimestrielle();
            //dd($dataDistrict, $commandeId, $dataCommandeTrimestrielle);
 
@@ -1073,6 +1073,8 @@ class RmaNutController extends AbstractController
                     "mnuActive" => "RMANut",
                     "responsableId" => $responsableId,
                     "dataUser" => $dataUser,
+                    "rmanutId" => $rmanutId,
+                    "commandeId" => $commandeId,
                     "district" => $dataDistrict,
                     "valuesLastCrenas" => $valuesLastCrenas,
                     "valuesNowCrenas" => $valuesNowCrenas,
